@@ -1,5 +1,7 @@
+import game.Game;
+
 public class BeimLetztenWeltkrieg {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+        Game.make("Beim letzten Weltkrieg", 960, 540).start();
     }
 }
