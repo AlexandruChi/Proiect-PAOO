@@ -8,12 +8,14 @@ public class Window {
     private final JFrame jFrame;
     private final Canvas canvas;
 
+    //TODO better resolution
+
     public Window(String title, int width, int height) {
 
         jFrame = new JFrame(title);
         jFrame.setSize(width, height);
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        jFrame.setResizable(false);
+        jFrame.setResizable(true);
         jFrame.setLocationRelativeTo(null);
         jFrame.setVisible(true);
 

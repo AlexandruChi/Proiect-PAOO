@@ -14,6 +14,12 @@ public class Game implements Runnable {
     private Thread thread;
     private Window window;
 
+    private Input input;
+
+    public Input getInput() {
+        return input;
+    }
+
     static class states {
         //TODO more states
         static State gameState;
@@ -29,6 +35,8 @@ public class Game implements Runnable {
     protected Game(String title, int width, int height) {
         isRunning = false;
         window = new Window(title, width, height);
+        input = new Input();
+        window.setInput(input);
 
         AssetManager.load();
 
