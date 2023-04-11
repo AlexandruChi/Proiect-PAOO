@@ -10,7 +10,6 @@ public class StartState extends State {
     @Override
     public void update() {
         Game.game.loadMainMenu();
-        //TODO fix this pice of shit
     }
 
     @Override
