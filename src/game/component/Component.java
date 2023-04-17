@@ -1,10 +1,15 @@
 package game.component;
 
+import game.Draw;
+import game.component.texture.Texture;
+
 import java.awt.*;
 
 public abstract class Component {
     protected Position position;
     protected Texture texture;
+
+    //TODO add screen position getCameraPosition();
 
     public Component(Position position, Texture texture) {
         this.position = position;
@@ -20,6 +25,6 @@ public abstract class Component {
     }
 
     public void draw(Graphics graphics) {
-        graphics.drawImage(texture.texture, position.xPX, position.yPX, texture.width, texture.height, null);
+        Draw.draw(graphics, texture, position.xPX, position.yPX);
     }
 }

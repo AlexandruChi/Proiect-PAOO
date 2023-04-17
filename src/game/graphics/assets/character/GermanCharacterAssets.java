@@ -13,7 +13,7 @@ public class GermanCharacterAssets {
         tmp[0] = ImageLoader.loadImage(normalWeapon1Path);
 
         characterWeapon1 = new Animation[1][2];
-        characterWeapon1[0][0] = Animation.make(tmp, 0,  0, 128);
+        characterWeapon1[0][0] = Animation.make(tmp, 0,  0, 64);
         characterWeapon1[0][1] = new Animation(characterWeapon1[0][0]);
         characterWeapon1[0][1].flip();
     }

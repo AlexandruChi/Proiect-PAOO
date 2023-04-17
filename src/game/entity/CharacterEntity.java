@@ -2,8 +2,8 @@ package game.entity;
 
 import game.component.*;
 import game.component.Component;
-
-import java.awt.*;
+import game.component.texture.MakeTexture;
+import game.component.texture.Texture;
 
 public class CharacterEntity extends Component implements Character {
 
@@ -20,7 +20,7 @@ public class CharacterEntity extends Component implements Character {
     private int curentAnimation;
 
     public CharacterEntity(Position position, Animation[][] animation, HitBox hitbox, double speed, int health, int maxHealth) {
-        super(position, Texture.make(animation[0][0].texture, animation[0][0].width));
+        super(position, MakeTexture.make(animation[0][0].texture, animation[0][0].width));
         this.animation = animation[0][0];
         altAnimation = animation;
         curentAnimation = 0;
@@ -49,8 +49,8 @@ public class CharacterEntity extends Component implements Character {
     public void update() {
         move();
         switch (travelDir) {
-            case up, up_right, right, down_right -> animation = altAnimation[curentAnimation][1];
-            case down, down_left, left, up_left -> animation = altAnimation[curentAnimation][0];
+            case up_right, right, down_right -> animation = altAnimation[curentAnimation][1];
+            case down_left, left, up_left -> animation = altAnimation[curentAnimation][0];
         }
 
         refreshTexture();
@@ -61,15 +61,13 @@ public class CharacterEntity extends Component implements Character {
     }
 
     public void move() {
-        int signX = 0, signY = 0;
-
-        signX = switch (travelDir) {
+        int signX = switch (travelDir) {
             case right, up_right, down_right -> 1;
             case left, up_left, down_left -> -1;
             default -> 0;
         };
 
-        signY = switch (travelDir) {
+        int signY = switch (travelDir) {
             case up, up_right, up_left -> -1;
             case down, down_right, down_left -> 1;
             default -> 0;

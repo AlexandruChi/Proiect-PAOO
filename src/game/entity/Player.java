@@ -16,7 +16,7 @@ public class Player {
         Position position = new Position();
         position.xPX = 100;
         position.yPX = 100;
-        character = new CharacterEntity(position, GermanCharacterAssets.characterWeapon1,null, 2, 5, 5);
+        character = new CharacterEntity(position, GermanCharacterAssets.characterWeapon1,null, 1, 5, 5);
     }
 
     public void update() {

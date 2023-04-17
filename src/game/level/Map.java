@@ -2,23 +2,33 @@ package game.level;
 
 import game.level.LevelManager;
 
+import java.awt.*;
+
 public class Map {
-    private LevelManager levelManager;
     private char[][] map;
     private int curentMap;
-    private int width;
-    private int height;
+    public static final int width = 500;
+    public static final int height = 500;
 
     public Map(String file) {
-        levelManager = new LevelManager(file);
-        curentMap = 1;
-        width = levelManager.getWidth();
-        height = levelManager.getHeight();
+        LevelManager.readFile(file);
+        curentMap = 0;
+        if (!loadNextMap()) {
+            // TODO add error
+            System.exit(1);
+        }
     }
 
     public boolean loadNextMap() {
         curentMap++;
-        map = levelManager.loadMap(curentMap);
-        return map != null;
+        if (!LevelManager.loadLevel(curentMap)) {
+            return false;
+        }
+        map = LevelManager.loadMap();
+        return true;
+    }
+
+    public void draw(Graphics graphics) {
+        // TODO map print
     }
 }

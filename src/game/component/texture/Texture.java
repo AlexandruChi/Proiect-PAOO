@@ -1,4 +1,4 @@
-package game.component;
+package game.component.texture;
 
 import game.graphics.ImageLoader;
 
@@ -8,14 +8,6 @@ public class Texture {
     public BufferedImage texture;
     public int width;
     public int height;
-
-    public static Texture make(BufferedImage texture, int size) {
-        return make(texture, size, size);
-    }
-
-    public static Texture make(BufferedImage texture, int width, int height) {
-        return new Texture(texture, width, height);
-    }
 
     public void flip() {
         texture = ImageLoader.flipImage(texture);

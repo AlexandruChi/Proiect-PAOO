@@ -1,5 +1,6 @@
 package game.component;
 
+import game.component.texture.Texture;
 import game.graphics.ImageLoader;
 
 import java.awt.image.BufferedImage;

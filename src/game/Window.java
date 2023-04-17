@@ -2,6 +2,8 @@ package game;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.KeyListener;
 
 public class Window {
@@ -18,6 +20,7 @@ public class Window {
         jFrame.setResizable(true);
         jFrame.setLocationRelativeTo(null);
         jFrame.setVisible(true);
+        jFrame.addComponentListener(new AspectRatio(this));
 
         canvas = new Canvas();
         canvas.setPreferredSize(new Dimension(width, height));
@@ -28,11 +31,11 @@ public class Window {
     }
 
     public int getWidth() {
-        return canvas.getWidth();
+        return jFrame.getWidth();
     }
 
     public int getHeight() {
-        return canvas.getHeight();
+        return jFrame.getHeight();
     }
 
     public Canvas getCanvas() {
@@ -43,5 +46,44 @@ public class Window {
 
     public void setInput(KeyListener keyListener) {
         jFrame.addKeyListener(keyListener);
+    }
+
+    public void setSize(int width, int height) {
+        jFrame.setSize(new Dimension(width, height));
+        canvas.setSize(new Dimension(width, height));
+    }
+}
+
+class AspectRatio extends ComponentAdapter {
+    private final Window window;
+
+    public AspectRatio(Window window) {
+        this.window = window;
+    }
+
+    @Override
+    public void componentResized(ComponentEvent e) {
+        int ratioWidth = 16;
+        int ratioHeight = 9;
+
+        int width = window.getWidth();
+        int height = window.getHeight();
+
+        if (width / ratioWidth < height / ratioHeight) {
+            height = width * ratioHeight / ratioWidth;
+        } else {
+            width = height * ratioWidth / ratioHeight;
+        }
+
+        if (window.getJFrame().getRootPane().getWindowDecorationStyle() == JRootPane.NONE) {
+            GraphicsDevice graphicsDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+            int screenWidth = graphicsDevice.getDisplayMode().getWidth();
+            int screenHeight = graphicsDevice.getDisplayMode().getHeight();
+            int x = (screenWidth - width) / 2;
+            int y = (screenHeight - height) / 2;
+            window.getJFrame().setLocation(x, y);
+        }
+
+        window.setSize(width, height);
     }
 }

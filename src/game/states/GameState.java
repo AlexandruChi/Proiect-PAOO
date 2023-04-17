@@ -1,17 +1,19 @@
 package game.states;
 
-import game.Game;
-import game.entity.Character;
 import game.entity.Player;
+import game.level.Map;
 
 import java.awt.*;
 
 public class GameState extends State {
     Player player;
+    Map map;
 
     //TODO better loading
     public GameState() {
         player = new Player();
+        // TODO save file
+        map = new Map("campaign.blksave");
     }
 
     @Override
@@ -21,6 +23,8 @@ public class GameState extends State {
 
     @Override
     public void draw(Graphics graphics) {
+        // TODO better print
+        map.draw(graphics);
         player.draw(graphics);
     }
 }
