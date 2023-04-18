@@ -2,8 +2,8 @@ package game.entity;
 
 import game.component.*;
 import game.component.Component;
+import game.component.position.Position;
 import game.component.texture.MakeTexture;
-import game.component.texture.Texture;
 
 public class CharacterEntity extends Component implements Character {
 
@@ -78,6 +78,9 @@ public class CharacterEntity extends Component implements Character {
 
         position.xPX = (int)position.tmpX;
         position.yPX = (int)position.tmpY;
+
+        position.x = position.xPX / 32;
+        position.y = position.yPX / 32;
     }
 
     public boolean incHealth(int health) {

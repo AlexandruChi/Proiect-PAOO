@@ -17,10 +17,10 @@ public class Window {
         jFrame = new JFrame(title);
         jFrame.setSize(width, height);
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        jFrame.setResizable(true);
+        jFrame.setResizable(false);
         jFrame.setLocationRelativeTo(null);
         jFrame.setVisible(true);
-        jFrame.addComponentListener(new AspectRatio(this));
+        //jFrame.addComponentListener(new AspectRatio(this));
 
         canvas = new Canvas();
         canvas.setPreferredSize(new Dimension(width, height));

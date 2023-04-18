@@ -1,4 +1,4 @@
-package game.component;
+package game.component.position;
 
 public class Position {
     public int x, y;

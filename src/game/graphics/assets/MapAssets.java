@@ -7,9 +7,9 @@ import game.graphics.ImageLoader;
 public class MapAssets {
     public static final int tileSize = 64;
 
-    public static final String groundPath = "/textures/map/base/ground.png";
-    public static final String waterPath = "/textures/map/base/water.png";
-    public static final String roadPath = "/textures/map/base/road.png";
+    public static final String groundPath = "res/textures/map/base/ground.png";
+    public static final String waterPath = "res/textures/map/base/water.png";
+    public static final String roadPath = "res/textures/map/base/road.png";
     public static Texture ground;
     public static Texture water;
     public static Texture road;

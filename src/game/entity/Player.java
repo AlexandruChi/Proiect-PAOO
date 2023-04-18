@@ -1,7 +1,8 @@
 package game.entity;
 
+import game.Camera;
 import game.Game;
-import game.component.Position;
+import game.component.position.Position;
 import game.graphics.assets.character.GermanCharacterAssets;
 
 import java.awt.*;
@@ -23,8 +24,8 @@ public class Player {
         character.setTravelDir(Game.game.getInput().getDirection());
         character.update();
     }
-    public void draw(Graphics graphics) {
-        character.draw(graphics);
+    public void draw(Graphics graphics, Camera camera) {
+        character.draw(graphics, camera);
     }
 
     public Character getCharacter() {
@@ -33,5 +34,9 @@ public class Player {
 
     public void setCharacter(Character character) {
         this.character = character;
+    }
+
+    public Position getPosition() {
+        return character.getPosition();
     }
 }

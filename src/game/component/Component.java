@@ -1,6 +1,8 @@
 package game.component;
 
+import game.Camera;
 import game.Draw;
+import game.component.position.Position;
 import game.component.texture.Texture;
 
 import java.awt.*;
@@ -24,7 +26,7 @@ public abstract class Component {
         this.position = position;
     }
 
-    public void draw(Graphics graphics) {
-        Draw.draw(graphics, texture, position.xPX, position.yPX);
+    public void draw(Graphics graphics, Camera camera) {
+        Draw.draw(graphics, camera, texture, position.xPX, position.yPX);
     }
 }

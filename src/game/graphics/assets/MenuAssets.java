@@ -4,7 +4,7 @@ import game.graphics.ImageLoader;
 import java.awt.image.BufferedImage;
 
 public class MenuAssets {
-    public final static String startScreenPath = "/textures/menu/start_screen.png";
+    public final static String startScreenPath = "res/textures/menu/start_screen.png";
 
     public static BufferedImage startScreen;
 

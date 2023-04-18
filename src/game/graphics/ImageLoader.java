@@ -11,7 +11,7 @@ import java.util.Objects;
 public class ImageLoader {
     public static BufferedImage loadImage(String path) {
         try {
-            return ImageIO.read(Objects.requireNonNull(ImageLoader.class.getResource(path)));
+            return ImageIO.read(new File(path));
         } catch (IOException e) {
             e.printStackTrace();
         }
