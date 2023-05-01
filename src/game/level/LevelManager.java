@@ -1,16 +1,22 @@
 package game.level;
 
+import game.component.Tile;
+import game.graphics.assets.MapAssets;
+
 import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Vector;
 
 public class LevelManager {
     //TODO read data from file and database
     private static FileReader fileReader;
     private static BufferedReader bufferedReader;
-    private static char[][] map;
+    private static Vector<Tile[][]> map;
+    private static Tile[][] layer1, layer2, layer3, layer4;
+    private static int environment;
     private static int nrMaps;
 
     public static void readFile(String file) {
@@ -55,6 +61,8 @@ public class LevelManager {
                                 return readLevelData();
                             }
                         } catch (NumberFormatException ignored) {}
+                    } else if (data[0].equals("endlevel")) {
+                        return false;
                     }
                 }
             }
@@ -66,30 +74,35 @@ public class LevelManager {
 
     private static boolean readLevelData() {
         boolean readMap = false;
-        map = new char[Map.height][Map.width];
+        boolean readEnv = false;
         try {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 // TODO add more tags
                 String[] data = TextParser.parse(line);
                 if (data.length == 1) {
-                    if (data[0].equals("endlevel")) {
-                        return readMap;
-                    } else if (data[0].equals("map")) {
-                        readMap = true;
-                        try {
-                            for (int i = 0; i < Map.height; i++) {
-                                do {
-                                    line = bufferedReader.readLine();
-                                } while (line.equals(""));
-                                String[] numbers = TextParser.parse(line);
-                                for (int j = 0; j < Map.width; j++) {
-                                    map[i][j] = (char) Integer.parseInt(numbers[j]);
+                    switch (data[0]) {
+                        case "endLevel" -> {
+                            return readMap && readEnv;
+                        }
+                        case "map" -> {
+                            if (!readMap) {
+                                readMap = readMapData();
+                            }
+                        }
+                        case "env" -> {
+                            if (!readEnv) {
+                                readEnv = true;
+                                try {
+                                    do {
+                                        line = bufferedReader.readLine();
+                                    } while (line.equals(""));
+                                    String[] numbers = TextParser.parse(line);
+                                    environment = Integer.parseInt(numbers[0]);
+                                } catch (NumberFormatException e) {
+                                    readEnv = false;
                                 }
                             }
-                        } catch (NumberFormatException e) {
-                            // TODO add error
-                            System.exit(1);
                         }
                     }
                 }
@@ -100,7 +113,112 @@ public class LevelManager {
         return false;
     }
 
-    public static char[][] loadMap() {
+    private static boolean readMapData() {
+        boolean readLayer1 = false;
+        boolean readLayer2 = false;
+        boolean readLayer3 = false;
+        boolean readLayer4 = false;
+
+        Tile[][] layer;
+
+        int yMap = Map.height / Map.mapScale;
+        int xMap = Map.width / Map.mapScale;
+
+        int x = 0, y = 0;
+
+        Tile tile = null;
+        Tile envTile = null;
+
+        try {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                String[] data = TextParser.parse(line);
+                if (data.length == 1) {
+                    if (data[0].equals("endMap")) {
+                        return readLayer1 && readLayer2 && readLayer3 && readLayer4;
+                    }
+                } else if (data.length == 2) {
+                    if (data[0].equals("layer")) {
+                        switch (Integer.parseInt(data[1])) {
+                            case 1 -> {
+                                readLayer1 = true;
+                                x = xMap / Tile.getTileScale(Tile.water);
+                                y = yMap / Tile.getTileScale(Tile.water);
+                                layer1 = new Tile[y][x];
+                                layer = layer1;
+                                tile = Tile.water;
+                                envTile = Tile.envWater;
+                            }
+                            case 2 -> {
+                                readLayer2 = true;
+                                x = xMap / Tile.getTileScale(Tile.ground);
+                                y = yMap / Tile.getTileScale(Tile.ground);
+                                layer2 = new Tile[y][x];
+                                layer = layer2;
+                                tile = Tile.ground;
+                                envTile = Tile.envGround;
+                            }
+                            case 3 -> {
+                                readLayer3 = true;
+                                x = xMap / Tile.getTileScale(Tile.path);
+                                y = yMap / Tile.getTileScale(Tile.path);
+                                layer3 = new Tile[y][x];
+                                layer = layer3;
+                                tile = Tile.path;
+                                envTile = Tile.envPath;
+                            }
+                            case 4 -> {
+                                readLayer4 = true;
+                                x = xMap / Tile.getTileScale(Tile.road);
+                                y = yMap / Tile.getTileScale(Tile.road);
+                                layer4 = new Tile[y][x];
+                                layer = layer4;
+                                tile = Tile.road;
+                                envTile = Tile.envRoad;
+                            }
+                            default -> layer = null;
+                        }
+                        if (layer != null) {
+                            try {
+                                for (int i = 0; i < y; i++) {
+                                    do {
+                                        line = bufferedReader.readLine();
+                                    } while (line.equals(""));
+                                    String[] numbers = TextParser.parse(line);
+                                    for (int j = 0; j < x; j++) {
+                                        switch (Integer.parseInt(numbers[j])) {
+                                            case 1 -> layer[i][j] = tile;
+                                            case 2 -> layer[i][j] = envTile;
+                                            case 0 -> layer[i][j] = null;
+                                            default ->
+                                                // TODO add error
+                                                    System.exit(1);
+                                        }
+                                    }
+                                }
+                            } catch (NumberFormatException e) {
+                                // TODO add error;
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return false;
+    }
+
+    public static Vector<Tile[][]> loadMap() {
+        MapAssets.loadEnvironment(environment);
+
+        map = new Vector<>();
+        map.add(layer1);
+        map.add(layer2);
+        map.add(layer3);
+        map.add(layer4);
+
         return map;
     }
 }

@@ -7,6 +7,9 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.KeyListener;
 
 public class Window {
+
+    // TODO make objectSize depend on screen size;
+    public static final int objectSize = 32;
     private final JFrame jFrame;
     private final Canvas canvas;
 

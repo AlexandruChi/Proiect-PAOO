@@ -1,11 +1,12 @@
 package game.entity;
 
+import game.Game;
 import game.component.*;
-import game.component.Component;
+import game.component.TextureComponent;
 import game.component.position.Position;
 import game.component.texture.MakeTexture;
 
-public class CharacterEntity extends Component implements Character {
+public class CharacterEntity extends TextureComponent implements Character {
 
     //TODO stuff
 
@@ -19,8 +20,8 @@ public class CharacterEntity extends Component implements Character {
     private Animation[][] altAnimation;
     private int curentAnimation;
 
-    public CharacterEntity(Position position, Animation[][] animation, HitBox hitbox, double speed, int health, int maxHealth) {
-        super(position, MakeTexture.make(animation[0][0].texture, animation[0][0].width));
+    public CharacterEntity(Position position, Animation[][] animation, HitBox hitbox, PrintBox printBox, double speed, int health, int maxHealth) {
+        super(position, MakeTexture.make(animation[0][0].texture, animation[0][0].width), printBox);
         this.animation = animation[0][0];
         altAnimation = animation;
         curentAnimation = 0;
@@ -61,6 +62,11 @@ public class CharacterEntity extends Component implements Character {
     }
 
     public void move() {
+
+        // TODO fix and add fractional movement
+
+        boolean canMove = false;
+
         int signX = switch (travelDir) {
             case right, up_right, down_right -> 1;
             case left, up_left, down_left -> -1;
@@ -73,14 +79,27 @@ public class CharacterEntity extends Component implements Character {
             default -> 0;
         };
 
-        position.tmpX += speed * signX;
-        position.tmpY += speed * signY;
+        if (Game.getGame().getMap().canWalkOn(position.xPX + signX, position.yPX + signY)) {
+            canMove = true;
+        } else if (Game.getGame().getMap().canWalkOn(position.xPX + signX, position.yPX)) {
+            canMove = true;
+            signY = 0;
+        } else if (Game.getGame().getMap().canWalkOn(position.xPX, position.yPX + signY)) {
+            canMove = true;
+            signX = 0;
+        }
 
-        position.xPX = (int)position.tmpX;
-        position.yPX = (int)position.tmpY;
 
-        position.x = position.xPX / 32;
-        position.y = position.yPX / 32;
+        if (canMove) {
+            position.tmpX += speed * signX;
+            position.tmpY += speed * signY;
+
+            position.xPX = (int) position.tmpX;
+            position.yPX = (int) position.tmpY;
+
+            position.x = position.xPX / 32;
+            position.y = position.yPX / 32;
+        }
     }
 
     public boolean incHealth(int health) {
@@ -104,5 +123,9 @@ public class CharacterEntity extends Component implements Character {
 
     public void attack(Position position) {
 
+    }
+
+    public double getSpeed() {
+        return speed;
     }
 }

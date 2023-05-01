@@ -17,4 +17,5 @@ public interface Character {
     boolean decHealth(int health);
     void attack(Position position);
     Position getPosition();
+    double getSpeed();
 }

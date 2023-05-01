@@ -9,11 +9,11 @@ import java.awt.*;
 public class StartState extends State {
     @Override
     public void update() {
-        Game.game.loadMainMenu();
+        Game.getGame().loadMainMenu();
     }
 
     @Override
     public void draw(Graphics graphics) {
-        graphics.drawImage(MenuAssets.startScreen, 0, 0, Game.game.getWidth(), Game.game.getHeight(), null);
+        graphics.drawImage(MenuAssets.startScreen, 0, 0, Game.getGame().getWidth(), Game.getGame().getHeight(), null);
     }
 }

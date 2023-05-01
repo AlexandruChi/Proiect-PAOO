@@ -1,6 +1,7 @@
 package game;
 
 import game.graphics.AssetManager;
+import game.level.Map;
 import game.states.GameState;
 import game.states.StartState;
 import game.states.State;
@@ -9,7 +10,7 @@ import java.awt.*;
 import java.awt.image.BufferStrategy;
 
 public class Game implements Runnable {
-    public static Game game = null;
+    private static Game game = null;
     private boolean isRunning;
     private Thread thread;
     private Window window;
@@ -25,14 +26,18 @@ public class Game implements Runnable {
         static State gameState;
     }
 
-    public static Game make(String title, int width, int height) {
+    public static Game getGame() {
         if (game == null) {
-            game = new Game(title, width, height);
+            game = new Game("Beim letzten Weltkrieg", 960, 540);
         }
         return game;
     }
 
-    protected Game(String title, int width, int height) {
+    public Map getMap() {
+        return ((GameState) states.gameState).getMap();
+    }
+
+    private Game(String title, int width, int height) {
         isRunning = false;
         window = new Window(title, width, height);
         input = new Input();

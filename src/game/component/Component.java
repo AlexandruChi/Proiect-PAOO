@@ -9,13 +9,11 @@ import java.awt.*;
 
 public abstract class Component {
     protected Position position;
-    protected Texture texture;
 
     //TODO add screen position getCameraPosition();
 
-    public Component(Position position, Texture texture) {
+    public Component(Position position) {
         this.position = position;
-        this.texture = texture;
     }
 
     public Position getPosition() {
@@ -24,9 +22,5 @@ public abstract class Component {
 
     public void setPosition(Position position) {
         this.position = position;
-    }
-
-    public void draw(Graphics graphics, Camera camera) {
-        Draw.draw(graphics, camera, texture, position.xPX, position.yPX);
     }
 }

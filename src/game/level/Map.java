@@ -2,21 +2,26 @@ package game.level;
 
 import game.Camera;
 import game.Draw;
-import game.component.texture.Texture;
-import game.graphics.assets.MapAssets;
+import game.Window;
+import game.component.Tile;
+import game.component.position.Position;
 
 import java.awt.*;
+import java.util.Vector;
 
 public class Map {
-    public static final char water = 0;
-    public static final char ground = 1;
-    public static final char road = 2;
-
-    private char[][] map;
+    private Vector<Tile[][]> map;
     private int curentMap;
 
-    public static final int width = 5;
-    public static final int height = 5;
+    public static final int mapScale = 2;
+
+    public static final int width = 500;
+    public static final int height = 500;
+
+    public static final int widthPX = width * Window.objectSize;
+    public static final int heightPX = height * Window.objectSize;
+
+    public static final int nrLayers = 4;
 
     public Map(String file) {
         LevelManager.readFile(file);
@@ -37,19 +42,22 @@ public class Map {
     }
 
     public void draw(Graphics graphics, Camera camera) {
-        Texture tile = null;
-        // TODO better map print
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                switch (map[i][j]) {
-                    case 0 -> tile = MapAssets.water;
-                    case 1 -> tile = MapAssets.ground;
-                    case 2 -> tile = MapAssets.road;
-                }
-                if (tile != null) {
-                    Draw.draw(graphics, camera, tile, j * tile.width, i * MapAssets.tileSize);
+        // TODO side tiles
+        Tile tile;
+        for (int l = 0; l < nrLayers; l++) {
+            for (int i = 0; i < height / mapScale / Tile.getLayerScale(l + 1); i++) {
+                for (int j = 0; j < width / mapScale / Tile.getLayerScale(l + 1); j++) {
+                    tile = map.get(l)[i][j];
+                    Draw.draw(graphics, camera, Tile.getTileTexture(tile), j * Tile.getTileScale(tile) * Window.objectSize * Map.mapScale, i * Tile.getTileScale(tile) * Window.objectSize * Map.mapScale);
                 }
             }
         }
+    }
+
+    public boolean canWalkOn(int x, int y) {
+        if (y < 0 || y > heightPX || x < 0 || x > widthPX) {
+            return false;
+        }
+        return true;
     }
 }
