@@ -61,31 +61,4 @@ public class Map {
         }
         return true;
     }
-
-    private int getCorner(int layer, int y, int x) {
-        for (int i = 1; i <= 4; i++) {
-            int difX, difY;
-
-            if (i == 1) {
-                difX = 1;
-                difY = -1;
-            } else if (i == 2) {
-                difX = -1;
-                difY = -1;
-            } else if (i == 3) {
-                difX = -1;
-                difY = 1;
-            } else {
-                difX = 1;
-                difY = 1;
-            }
-
-            if ((map.get(layer)[y + difY][x] != map.get(layer)[y][x]) && (map.get(layer)[y][x + difX] != map.get(layer)[y][x])) {
-                if ((map.get(layer)[y - difY][x] == map.get(layer)[y][x]) && (map.get(layer)[y][x - difX] == map.get(layer)[y][x])) {
-                    return i;
-                }
-            }
-        }
-        return 0;
-    }
 }
