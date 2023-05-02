@@ -5,6 +5,7 @@ import game.Draw;
 import game.Window;
 import game.component.Tile;
 import game.component.position.Position;
+import game.component.texture.Texture;
 
 import java.awt.*;
 import java.util.Vector;
@@ -48,6 +49,17 @@ public class Map {
             for (int i = 0; i < height / mapScale / Tile.getLayerScale(l + 1); i++) {
                 for (int j = 0; j < width / mapScale / Tile.getLayerScale(l + 1); j++) {
                     tile = map.get(l)[i][j];
+                    Texture texture;
+//                    if (Tile.hasCorner(tile)) {
+//                        int corner = getCorner(l, i, j);
+//                        if (corner == 0) {
+//                            texture  = Tile.getTileTexture(tile);
+//                        } else {
+//
+//                        }
+//                    } else {
+//                        texture = Tile.getTileTexture(tile);
+//                    }
                     Draw.draw(graphics, camera, Tile.getTileTexture(tile), j * Tile.getTileScale(tile) * Window.objectSize * Map.mapScale, i * Tile.getTileScale(tile) * Window.objectSize * Map.mapScale);
                 }
             }
@@ -59,5 +71,32 @@ public class Map {
             return false;
         }
         return true;
+    }
+
+    private int getCorner(int layer, int y, int x) {
+        for (int i = 1; i <= 4; i++) {
+            int difX, difY;
+
+            if (i == 1) {
+                difX = 1;
+                difY = -1;
+            } else if (i == 2) {
+                difX = -1;
+                difY = -1;
+            } else if (i == 3) {
+                difX = -1;
+                difY = 1;
+            } else {
+                difX = 1;
+                difY = 1;
+            }
+
+            if ((map.get(layer)[y + difY][x] != map.get(layer)[y][x]) && (map.get(layer)[y][x + difX] != map.get(layer)[y][x])) {
+                if ((map.get(layer)[y - difY][x] == map.get(layer)[y][x]) && (map.get(layer)[y][x - difX] == map.get(layer)[y][x])) {
+                    return i;
+                }
+            }
+        }
+        return 0;
     }
 }

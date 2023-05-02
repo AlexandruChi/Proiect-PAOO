@@ -11,8 +11,6 @@ import java.io.IOException;
 import java.util.Vector;
 
 public class LevelManager {
-    //TODO read data from file and database
-    private static FileReader fileReader;
     private static BufferedReader bufferedReader;
     private static Vector<Tile[][]> map;
     private static Tile[][] layer1, layer2, layer3, layer4;
@@ -21,7 +19,8 @@ public class LevelManager {
 
     public static void readFile(String file) {
         try {
-            fileReader = new FileReader(file);
+            //TODO read data from file and database
+            FileReader fileReader = new FileReader(file);
             bufferedReader = new BufferedReader(fileReader);
             String line = bufferedReader.readLine();
             String[] data = line.split(" ");
