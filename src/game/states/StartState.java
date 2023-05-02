@@ -1,7 +1,6 @@
 package game.states;
 
 import game.Game;
-import game.graphics.AssetManager;
 import game.graphics.assets.MenuAssets;
 
 import java.awt.*;
