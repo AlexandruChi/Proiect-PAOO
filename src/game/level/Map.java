@@ -49,17 +49,6 @@ public class Map {
             for (int i = 0; i < height / mapScale / Tile.getLayerScale(l + 1); i++) {
                 for (int j = 0; j < width / mapScale / Tile.getLayerScale(l + 1); j++) {
                     tile = map.get(l)[i][j];
-                    Texture texture;
-//                    if (Tile.hasCorner(tile)) {
-//                        int corner = getCorner(l, i, j);
-//                        if (corner == 0) {
-//                            texture  = Tile.getTileTexture(tile);
-//                        } else {
-//
-//                        }
-//                    } else {
-//                        texture = Tile.getTileTexture(tile);
-//                    }
                     Draw.draw(graphics, camera, Tile.getTileTexture(tile), j * Tile.getTileScale(tile) * Window.objectSize * Map.mapScale, i * Tile.getTileScale(tile) * Window.objectSize * Map.mapScale);
                 }
             }
