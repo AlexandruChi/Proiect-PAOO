@@ -5,6 +5,7 @@ import game.Draw;
 import game.Window;
 import game.component.Tile;
 import game.component.position.Position;
+import game.component.texture.Texture;
 
 import java.awt.*;
 import java.util.Vector;
@@ -48,6 +49,7 @@ public class Map {
             for (int i = 0; i < height / mapScale / Tile.getLayerScale(l + 1); i++) {
                 for (int j = 0; j < width / mapScale / Tile.getLayerScale(l + 1); j++) {
                     tile = map.get(l)[i][j];
+                    Texture texture;
                     Draw.draw(graphics, camera, Tile.getTileTexture(tile), j * Tile.getTileScale(tile) * Window.objectSize * Map.mapScale, i * Tile.getTileScale(tile) * Window.objectSize * Map.mapScale);
                 }
             }
