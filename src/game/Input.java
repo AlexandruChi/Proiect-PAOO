@@ -9,6 +9,7 @@ import java.util.Set;
 public class Input implements KeyListener {
     private final Set<Direction> validDirections;
     boolean input;
+    boolean sprint;
     Direction direction;
 
     public Input() {
@@ -31,6 +32,8 @@ public class Input implements KeyListener {
             case KeyEvent.VK_S -> addMovement(Direction.down);
             case KeyEvent.VK_A -> addMovement(Direction.left);
             case KeyEvent.VK_D -> addMovement(Direction.right);
+
+            case KeyEvent.VK_SHIFT -> sprint = true;
         }
     }
 
@@ -41,6 +44,8 @@ public class Input implements KeyListener {
             case KeyEvent.VK_S -> subMovement(Direction.down);
             case KeyEvent.VK_A -> subMovement(Direction.left);
             case KeyEvent.VK_D -> subMovement(Direction.right);
+
+            case KeyEvent.VK_SHIFT -> sprint = false;
         }
     }
 
@@ -157,6 +162,10 @@ public class Input implements KeyListener {
             return true;
         }
         return false;
+    }
+
+    public Boolean getSprint() {
+        return sprint;
     }
 
     public Direction getDirection() {

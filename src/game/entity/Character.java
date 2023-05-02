@@ -8,7 +8,6 @@ import java.awt.*;
 
 public interface Character {
     void setTravelDir(Direction direction);
-    void setSpeed(double speed);
     Direction getTravelDir();
     void update();
     void draw(Graphics graphics, Camera camera);
@@ -18,4 +17,5 @@ public interface Character {
     void attack(Position position);
     Position getPosition();
     double getSpeed();
+    public void setSprint(boolean sprint);
 }

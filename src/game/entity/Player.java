@@ -23,11 +23,12 @@ public class Player {
         PrintBox printBox = new PrintBox();
         printBox.difY = 64;
         printBox.difX = 32;
-        character = new CharacterEntity(position, GermanCharacterAssets.characterWeapon1,null, printBox, 10, 5, 5);
+        character = new CharacterEntity(position, GermanCharacterAssets.characterWeapon1,null, printBox, 1, 3, 5, 5);
     }
 
     public void update() {
         character.setTravelDir(Game.getGame().getInput().getDirection());
+        character.setSprint(Game.getGame().getInput().getSprint());
         character.update();
     }
     public void draw(Graphics graphics, Camera camera) {

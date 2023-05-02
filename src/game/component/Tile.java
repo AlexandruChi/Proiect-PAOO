@@ -43,4 +43,30 @@ public enum Tile {
             case envRoad -> MapAssets.envRoad;
         };
     }
+
+    public static Texture getCornerTileTexture(Tile tile) {
+        if (tile == null) {
+            return null;
+        }
+        return switch (tile) {
+            case water -> MapAssets.water;
+            case envWater -> MapAssets.envWater;
+            case ground -> MapAssets.ground;
+            case envGround -> MapAssets.envGround;
+            case path -> MapAssets.path;
+            case envPath -> MapAssets.envPath;
+            case road -> MapAssets.road;
+            case envRoad -> MapAssets.envRoad;
+        };
+    }
+
+    public static boolean hasOrientation(Tile tile) {
+        if (tile == null) {
+            return false;
+        }
+        return switch (tile) {
+            case water, envWater, ground, envGround, path, envPath -> false;
+            case road, envRoad -> true;
+        };
+    }
 }

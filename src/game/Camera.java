@@ -20,28 +20,66 @@ public class Camera extends Component {
     }
 
     public void update() {
-        if (Distance.calculateDistance(new Pair<>((double)position.xPX, (double)position.yPX), new Pair<>((double)player.getPosition().xPX, (double)player.getPosition().yPX)) > cameraDistance) {
-            move(player.getCharacter().getTravelDir());
+        int difX = position.xPX - player.getPosition().xPX;
+        int difY = position.yPX - player.getPosition().yPX;
+
+        if (Math.abs(difX) > cameraDistance || Math.abs(difY) > cameraDistance) {
+            followPlayer();
         }
     }
 
-    private void move(Direction direction) {
-        int signX = switch (direction) {
-            case right, up_right, down_right -> 1;
-            case left, up_left, down_left -> -1;
-            default -> 0;
-        };
+    private void followPlayer() {
+        double speedX = player.getCharacter().getSpeed();
+        double speedY = player.getCharacter().getSpeed();
+        int difX = position.xPX - player.getPosition().xPX;
+        int difY = position.yPX - player.getPosition().yPX;
 
-        int signY = switch (direction) {
-            case up, up_right, up_left -> -1;
-            case down, down_right, down_left -> 1;
-            default -> 0;
-        };
+        int signX, signY;
 
-        position.tmpX += player.getCharacter().getSpeed() * signX;
-        position.tmpY += player.getCharacter().getSpeed() * signY;
+        if (difX != 0) {
+            signX = difX / Math.abs(difX);
+        } else {
+            signX = 0;
+        }
+
+        if (difY != 0) {
+            signY = difY / Math.abs(difY);
+        } else {
+            signY = 0;
+        }
+
+        if (Math.abs(difX) < speedX) {
+            speedX = Math.abs(difX);
+        }
+
+        if (Math.abs(difY) < speedY) {
+            speedY = Math.abs(difY);
+        }
+
+        position.tmpX -= speedX * signX;
+        position.tmpY -= speedY * signY;
 
         position.xPX = (int)position.tmpX;
         position.yPX = (int)position.tmpY;
     }
+
+//    private void move(Direction direction) {
+//        int signX = switch (direction) {
+//            case right, up_right, down_right -> 1;
+//            case left, up_left, down_left -> -1;
+//            default -> 0;
+//        };
+//
+//        int signY = switch (direction) {
+//            case up, up_right, up_left -> -1;
+//            case down, down_right, down_left -> 1;
+//            default -> 0;
+//        };
+//
+//        position.tmpX += player.getCharacter().getSpeed() * signX;
+//        position.tmpY += player.getCharacter().getSpeed() * signY;
+//
+//        position.xPX = (int)position.tmpX;
+//        position.yPX = (int)position.tmpY;
+//    }
 }
