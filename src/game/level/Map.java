@@ -50,7 +50,12 @@ public class Map {
                 for (int j = 0; j < width / mapScale / Tile.getLayerScale(l + 1); j++) {
                     tile = map.get(l)[i][j];
                     Texture texture;
-                    Draw.draw(graphics, camera, Tile.getTileTexture(tile), j * Tile.getTileScale(tile) * Window.objectSize * Map.mapScale, i * Tile.getTileScale(tile) * Window.objectSize * Map.mapScale);
+                    if (Tile.hasCorner(tile)) {
+
+                    } else {
+                        texture = Tile.getTileTexture(tile);
+                    }
+                    Draw.draw(graphics, camera, texture, j * Tile.getTileScale(tile) * Window.objectSize * Map.mapScale, i * Tile.getTileScale(tile) * Window.objectSize * Map.mapScale);
                 }
             }
         }
@@ -61,5 +66,36 @@ public class Map {
             return false;
         }
         return true;
+    }
+
+    private int getCorner(int layer, int y, int x) {
+        if (y > 0 && y < height / mapScale && x > 0 && x < width / mapScale) {
+            return 0;
+        }
+
+        for (int i = 1; i <= 4; i++) {
+            int difX, difY;
+
+            if (i == 1) {
+                difX = 1;
+                difY = -1;
+            } else if (i == 2) {
+                difX = -1;
+                difY = -1;
+            } else if (i == 3) {
+                difX = -1;
+                difY = 1;
+            } else {
+                difX = 1;
+                difY = 1;
+            }
+
+            if ((map.get(layer)[y + difY][x] != map.get(layer)[y][x]) && (map.get(layer)[y][x + difX] != map.get(layer)[y][x])) {
+                if ((map.get(layer)[y - difY][x] == map.get(layer)[y][x]) && (map.get(layer)[y][x - difX] == map.get(layer)[y][x])) {
+                    return i;
+                }
+            }
+        }
+        return 0;
     }
 }
