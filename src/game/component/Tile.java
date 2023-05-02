@@ -69,4 +69,14 @@ public enum Tile {
             case road, envRoad -> true;
         };
     }
+
+    public static boolean hasCorner(Tile tile) {
+        if (tile == null) {
+            return false;
+        }
+        return switch (tile) {
+            case water -> false;
+            case envWater, ground, envGround, path, envPath, road, envRoad -> true;
+        };
+    }
 }
