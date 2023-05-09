@@ -154,14 +154,10 @@ public class CharacterEntity extends TextureComponent implements Character {
     }
 
     private void updateSpeed() {
-        if (travelDir != Direction.stop) {
-            if (sprint) {
-                speed = sprintSpeed;
-            } else {
-                speed = normalSpeed;
-            }
+        if (sprint) {
+            speed = sprintSpeed;
         } else {
-            speed = 0;
+            speed = normalSpeed;
         }
     }
 

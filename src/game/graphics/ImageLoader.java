@@ -36,11 +36,11 @@ public class ImageLoader {
             for (int x = 0; x < width; x++) {
                 if (corner == 1 && x > y) {
                     imageWithAlpha.setRGB(x, y, 0x00FFFFFF);
-                } else if (corner == 2 && x > height - y - 1) {
+                } else if (corner == 4 && x > height - y - 1) {
                     imageWithAlpha.setRGB(x, y, 0x00FFFFFF);
                 } else if (corner == 3 && x < y) {
                     imageWithAlpha.setRGB(x, y, 0x00FFFFFF);
-                } else if (corner == 4 && x < width - y - 1) {
+                } else if (corner == 2 && x < width - y - 1) {
                     imageWithAlpha.setRGB(x, y, 0x00FFFFFF);
                 }
             }

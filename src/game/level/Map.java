@@ -52,8 +52,8 @@ public class Map {
                 for (int j = 0; j < width / mapScale / Tile.getLayerScale(l + 1); j++) {
                     tile = map.get(l)[i][j];
                     Texture texture;
-                    if (Tile.hasCorner(tile)) {
-                        texture = MakeTexture.make(ImageLoader.removeCorner(Tile.getTileTexture(tile).texture, getCorner(l, i, j)), Tile.getTileTexture(tile).width, Tile.getTileTexture(tile).height);
+                    if (Tile.hasCorner(tile) && getCorner(l, i, j) != 0) {
+                        texture = Tile.getTileCornerTexture(tile)[getCorner(l, i, j) - 1];
                     } else {
                         texture = Tile.getTileTexture(tile);
                     }

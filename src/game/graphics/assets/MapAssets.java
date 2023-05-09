@@ -32,12 +32,33 @@ public class MapAssets {
     public static Texture envPath;
     public static Texture envRoad;
 
+    public static Texture[] waterCorner;
+    public static Texture[] groundCorner;
+    public static Texture[] pathCorner;
+    public static Texture[] roadCorner;
+    public static Texture[] envWaterCorner;
+    public static Texture[] envGroundCorner;
+    public static Texture[] envPathCorner;
+    public static Texture[] envRoadCorner;
+
     public static void load() {
         SpriteSheet spriteSheet = new SpriteSheet(ImageLoader.loadImage(basePath));
         water = MakeTexture.make(spriteSheet.crop(0, 0, textureSize), waterTileSize);
         ground = MakeTexture.make(spriteSheet.crop(1, 0, textureSize), groundTileSize);
         path = MakeTexture.make(spriteSheet.crop(2, 0, textureSize), pathTileSize);
         road = MakeTexture.make(spriteSheet.crop(3, 0, textureSize), roadTileSize);
+
+        waterCorner = new Texture[4];
+        groundCorner = new Texture[4];
+        pathCorner = new Texture[4];
+        roadCorner = new Texture[4];
+
+        for (int i = 1; i <= 4; i++) {
+            waterCorner[i - 1] = MakeTexture.make(ImageLoader.removeCorner(water.texture, i), waterTileSize);
+            groundCorner[i - 1] = MakeTexture.make(ImageLoader.removeCorner(ground.texture, i), groundTileSize);
+            pathCorner[i - 1] = MakeTexture.make(ImageLoader.removeCorner(path.texture, i), pathTileSize);
+            roadCorner[i - 1] = MakeTexture.make(ImageLoader.removeCorner(road.texture, i), roadTileSize);
+        }
     }
 
     public static void loadEnvironment(int environment) {
@@ -50,5 +71,17 @@ public class MapAssets {
         envGround = MakeTexture.make(spriteSheet.crop(1, 0, textureSize), groundTileSize);
         envPath = MakeTexture.make(spriteSheet.crop(2, 0, textureSize), pathTileSize);
         envRoad = MakeTexture.make(spriteSheet.crop(3, 0, textureSize), roadTileSize);
+
+        envWaterCorner = new Texture[4];
+        envGroundCorner = new Texture[4];
+        envPathCorner = new Texture[4];
+        envRoadCorner = new Texture[4];
+
+        for (int i = 1; i <= 4; i++) {
+            envWaterCorner[i - 1] = MakeTexture.make(ImageLoader.removeCorner(envWater.texture, i), waterTileSize);
+            envGroundCorner[i - 1] = MakeTexture.make(ImageLoader.removeCorner(envGround.texture, i), groundTileSize);
+            envPathCorner[i - 1] = MakeTexture.make(ImageLoader.removeCorner(envPath.texture, i), pathTileSize);
+            envRoadCorner[i - 1] = MakeTexture.make(ImageLoader.removeCorner(envRoad.texture, i), roadTileSize);
+        }
     }
 }

@@ -79,4 +79,44 @@ public enum Tile {
             case envWater, ground, envGround, path, envPath, road, envRoad -> true;
         };
     }
+
+    public static Texture[] getTileCornerTexture(Tile tile) {
+        if (tile == null) {
+            return null;
+        }
+        return switch (tile) {
+            case water -> MapAssets.waterCorner;
+            case envWater -> MapAssets.envWaterCorner;
+            case ground -> MapAssets.groundCorner;
+            case envGround -> MapAssets.envGroundCorner;
+            case path -> MapAssets.pathCorner;
+            case envPath -> MapAssets.envPathCorner;
+            case road -> MapAssets.roadCorner;
+            case envRoad -> MapAssets.envRoadCorner;
+        };
+    }
+
+    public static Tile getEnv(Tile tile) {
+        if (tile == null) {
+            return null;
+        }
+        return switch (tile) {
+            case water, envWater -> envWater;
+            case ground, envGround -> envGround;
+            case path, envPath -> envPath;
+            case road, envRoad -> envRoad;
+        };
+    }
+
+    public static Tile getNormal(Tile tile) {
+        if (tile == null) {
+            return null;
+        }
+        return switch (tile) {
+            case water, envWater -> water;
+            case ground, envGround -> ground;
+            case path, envPath -> path;
+            case road, envRoad -> road;
+        };
+    }
 }

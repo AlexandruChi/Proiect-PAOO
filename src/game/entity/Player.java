@@ -23,7 +23,7 @@ public class Player {
         PrintBox printBox = new PrintBox();
         printBox.difY = 64;
         printBox.difX = 32;
-        character = new CharacterEntity(position, GermanCharacterAssets.characterWeapon1,null, printBox, 1, 3, 5, 5);
+        character = new CharacterEntity(position, GermanCharacterAssets.characterWeapon1,null, printBox, 1, 10, 5, 5);
     }
 
     public void update() {

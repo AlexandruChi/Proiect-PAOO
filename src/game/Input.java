@@ -35,6 +35,8 @@ public class Input implements KeyListener {
 
             case KeyEvent.VK_SHIFT -> sprint = true;
         }
+
+        System.out.println(direction);
     }
 
     @Override
