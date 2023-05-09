@@ -32,29 +32,17 @@ public class ImageLoader {
         BufferedImage imageWithAlpha = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         imageWithAlpha.getGraphics().drawImage(image, 0, 0, null);
 
-        int startX = 0;
-        int startY = 0;
-        int endX = width;
-        int endY = height;
-
-        // TODO kill chatGPT and fix
-
-        if (corner == 1 || corner == 2) {
-            endX -= height;
-        }
-        if (corner == 2 || corner == 3) {
-            endY -= height;
-        }
-        if (corner == 3 || corner == 4) {
-            startY += height;
-        }
-        if (corner == 4 || corner == 1) {
-            startX += height;
-        }
-
-        for (int x = startX; x < endX; x++) {
-            for (int y = startY; y < endY; y++) {
-                imageWithAlpha.setRGB(x, y, imageWithAlpha.getRGB(x, y) & 0x00FFFFFF);
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                if (corner == 1 && x > y) {
+                    imageWithAlpha.setRGB(x, y, 0x00FFFFFF);
+                } else if (corner == 2 && x > height - y - 1) {
+                    imageWithAlpha.setRGB(x, y, 0x00FFFFFF);
+                } else if (corner == 3 && x < y) {
+                    imageWithAlpha.setRGB(x, y, 0x00FFFFFF);
+                } else if (corner == 4 && x < width - y - 1) {
+                    imageWithAlpha.setRGB(x, y, 0x00FFFFFF);
+                }
             }
         }
 

@@ -5,7 +5,9 @@ import game.Draw;
 import game.Window;
 import game.component.Tile;
 import game.component.position.Position;
+import game.component.texture.MakeTexture;
 import game.component.texture.Texture;
+import game.graphics.ImageLoader;
 
 import java.awt.*;
 import java.util.Vector;
@@ -51,7 +53,7 @@ public class Map {
                     tile = map.get(l)[i][j];
                     Texture texture;
                     if (Tile.hasCorner(tile)) {
-
+                        texture = MakeTexture.make(ImageLoader.removeCorner(Tile.getTileTexture(tile).texture, getCorner(l, i, j)), Tile.getTileTexture(tile).width, Tile.getTileTexture(tile).height);
                     } else {
                         texture = Tile.getTileTexture(tile);
                     }
@@ -69,7 +71,7 @@ public class Map {
     }
 
     private int getCorner(int layer, int y, int x) {
-        if (y > 0 && y < height / mapScale && x > 0 && x < width / mapScale) {
+        if (y <= 0 || y >= (height / mapScale / Tile.getLayerScale(layer + 1)) - 1 || x <= 0 || x >= (width / mapScale / Tile.getLayerScale(layer + 1)) - 1) {
             return 0;
         }
 
