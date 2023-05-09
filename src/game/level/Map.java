@@ -64,7 +64,7 @@ public class Map {
     }
 
     public boolean canWalkOn(int x, int y) {
-        if (y < 0 || y > heightPX || x < 0 || x > widthPX) {
+        if (y < 0 || y >= heightPX || x < 0 || x >= widthPX) {
             return false;
         }
         return true;
