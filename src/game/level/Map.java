@@ -45,7 +45,7 @@ public class Map {
     }
 
     public void draw(Graphics graphics, Camera camera) {
-        // TODO side tiles
+        // TODO side tiles (make better)
         Tile tile;
         for (int l = 0; l < nrLayers; l++) {
             for (int i = 0; i < height / mapScale / Tile.getLayerScale(l + 1); i++) {
@@ -54,6 +54,11 @@ public class Map {
                     Texture texture;
                     if (Tile.hasCorner(tile) && getCorner(l, i, j) != 0) {
                         texture = Tile.getTileCornerTexture(tile)[getCorner(l, i, j) - 1];
+
+                        if (hasOverlap(l, i, j)) {
+                            Draw.draw(graphics, camera, Tile.getTileTexture(Tile.getNormal(tile)), j * Tile.getTileScale(tile) * Window.objectSize * Map.mapScale, i * Tile.getTileScale(tile) * Window.objectSize * Map.mapScale);
+                        }
+
                     } else {
                         texture = Tile.getTileTexture(tile);
                     }
@@ -93,11 +98,19 @@ public class Map {
             }
 
             if ((map.get(layer)[y + difY][x] != map.get(layer)[y][x]) && (map.get(layer)[y][x + difX] != map.get(layer)[y][x])) {
-                if ((map.get(layer)[y - difY][x] == map.get(layer)[y][x]) && (map.get(layer)[y][x - difX] == map.get(layer)[y][x])) {
+                if ((Tile.getNormal(map.get(layer)[y - difY][x]) == Tile.getNormal(map.get(layer)[y][x])) && (Tile.getNormal(map.get(layer)[y][x - difX]) == Tile.getNormal(map.get(layer)[y][x]))) {
                     return i;
                 }
             }
         }
         return 0;
+    }
+
+    private boolean hasOverlap(int layer, int y, int x) {
+        if (y <= 0 || y >= (height / mapScale / Tile.getLayerScale(layer + 1)) - 1 || x <= 0 || x >= (width / mapScale / Tile.getLayerScale(layer + 1)) - 1) {
+            return false;
+        }
+
+        return Tile.getNormal(map.get(layer)[y][x]) == Tile.getNormal(map.get(layer)[y][x + 1]) && Tile.getNormal(map.get(layer)[y][x]) == Tile.getNormal(map.get(layer)[y][x - 1]) && Tile.getNormal(map.get(layer)[y][x]) == Tile.getNormal(map.get(layer)[y + 1][x]) && Tile.getNormal(map.get(layer)[y][x]) == Tile.getNormal(map.get(layer)[y - 1][x]);
     }
 }
