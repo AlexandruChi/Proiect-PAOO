@@ -19,6 +19,11 @@ public class LevelManager {
     private static int environment;
     private static int nrMaps;
 
+    private static int nrTrees;
+    private static int nrEnvTrees;
+    private static int nrRocks;
+    private static int nrEnvRocks;
+
     public static void readFile(String file) {
         try {
             fileReader = new FileReader(file);
@@ -75,6 +80,7 @@ public class LevelManager {
     private static boolean readLevelData() {
         boolean readMap = false;
         boolean readEnv = false;
+        boolean readObjects = false;
         try {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
@@ -83,12 +89,15 @@ public class LevelManager {
                 if (data.length == 1) {
                     switch (data[0]) {
                         case "endLevel" -> {
-                            return readMap && readEnv;
+                            return readMap && readEnv && readObjects;
                         }
                         case "map" -> {
                             if (!readMap) {
                                 readMap = readMapData();
                             }
+                        }
+                        case "objects" -> {
+                            readObjects = readObjectsData();
                         }
                         case "env" -> {
                             if (!readEnv) {
@@ -110,6 +119,88 @@ public class LevelManager {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        return false;
+    }
+
+    private static boolean readObjectsData() {
+        boolean readNrTrees = false;
+        boolean readNrEnvTrees = false;
+        boolean readNrRocks = false;
+        boolean readNrEnvRocks = false;
+
+        try {
+            String line;
+
+            while ((line = bufferedReader.readLine()) != null) {
+                String[] data = TextParser.parse(line);
+                if (data.length == 1) {
+                    switch (data[0]) {
+                        case "endObjects" -> {
+                            return readNrTrees && readNrEnvTrees && readNrRocks && readNrEnvRocks;
+                        }
+                        case "nrTrees" -> {
+                            if (!readNrTrees) {
+                                readNrTrees = true;
+                                try {
+                                    do {
+                                        line = bufferedReader.readLine();
+                                    } while (line.equals(""));
+                                    String[] numbers = TextParser.parse(line);
+                                    nrTrees = Integer.parseInt(numbers[0]);
+                                } catch (NumberFormatException e) {
+                                    readNrTrees = false;
+                                }
+                            }
+                        }
+                        case "nrEnvTrees" -> {
+                            if (!readNrEnvTrees) {
+                                readNrEnvTrees = true;
+                                try {
+                                    do {
+                                        line = bufferedReader.readLine();
+                                    } while (line.equals(""));
+                                    String[] numbers = TextParser.parse(line);
+                                    nrEnvTrees = Integer.parseInt(numbers[0]);
+                                } catch (NumberFormatException e) {
+                                    readNrEnvTrees = false;
+                                }
+                            }
+                        }
+                        case "nrRocks" -> {
+                            if (!readNrRocks) {
+                                readNrRocks = true;
+                                try {
+                                    do {
+                                        line = bufferedReader.readLine();
+                                    } while (line.equals(""));
+                                    String[] numbers = TextParser.parse(line);
+                                    nrRocks = Integer.parseInt(numbers[0]);
+                                } catch (NumberFormatException e) {
+                                    readNrRocks = false;
+                                }
+                            }
+                        }
+                        case "nrEnvRocks" -> {
+                            if (!readNrEnvRocks) {
+                                readNrEnvRocks = true;
+                                try {
+                                    do {
+                                        line = bufferedReader.readLine();
+                                    } while (line.equals(""));
+                                    String[] numbers = TextParser.parse(line);
+                                    nrEnvRocks = Integer.parseInt(numbers[0]);
+                                } catch (NumberFormatException e) {
+                                    readNrEnvRocks = false;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         return false;
     }
 
@@ -220,6 +311,26 @@ public class LevelManager {
         map.add(layer4);
 
         return map;
+    }
+
+    public static int getEnvironment() {
+        return environment;
+    }
+
+    public static int getNrTrees() {
+        return nrTrees;
+    }
+
+    public static int getNrEnvTrees() {
+        return nrEnvTrees;
+    }
+
+    public static int getNrRocks() {
+        return nrRocks;
+    }
+
+    public static int getNrEnvRocks() {
+        return nrEnvRocks;
     }
 }
 

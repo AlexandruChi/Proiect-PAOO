@@ -5,12 +5,14 @@ import game.Draw;
 import game.Window;
 import game.component.ObjectTile;
 import game.component.Pair;
+import game.component.RandomNumber;
 import game.component.Tile;
 import game.component.position.Corner;
 import game.component.position.RelativeCoordinates;
 import game.component.texture.Texture;
 
 import java.awt.*;
+import java.util.Random;
 import java.util.Vector;
 
 // TODO better coordinates system
@@ -53,12 +55,130 @@ public class Map {
         }
         map = LevelManager.loadMap();
 
-        // TODO add loading for objects from save
-        if (objectMap == null) {
+        objectMap = new ObjectTile[height][width];
 
-        }
+        // TODO add loading for objects from save
+
+        generateObjects(objectMap);
 
         return true;
+    }
+
+    private void generateObjects(ObjectTile[][] objectMap) {
+
+        for (int i = 0; i < 2; i++) {
+            ObjectTile tile = switch (i) {
+                case 0 -> ObjectTile.tree;
+                case 1 -> ObjectTile.rock;
+                default -> null;
+            };
+
+            int nrObjects = switch (tile) {
+                case tree -> nrTrees;
+                case rock -> nrRocks;
+            };
+
+            int nrEnvObjects = switch (tile) {
+                case tree -> nrEnvTrees;
+                case rock -> nrEnvRocks;
+            };
+
+            for (int j = 0; j < nrObjects; j++) {
+
+                int timer = 0;
+
+                while (timer < 100) {
+                    timer++;
+
+                    int x = RandomNumber.randomNumber(1, width - 1);
+                    int y = RandomNumber.randomNumber(1, height - 1);
+
+                    if (
+                                    objectMap[y][x] == null &&
+                                    objectMap[y - 1][x] == null &&
+                                    objectMap[y + 1][x] == null &&
+                                    objectMap[y][x - 1] == null &&
+                                    objectMap[y][x + 1] == null &&
+                                    objectMap[y - 1][x - 1] == null &&
+                                    objectMap[y - 1][x + 1] == null &&
+                                    objectMap[y + 1][x - 1] == null &&
+                                    objectMap[y + 1][x + 1] == null &&
+
+                                    map.get(3)[y / mapScale / Tile.getLayerScale(4)][x / mapScale / Tile.getLayerScale(4)] == null &&
+                                    map.get(2)[y / mapScale / Tile.getLayerScale(3)][x / mapScale / Tile.getLayerScale(3)] == null &&
+                                    map.get(1)[y / mapScale / Tile.getLayerScale(2)][x / mapScale / Tile.getLayerScale(2)] != null
+                        ) {
+
+                        if (map.get(1)[y / mapScale / Tile.getLayerScale(2)][x / mapScale / Tile.getLayerScale(2)] == Tile.ground) {
+                            if (getCorner(1, y / mapScale / Tile.getLayerScale(2), x / mapScale / Tile.getLayerScale(2)) == 0) {
+                                objectMap[y][x] = tile;
+                            } else {
+                                int groundTileX = x / mapScale / Tile.getLayerScale(2);
+                                int groundTileY = y / mapScale / Tile.getLayerScale(2);
+
+                                if (!Corner.isInCorner(Tile.getLayerScale(2) * mapScale, RelativeCoordinates.getRelativeCoordinates(new Pair<>(groundTileX * mapScale * Tile.getLayerScale(2), groundTileY * mapScale * Tile.getLayerScale(2)), new Pair<>((x), (y))), getCorner(1, groundTileY, groundTileX))) {
+                                    objectMap[y][x] = tile;
+                                }
+                            }
+                        } else if (
+                                        map.get(1)[y / mapScale / Tile.getLayerScale(2)][x / mapScale / Tile.getLayerScale(2)] == Tile.envGround &&
+                                        getCorner(1, y / mapScale / Tile.getLayerScale(2), x / mapScale / Tile.getLayerScale(2)) != 0 &&
+                                        hasOverlap(1, y / mapScale / Tile.getLayerScale(2), x / mapScale / Tile.getLayerScale(2))
+                        ) {
+
+                            int groundTileX = x / mapScale / Tile.getLayerScale(2);
+                            int groundTileY = y / mapScale / Tile.getLayerScale(2);
+
+                            if (!Corner.isInCorner(Tile.getLayerScale(2) * mapScale, RelativeCoordinates.getRelativeCoordinates(new Pair<>(groundTileX * mapScale * Tile.getLayerScale(2), groundTileY * mapScale * Tile.getLayerScale(2)), new Pair<>((x), (y))), getCorner(1, groundTileY, groundTileX))) {
+                                objectMap[y][x] = tile;
+                            }
+                        }
+                    }
+                }
+            }
+
+            for (int j = 0; j < nrEnvObjects; j++) {
+
+                int timer = 0;
+
+                while (timer < 100) {
+                    timer++;
+
+                    int x = RandomNumber.randomNumber(1, width - 1);
+                    int y = RandomNumber.randomNumber(1, height - 1);
+
+                    if (
+                            objectMap[y][x] == null &&
+                                    objectMap[y - 1][x] == null &&
+                                    objectMap[y + 1][x] == null &&
+                                    objectMap[y][x - 1] == null &&
+                                    objectMap[y][x + 1] == null &&
+                                    objectMap[y - 1][x - 1] == null &&
+                                    objectMap[y - 1][x + 1] == null &&
+                                    objectMap[y + 1][x - 1] == null &&
+                                    objectMap[y + 1][x + 1] == null &&
+
+                                    map.get(3)[y / mapScale / Tile.getLayerScale(4)][x / mapScale / Tile.getLayerScale(4)] == null &&
+                                    map.get(2)[y / mapScale / Tile.getLayerScale(3)][x / mapScale / Tile.getLayerScale(3)] == null &&
+                                    map.get(1)[y / mapScale / Tile.getLayerScale(2)][x / mapScale / Tile.getLayerScale(2)] != null
+                    ) {
+
+                        if (map.get(1)[y / mapScale / Tile.getLayerScale(2)][x / mapScale / Tile.getLayerScale(2)] == Tile.envGround) {
+                            if (getCorner(1, y / mapScale / Tile.getLayerScale(2), x / mapScale / Tile.getLayerScale(2)) == 0) {
+                                objectMap[y][x] = tile;
+                            } else {
+                                int groundTileX = x / mapScale / Tile.getLayerScale(2);
+                                int groundTileY = y / mapScale / Tile.getLayerScale(2);
+
+                                if (!Corner.isInCorner(Tile.getLayerScale(2) * mapScale, RelativeCoordinates.getRelativeCoordinates(new Pair<>(groundTileX * mapScale * Tile.getLayerScale(2), groundTileY * mapScale * Tile.getLayerScale(2)), new Pair<>((x), (y))), getCorner(1, groundTileY, groundTileX))) {
+                                    objectMap[y][x] = tile;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public void draw(Graphics graphics, Camera camera) {

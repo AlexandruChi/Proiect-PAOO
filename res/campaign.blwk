@@ -6,6 +6,26 @@ nrLevels 1
 
         1
 
+    <objects>
+
+        <nrTrees>
+
+            250
+
+        <nrEnvTrees>
+
+            200
+
+        <nrRocks>
+
+            100
+
+        <nrEnvRocks>
+
+            100
+
+    <endObjects>
+
     <map>
 
         <layer 1>
