@@ -75,7 +75,6 @@ public class CharacterEntity extends TextureComponent implements Character {
 
         boolean canMove = false;
         double tmpSpeed = speed;
-
         int signX = 0, signY = 0;
 
         while (tmpSpeed != 0) {
@@ -120,9 +119,6 @@ public class CharacterEntity extends TextureComponent implements Character {
 
             position.xPX = (int) position.tmpX;
             position.yPX = (int) position.tmpY;
-
-            position.x = position.xPX / 32;
-            position.y = position.yPX / 32;
         }
     }
 

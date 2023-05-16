@@ -1,11 +1,6 @@
 package game.component;
 
-import game.Camera;
-import game.Draw;
 import game.component.position.Position;
-import game.component.texture.Texture;
-
-import java.awt.*;
 
 public abstract class Component {
     protected Position position;

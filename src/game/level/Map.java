@@ -3,6 +3,7 @@ package game.level;
 import game.Camera;
 import game.Draw;
 import game.Window;
+import game.component.ObjectTile;
 import game.component.Pair;
 import game.component.Tile;
 import game.component.position.Corner;
@@ -16,7 +17,15 @@ import java.util.Vector;
 
 public class Map {
     private Vector<Tile[][]> map;
+
+    private ObjectTile[][] objectMap;
+
     private int curentMap;
+
+    private int nrTrees;
+    private int nrEnvTrees;
+    private int nrRocks;
+    private int nrEnvRocks;
 
     public static final int mapScale = 2;
 
@@ -43,6 +52,12 @@ public class Map {
             return false;
         }
         map = LevelManager.loadMap();
+
+        // TODO add loading for objects from save
+        if (objectMap == null) {
+
+        }
+
         return true;
     }
 

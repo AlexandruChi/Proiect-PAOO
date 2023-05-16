@@ -17,5 +17,5 @@ public interface Character {
     void attack(Position position);
     Position getPosition();
     double getSpeed();
-    public void setSprint(boolean sprint);
+    void setSprint(boolean sprint);
 }

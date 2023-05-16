@@ -1,6 +1,7 @@
 package game.graphics.assets;
 
 import game.Window;
+import game.component.ObjectTile;
 import game.component.Tile;
 import game.component.texture.MakeTexture;
 import game.component.texture.Texture;
@@ -15,8 +16,10 @@ public class MapAssets {
     public static final int roadTileSize = Window.objectSize * Map.mapScale * Tile.getTileScale(Tile.road);
 
 
+
     public static final int textureSize = 500;
 
+    public static final int base = 0;
     public static final int beach = 1;
     public static final int forest = 2;
     public static final int city = 3;
@@ -27,10 +30,14 @@ public class MapAssets {
     public static Texture ground;
     public static Texture path;
     public static Texture road;
+    public static Texture tree;
+    public static Texture rock;
     public static Texture envWater;
     public static Texture envGround;
     public static Texture envPath;
     public static Texture envRoad;
+    public static Texture envTree;
+    public static Texture envRocks;
 
     public static Texture[] waterCorner;
     public static Texture[] groundCorner;
@@ -47,6 +54,9 @@ public class MapAssets {
         ground = MakeTexture.make(spriteSheet.crop(1, 0, textureSize), groundTileSize);
         path = MakeTexture.make(spriteSheet.crop(2, 0, textureSize), pathTileSize);
         road = MakeTexture.make(spriteSheet.crop(3, 0, textureSize), roadTileSize);
+
+        tree = MakeTexture.make(spriteSheet.crop(0, 1, textureSize), ObjectTile.getEnvObjectTileScale(ObjectTile.tree, base));
+        rock = MakeTexture.make(spriteSheet.crop(1, 1, textureSize), ObjectTile.getEnvObjectTileScale(ObjectTile.rock, base));
 
         waterCorner = new Texture[4];
         groundCorner = new Texture[4];

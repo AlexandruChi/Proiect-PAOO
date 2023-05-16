@@ -15,11 +15,13 @@ public class Player {
         //TODO better thing for position
         //TODO better hitbox
         //TODO const for health and speed
+
         Position position = new Position();
         position.tmpX = 12300;
         position.tmpY = 13800;
         position.xPX = 12300;
         position.yPX = 13800;
+
         PrintBox printBox = new PrintBox();
         printBox.difY = 64;
         printBox.difX = 32;
