@@ -28,23 +28,17 @@ public enum Tile {
         };
     }
 
-    public static Texture getTileTexture(Tile tile) {
-        if (tile == null) {
-            return null;
-        }
-        return switch (tile) {
-            case water -> MapAssets.water;
-            case envWater -> MapAssets.envWater;
-            case ground -> MapAssets.ground;
-            case envGround -> MapAssets.envGround;
-            case path -> MapAssets.path;
-            case envPath -> MapAssets.envPath;
-            case road -> MapAssets.road;
-            case envRoad -> MapAssets.envRoad;
+    public static Tile getLayerTile(int layer) {
+        return switch (layer) {
+            case 1 -> water;
+            case 2 -> ground;
+            case 3 -> path;
+            case 4 -> road;
+            default -> null;
         };
     }
 
-    public static Texture getCornerTileTexture(Tile tile) {
+    public static Texture getTileTexture(Tile tile) {
         if (tile == null) {
             return null;
         }
@@ -117,6 +111,16 @@ public enum Tile {
             case ground, envGround -> ground;
             case path, envPath -> path;
             case road, envRoad -> road;
+        };
+    }
+
+    public static boolean canWalkOn(Tile tile) {
+        if (tile == null) {
+            return false;
+        }
+        return switch (tile) {
+            case ground, envGround, path, envPath, road, envRoad -> true;
+            default -> false;
         };
     }
 }

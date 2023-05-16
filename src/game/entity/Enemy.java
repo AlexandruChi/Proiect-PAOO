@@ -8,10 +8,10 @@ import game.graphics.assets.character.GermanCharacterAssets;
 
 import java.awt.*;
 
-public class Player {
+public abstract class Enemy {
     protected Character character;
 
-    public Player() {
+    public Enemy() {
         //TODO better thing for position
         //TODO better hitbox
         //TODO const for health and speed
@@ -26,11 +26,7 @@ public class Player {
         character = new CharacterEntity(position, GermanCharacterAssets.characterWeapon1,null, printBox, 1, 10, 5, 5);
     }
 
-    public void update() {
-        character.setTravelDir(Game.getGame().getInput().getDirection());
-        character.setSprint(Game.getGame().getInput().getSprint());
-        character.update();
-    }
+    public abstract void update();
     public void draw(Graphics graphics, Camera camera) {
         character.draw(graphics, camera);
     }

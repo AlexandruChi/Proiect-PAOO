@@ -3,14 +3,16 @@ package game.level;
 import game.Camera;
 import game.Draw;
 import game.Window;
+import game.component.Pair;
 import game.component.Tile;
-import game.component.position.Position;
-import game.component.texture.MakeTexture;
+import game.component.position.Corner;
+import game.component.position.RelativeCoordinates;
 import game.component.texture.Texture;
-import game.graphics.ImageLoader;
 
 import java.awt.*;
 import java.util.Vector;
+
+// TODO better coordinates system
 
 public class Map {
     private Vector<Tile[][]> map;
@@ -45,7 +47,6 @@ public class Map {
     }
 
     public void draw(Graphics graphics, Camera camera) {
-        // TODO side tiles (make better)
         Tile tile;
         for (int l = 0; l < nrLayers; l++) {
             for (int i = 0; i < height / mapScale / Tile.getLayerScale(l + 1); i++) {
@@ -69,10 +70,34 @@ public class Map {
     }
 
     public boolean canWalkOn(int x, int y) {
+
+        // Tile -> layer indexat de la 1
+        // Map  -> layer indexat de la 0
+
+        boolean ok = false;
         if (y < 0 || y >= heightPX || x < 0 || x >= widthPX) {
             return false;
+        } else {
+            for (int layer = 0; layer < nrLayers; layer++) {
+                if (Tile.canWalkOn(Tile.getNormal(Tile.getLayerTile(layer + 1))) || Tile.canWalkOn(Tile.getEnv(Tile.getLayerTile(layer + 1)))) {
+                    int tileX = x / Window.objectSize / mapScale / Tile.getLayerScale(layer + 1);
+                    int tileY = y / Window.objectSize / mapScale / Tile.getLayerScale(layer + 1);
+                    if (map.get(layer)[tileY][tileX] != null) {
+                        if (Tile.canWalkOn(map.get(layer)[tileY][tileX])) {
+                            if (getCorner(layer, tileY, tileX) == 0 || (hasOverlap(layer, tileY, tileX) && Tile.canWalkOn(Tile.getNormal(map.get(layer)[tileY][tileX])))) {
+                                ok = true;
+                            } else if (!ok){
+                                ok = !Corner.isInCorner(Tile.getLayerScale(layer + 1) * Window.objectSize * mapScale, RelativeCoordinates.getRelativeCoordinates(new Pair<>(tileX * Tile.getLayerScale(layer + 1) * Window.objectSize * mapScale, tileY * Tile.getLayerScale(layer + 1) * Window.objectSize * mapScale), new Pair<>((x), (y))), getCorner(layer, tileY, tileX));
+                            }
+                        } else {
+                            ok = false;
+                        }
+                    }
+                }
+            }
         }
-        return true;
+
+        return ok;
     }
 
     private int getCorner(int layer, int y, int x) {
