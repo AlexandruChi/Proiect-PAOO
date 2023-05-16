@@ -15,8 +15,6 @@ public class MapAssets {
     public static final int pathTileSize = Window.objectSize * Map.mapScale * Tile.getTileScale(Tile.path);
     public static final int roadTileSize = Window.objectSize * Map.mapScale * Tile.getTileScale(Tile.road);
 
-
-
     public static final int textureSize = 500;
 
     public static final int base = 0;
@@ -37,7 +35,7 @@ public class MapAssets {
     public static Texture envPath;
     public static Texture envRoad;
     public static Texture envTree;
-    public static Texture envRocks;
+    public static Texture envRock;
 
     public static Texture[] waterCorner;
     public static Texture[] groundCorner;
@@ -55,8 +53,8 @@ public class MapAssets {
         path = MakeTexture.make(spriteSheet.crop(2, 0, textureSize), pathTileSize);
         road = MakeTexture.make(spriteSheet.crop(3, 0, textureSize), roadTileSize);
 
-        tree = MakeTexture.make(spriteSheet.crop(0, 1, textureSize), ObjectTile.getEnvObjectTileScale(ObjectTile.tree, base));
-        rock = MakeTexture.make(spriteSheet.crop(1, 1, textureSize), ObjectTile.getEnvObjectTileScale(ObjectTile.rock, base));
+        tree = MakeTexture.make(spriteSheet.crop(0, 1, textureSize), ObjectTile.getEnvObjectTileScale(ObjectTile.tree, base) * Window.objectSize);
+        rock = MakeTexture.make(spriteSheet.crop(1, 1, textureSize), ObjectTile.getEnvObjectTileScale(ObjectTile.rock, base) * Window.objectSize);
 
         waterCorner = new Texture[4];
         groundCorner = new Texture[4];
@@ -81,6 +79,9 @@ public class MapAssets {
         envGround = MakeTexture.make(spriteSheet.crop(1, 0, textureSize), groundTileSize);
         envPath = MakeTexture.make(spriteSheet.crop(2, 0, textureSize), pathTileSize);
         envRoad = MakeTexture.make(spriteSheet.crop(3, 0, textureSize), roadTileSize);
+
+        envTree = MakeTexture.make(spriteSheet.crop(0, 1, textureSize), ObjectTile.getEnvObjectTileScale(ObjectTile.envTree, environment) * Window.objectSize);
+        envRock = MakeTexture.make(spriteSheet.crop(1, 1, textureSize), ObjectTile.getEnvObjectTileScale(ObjectTile.envRock, environment) * Window.objectSize);
 
         envWaterCorner = new Texture[4];
         envGroundCorner = new Texture[4];

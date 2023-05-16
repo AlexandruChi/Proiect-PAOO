@@ -10,19 +10,19 @@ nrLevels 1
 
         <nrTrees>
 
-            250
+            100
 
         <nrEnvTrees>
 
-            200
+            500
 
         <nrRocks>
 
-            100
+            300
 
         <nrEnvRocks>
 
-            100
+            300
 
     <endObjects>
 
