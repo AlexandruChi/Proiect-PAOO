@@ -11,7 +11,7 @@ import java.awt.*;
 public class NPC implements Character{
     protected Entity entity;
 
-    private static final int changeDirectionDelay = 60;
+    private static final int changeDirectionDelay = 180;
     private int changeDirectionTimer;
 
     protected NPC(Entity entity) {
@@ -35,6 +35,10 @@ public class NPC implements Character{
             changeDirectionTimer = 0;
             entity.setTravelDir(Direction.values()[RandomNumber.randomNumber(0, 8)]);
         }
+    }
+
+    public void followCharacter(Character character) {
+
     }
 
     public Entity getEntity() {

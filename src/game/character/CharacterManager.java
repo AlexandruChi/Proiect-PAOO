@@ -17,7 +17,10 @@ public class CharacterManager {
     private final List<Character> characters = new ArrayList<>();
     private final Player player;
 
-    public CharacterManager() {
+    private final Map map;
+
+    public CharacterManager(Map map) {
+        this.map = map;
         player = new Player(LevelManager.getPlayerPosition());
         characters.add(player);
         load();
@@ -52,12 +55,12 @@ public class CharacterManager {
                     position.yPX = RandomNumber.randomNumber(0, Map.heightPX - 1);
                     position.xPX = RandomNumber.randomNumber(0, Map.widthPX - 1);
 
-                    if (Game.getGame().getMap().canWalkOn(position.xPX, position.yPX)) {
+                    if (map.canWalkOn(position.xPX, position.yPX)) {
 
                         position.tmpX = position.xPX;
                         position.tmpY = position.yPX;
 
-                        if (Distance.calculateDistance(new Pair<>(player.getPosition().tmpX, player.getPosition().tmpY), new Pair<>(position.tmpX, position.tmpY)) < 10 * Window.objectSize) {
+                        if (Distance.calculateDistance(new Pair<>(player.getPosition().tmpX, player.getPosition().tmpY), new Pair<>(position.tmpX, position.tmpY)) > 10 * Window.objectSize) {
                             ok = true;
                         }
                     }

@@ -4,6 +4,7 @@ import game.Camera;
 import game.character.Character;
 import game.character.CharacterManager;
 import game.character.Player;
+import game.level.LevelManager;
 import game.level.Map;
 
 import java.awt.*;
@@ -15,8 +16,9 @@ public class GameState extends State {
 
     //TODO better loading
     public GameState() {
-        map = new Map("res/campaign.blwk");
-        characterManager = new CharacterManager();
+        LevelManager.readFile("res/campaign.blwk");
+        map = new Map();
+        characterManager = new CharacterManager(map);
         camera = new Camera(characterManager.getPlayer());
         // TODO save file
     }
@@ -34,5 +36,9 @@ public class GameState extends State {
 
     public Map getMap() {
         return map;
+    }
+
+    public CharacterManager getCharacterManager() {
+        return characterManager;
     }
 }

@@ -144,6 +144,18 @@ public class EntityClass extends TextureComponent implements Entity {
 
     }
 
+    public void attack(Entity entity) {
+
+        // TODO add weapons
+
+        // if (weapon)
+        // do something
+        // else
+        //   |
+        //   V
+        entity.decHealth(damage);
+    }
+
     public double getSpeed() {
         return speed;
     }

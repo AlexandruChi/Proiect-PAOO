@@ -20,6 +20,8 @@ public class Camera extends Component {
         int difX = position.xPX - player.getPosition().xPX;
         int difY = position.yPX - player.getPosition().yPX;
 
+        // TODO enter camera when changing character
+
         if (Math.abs(difX) > cameraDistance || Math.abs(difY) > cameraDistance) {
             followPlayer();
         }
@@ -59,24 +61,4 @@ public class Camera extends Component {
         position.xPX = (int)position.tmpX;
         position.yPX = (int)position.tmpY;
     }
-
-//    private void move(Direction direction) {
-//        int signX = switch (direction) {
-//            case right, up_right, down_right -> 1;
-//            case left, up_left, down_left -> -1;
-//            default -> 0;
-//        };
-//
-//        int signY = switch (direction) {
-//            case up, up_right, up_left -> -1;
-//            case down, down_right, down_left -> 1;
-//            default -> 0;
-//        };
-//
-//        position.tmpX += player.getCharacter().getSpeed() * signX;
-//        position.tmpY += player.getCharacter().getSpeed() * signY;
-//
-//        position.xPX = (int)position.tmpX;
-//        position.yPX = (int)position.tmpY;
-//    }
 }

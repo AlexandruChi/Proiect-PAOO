@@ -11,7 +11,6 @@ import game.component.Tile;
 import game.component.position.Corner;
 import game.component.position.RelativeCoordinates;
 import game.component.texture.Texture;
-import game.graphics.ImageLoader;
 
 import java.awt.*;
 import java.util.Vector;
@@ -45,8 +44,7 @@ public class Map {
 
     public static final int nrLayers = 4;
 
-    public Map(String file) {
-        LevelManager.readFile(file);
+    public Map() {
         curentMap = 0;
         if (!loadNextMap()) {
             // TODO add error
