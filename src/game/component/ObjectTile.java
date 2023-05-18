@@ -95,6 +95,17 @@ public enum ObjectTile {
         };
     }
 
+    public static Texture getTransparentTexture(ObjectTile objectTile) {
+        if (objectTile == null) {
+            return null;
+        }
+        return switch (objectTile) {
+            case tree -> MapAssets.treeTransparent;
+
+            default -> null;
+        };
+    }
+
     public static ObjectTile getEnv(ObjectTile objectTile) {
         return switch (objectTile) {
             case tree, envTree -> envTree;

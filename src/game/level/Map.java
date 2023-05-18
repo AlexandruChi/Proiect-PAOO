@@ -11,11 +11,13 @@ import game.component.Tile;
 import game.component.position.Corner;
 import game.component.position.RelativeCoordinates;
 import game.component.texture.Texture;
+import game.graphics.ImageLoader;
 
 import java.awt.*;
 import java.util.Vector;
 
 import static game.component.ObjectTile.tmp;
+import static game.component.ObjectTile.tree;
 
 // TODO better coordinates system
 
@@ -254,9 +256,6 @@ public class Map {
     }
 
     public void draw(Graphics graphics, Camera camera, CharacterManager characterManager) {
-
-        // TODO make draw matrix in game state
-
         Tile tile;
         for (int l = 0; l < nrLayers; l++) {
             for (int i = 0; i < height / mapScale / Tile.getLayerScale(l + 1); i++) {
@@ -286,10 +285,17 @@ public class Map {
                     characterManager.getCharacters().get(characterIndex).draw(graphics, camera);
                     characterIndex++;
                 }
+                Texture texture = ObjectTile.getTexture(objectMap[i][j]);
+                if (objectMap[i][j] == tree) {
+                    if (i > (characterManager.getPlayer().getPosition().yPX / Window.objectSize) + 2 && Math.abs(j - characterManager.getPlayer().getPosition().xPX / Window.objectSize) < 25) {
+                        texture = ObjectTile.getTransparentTexture(objectMap[i][j]);
+
+                    }
+                }
                 if (objectMap[i][j] != null) {
                     Pair<Integer, Integer> printBox = ObjectTile.getPrintBoxSize(objectMap[i][j], environment);
                     if (printBox != null) {
-                        Draw.draw(graphics, camera, ObjectTile.getTexture(objectMap[i][j]), (j - printBox.getLeft()) * Window.objectSize, (i - printBox.getRight()) * Window.objectSize);
+                        Draw.draw(graphics, camera, texture, (j - printBox.getLeft()) * Window.objectSize, (i - printBox.getRight()) * Window.objectSize);
                     }
                 }
             }

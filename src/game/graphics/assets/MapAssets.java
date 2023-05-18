@@ -37,6 +37,8 @@ public class MapAssets {
     public static Texture envTree;
     public static Texture envRock;
 
+    public static Texture treeTransparent;
+
     public static Texture[] waterCorner;
     public static Texture[] groundCorner;
     public static Texture[] pathCorner;
@@ -55,6 +57,9 @@ public class MapAssets {
 
         tree = MakeTexture.make(spriteSheet.crop(0, 1, textureSize), ObjectTile.getEnvObjectTileScale(ObjectTile.tree, base) * Window.objectSize);
         rock = MakeTexture.make(spriteSheet.crop(1, 1, textureSize), ObjectTile.getEnvObjectTileScale(ObjectTile.rock, base) * Window.objectSize);
+
+        treeTransparent = new Texture(tree);
+        treeTransparent.texture = ImageLoader.lowerTransparency(treeTransparent.texture);
 
         waterCorner = new Texture[4];
         groundCorner = new Texture[4];

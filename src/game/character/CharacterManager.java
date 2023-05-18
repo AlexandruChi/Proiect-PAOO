@@ -1,7 +1,6 @@
 package game.character;
 
 import game.level.LevelManager;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
