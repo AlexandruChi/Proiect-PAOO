@@ -37,7 +37,7 @@ public class CharacterManager {
             int nr = switch (k) {
                 case 0 -> LevelManager.getNrEnemiesNormal();
                 case 1 -> LevelManager.getNrEnemiesUndead();
-                default -> throw new IllegalStateException("Unexpected value: " + k);
+                default -> 0;
             };
 
             for (int i = 0; i < nr; i++) {
@@ -46,7 +46,7 @@ public class CharacterManager {
                 boolean ok = false;
                 int timer = 0;
 
-                while (timer < 100) {
+                while (timer < 100 && !ok) {
                     timer++;
 
                     position.yPX = RandomNumber.randomNumber(0, Map.heightPX - 1);
@@ -67,7 +67,7 @@ public class CharacterManager {
                     characters.add(switch (k) {
                         case 0 -> new NormalEnemy(position);
                         case 1 -> new UndeadEnemy(position);
-                        default -> throw new IllegalStateException("Unexpected value: " + k);
+                        default -> null;
                     });
                 }
             }
