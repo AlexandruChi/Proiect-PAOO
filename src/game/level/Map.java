@@ -3,6 +3,7 @@ package game.level;
 import game.Camera;
 import game.Draw;
 import game.Window;
+import game.character.CharacterManager;
 import game.component.ObjectTile;
 import game.component.Pair;
 import game.component.RandomNumber;
@@ -14,13 +15,14 @@ import game.component.texture.Texture;
 import java.awt.*;
 import java.util.Vector;
 
+import static game.component.ObjectTile.tmp;
+
 // TODO better coordinates system
 
 public class Map {
     private Vector<Tile[][]> map;
 
     private ObjectTile[][] objectMap;
-    private CollisionMap collisionMap;
 
     private int curentMap;
 
@@ -58,8 +60,6 @@ public class Map {
         map = LevelManager.loadMap();
 
         objectMap = new ObjectTile[height][width];
-        collisionMap = new CollisionMap();
-        collisionMap.collisionMap = new boolean[height][width];
 
         // TODO add loading for objects from save
 
@@ -70,12 +70,12 @@ public class Map {
 
         environment = LevelManager.getEnvironment();
 
-        generateObjects(objectMap, collisionMap);
+        generateObjects(objectMap);
 
         return true;
     }
 
-    private void generateObjects(ObjectTile[][] objectMap, CollisionMap collisionMap) {
+    private void generateObjects(ObjectTile[][] objectMap) {
 
         for (int i = 0; i < 2; i++) {
             ObjectTile tile = switch (i) {
@@ -124,14 +124,14 @@ public class Map {
                                     map.get(3)[y / mapScale / Tile.getLayerScale(4)][x / mapScale / Tile.getLayerScale(4)] == null &&
                                     map.get(2)[y / mapScale / Tile.getLayerScale(3)][x / mapScale / Tile.getLayerScale(3)] == null &&
                                     map.get(1)[y / mapScale / Tile.getLayerScale(2)][x / mapScale / Tile.getLayerScale(2)] != null
-                        ) {
+                    ) {
 
-                            // TODO check for full hitbox
+                        // TODO check for full hitbox
 
                         if (map.get(1)[y / mapScale / Tile.getLayerScale(2)][x / mapScale / Tile.getLayerScale(2)] == Tile.ground) {
                             ok = addObject(objectMap, tile, x, y);
                         } else if (
-                                        map.get(1)[y / mapScale / Tile.getLayerScale(2)][x / mapScale / Tile.getLayerScale(2)] == Tile.envGround &&
+                                map.get(1)[y / mapScale / Tile.getLayerScale(2)][x / mapScale / Tile.getLayerScale(2)] == Tile.envGround &&
                                         getCorner(1, y / mapScale / Tile.getLayerScale(2), x / mapScale / Tile.getLayerScale(2)) != 0 &&
                                         hasOverlap(1, y / mapScale / Tile.getLayerScale(2), x / mapScale / Tile.getLayerScale(2))
                         ) {
@@ -140,9 +140,8 @@ public class Map {
                             int groundTileY = y / mapScale / Tile.getLayerScale(2);
 
                             if (Corner.isInCorner(Tile.getLayerScale(2) * mapScale, RelativeCoordinates.getRelativeCoordinates(new Pair<>(groundTileX * mapScale * Tile.getLayerScale(2), groundTileY * mapScale * Tile.getLayerScale(2)), new Pair<>((x), (y))), getCorner(1, groundTileY, groundTileX))) {
-                                objectMap[y][x] = tile;
+                                ok = addObject(objectMap, tile, x, y);
                             }
-                            ok = true;
                         }
                     }
                 }
@@ -185,29 +184,62 @@ public class Map {
                 }
             }
         }
-
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                if (objectMap[i][j] != null) {
-                    int difX = ObjectTile.getHitBoxSize(objectMap[i][j], environment).getLeft();
-                    int difY = ObjectTile.getHitBoxSize(objectMap[i][j], environment).getRight();
-
-                    for (int y = i; y < i + difY; y++) {
-                        for (int x = j; x < j + difX; x++) {
-                            collisionMap.collisionMap[y][x] = true;
-                        }
-                    }
-
-                }
-            }
-        }
     }
 
     private boolean addObject(ObjectTile[][] objectMap, ObjectTile tile, int x, int y) {
+        if (!addTmpObjects(objectMap, tile, x, y)) {
+            return false;
+        }
         if (getCorner(1, y / mapScale / Tile.getLayerScale(2), x / mapScale / Tile.getLayerScale(2)) == 0) {
             objectMap[y][x] = tile;
         } else {
             addObjectToCorner(objectMap, tile, x, y);
+        }
+        return true;
+    }
+
+    private boolean addTmpObjects(ObjectTile[][] objectMap, ObjectTile tile, int x, int y) {
+        int difX = ObjectTile.getHitBoxSize(tile, environment).getLeft();
+        int difY = ObjectTile.getHitBoxSize(tile, environment).getRight();
+
+        for (int i = y; i < y + difY; i++) {
+            for (int j = x; j < x + difX; j++) {
+                if (i != y || j != x) { // TODO dacă nu merge pune &&
+
+                    if (i >= height - 1 || j >= width - 1) {
+                        return false;
+                    }
+
+                    if (objectMap[i][j] != null || objectMap[i + 1][j + 1] != null || objectMap[i][j + 1] != null) {
+                        return false;
+                    }
+                    if (j == x && objectMap[i - 1][j + 1] != null) {
+                        return false;
+                    }
+                    if (i == y && objectMap[i + 1][j - 1] != null) {
+                        return false;
+                    }
+                    if (!(map.get(3)[i / mapScale / Tile.getLayerScale(4)][j / mapScale / Tile.getLayerScale(4)] == null && map.get(2)[i / mapScale / Tile.getLayerScale(3)][j / mapScale / Tile.getLayerScale(3)] == null && map.get(1)[i / mapScale / Tile.getLayerScale(2)][j / mapScale / Tile.getLayerScale(2)] != null)) {
+                        return false;
+                    }
+                    if (map.get(1)[i / mapScale / Tile.getLayerScale(2)][j / mapScale / Tile.getLayerScale(2)] == Tile.envGround && getCorner(1, i / mapScale / Tile.getLayerScale(2), j / mapScale / Tile.getLayerScale(2)) != 0 && hasOverlap(1, i / mapScale / Tile.getLayerScale(2), j / mapScale / Tile.getLayerScale(2))) {
+                        int groundTileX = j / mapScale / Tile.getLayerScale(2);
+                        int groundTileY = i / mapScale / Tile.getLayerScale(2);
+
+                        if (Corner.isInCorner(Tile.getLayerScale(2) * mapScale, RelativeCoordinates.getRelativeCoordinates(new Pair<>(groundTileX * mapScale * Tile.getLayerScale(2), groundTileY * mapScale * Tile.getLayerScale(2)), new Pair<>((j), (i))), getCorner(1, groundTileY, groundTileX))) {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+
+        for (int i = y; i < y + difY; i++) {
+            for (int j = x; j < x + difX; j++) {
+                if (i != y || j != x) {
+                    objectMap[i][j] = tmp;
+                }
+            }
         }
         return true;
     }
@@ -221,7 +253,7 @@ public class Map {
         }
     }
 
-    public void draw(Graphics graphics, Camera camera) {
+    public void draw(Graphics graphics, Camera camera, CharacterManager characterManager) {
 
         // TODO make draw matrix in game state
 
@@ -246,11 +278,19 @@ public class Map {
             }
         }
 
+        int characterIndex = 0;
+
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
+                while (characterIndex < characterManager.getCharacters().size() && characterManager.getCharacters().get(characterIndex).getPosition().yPX / Window.objectSize == i - 1) {
+                    characterManager.getCharacters().get(characterIndex).draw(graphics, camera);
+                    characterIndex++;
+                }
                 if (objectMap[i][j] != null) {
                     Pair<Integer, Integer> printBox = ObjectTile.getPrintBoxSize(objectMap[i][j], environment);
-                    Draw.draw(graphics, camera, ObjectTile.getTexture(objectMap[i][j]), (j - printBox.getLeft()) * Window.objectSize, (i - printBox.getRight()) * Window.objectSize);
+                    if (printBox != null) {
+                        Draw.draw(graphics, camera, ObjectTile.getTexture(objectMap[i][j]), (j - printBox.getLeft()) * Window.objectSize, (i - printBox.getRight()) * Window.objectSize);
+                    }
                 }
             }
         }
@@ -264,7 +304,7 @@ public class Map {
         boolean ok = false;
         if (y < 0 || y >= heightPX || x < 0 || x >= widthPX) {
             return false;
-        } else if (collisionMap.collisionMap[y / Window.objectSize][x / Window.objectSize]) {
+        } else if (objectMap[y / Window.objectSize][x / Window.objectSize] != null) {
             return false;
         } else {
             for (int layer = 0; layer < nrLayers; layer++) {
@@ -275,7 +315,7 @@ public class Map {
                         if (Tile.canWalkOn(map.get(layer)[tileY][tileX])) {
                             if (getCorner(layer, tileY, tileX) == 0 || (hasOverlap(layer, tileY, tileX) && Tile.canWalkOn(Tile.getNormal(map.get(layer)[tileY][tileX])))) {
                                 ok = true;
-                            } else if (!ok){
+                            } else if (!ok) {
                                 ok = !Corner.isInCorner(Tile.getLayerScale(layer + 1) * Window.objectSize * mapScale, RelativeCoordinates.getRelativeCoordinates(new Pair<>(tileX * Tile.getLayerScale(layer + 1) * Window.objectSize * mapScale, tileY * Tile.getLayerScale(layer + 1) * Window.objectSize * mapScale), new Pair<>((x), (y))), getCorner(layer, tileY, tileX));
                             }
                         } else {
@@ -327,8 +367,4 @@ public class Map {
 
         return Tile.getNormal(map.get(layer)[y][x]) == Tile.getNormal(map.get(layer)[y][x + 1]) && Tile.getNormal(map.get(layer)[y][x]) == Tile.getNormal(map.get(layer)[y][x - 1]) && Tile.getNormal(map.get(layer)[y][x]) == Tile.getNormal(map.get(layer)[y + 1][x]) && Tile.getNormal(map.get(layer)[y][x]) == Tile.getNormal(map.get(layer)[y - 1][x]);
     }
-}
-
-class CollisionMap {
-    public boolean[][] collisionMap;
 }

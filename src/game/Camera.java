@@ -1,11 +1,8 @@
 package game;
 
 import game.component.Component;
-import game.component.Direction;
-import game.component.Pair;
-import game.component.position.Distance;
 import game.component.position.Position;
-import game.entity.Player;
+import game.character.Player;
 import game.graphics.assets.CharacterAssets;
 
 public class Camera extends Component {

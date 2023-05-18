@@ -8,7 +8,9 @@ import java.awt.*;
 public class StartState extends State {
     @Override
     public void update() {
-        Game.getGame().loadMainMenu();
+        if (Game.getGame().getInput().hadInput()) {
+            Game.getGame().loadMainMenu();
+        }
     }
 
     @Override

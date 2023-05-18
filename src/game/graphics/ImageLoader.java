@@ -25,6 +25,27 @@ public class ImageLoader {
         return flipOperation.filter(originalImage, null);
     }
 
+    public static BufferedImage lowerTransparency(BufferedImage originalImage) {
+        int width = originalImage.getWidth();
+        int height = originalImage.getHeight();
+
+        BufferedImage newImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                int pixel = originalImage.getRGB(x, y);
+                int alpha = (pixel >> 24) & 0xFF;
+                int newAlpha = (int) (alpha * 0.5); // Lowering transparency to 50%
+
+                // Create the new pixel with the lowered transparency
+                int newPixel = (newAlpha << 24) | (pixel & 0x00FFFFFF);
+                newImage.setRGB(x, y, newPixel);
+            }
+        }
+
+        return newImage;
+    }
+
     public static BufferedImage removeCorner(BufferedImage image, int corner) {
         int width = image.getWidth();
         int height = image.getHeight();

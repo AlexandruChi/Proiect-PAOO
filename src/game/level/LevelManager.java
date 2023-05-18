@@ -1,6 +1,8 @@
 package game.level;
 
+import game.Window;
 import game.component.Tile;
+import game.component.position.Position;
 import game.graphics.assets.MapAssets;
 
 import java.io.BufferedReader;
@@ -23,6 +25,8 @@ public class LevelManager {
     private static int nrEnvTrees;
     private static int nrRocks;
     private static int nrEnvRocks;
+
+    private static Position playerPosition;
 
     public static void readFile(String file) {
         try {
@@ -81,6 +85,7 @@ public class LevelManager {
         boolean readMap = false;
         boolean readEnv = false;
         boolean readObjects = false;
+        boolean readPlayer = false;
         try {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
@@ -89,7 +94,7 @@ public class LevelManager {
                 if (data.length == 1) {
                     switch (data[0]) {
                         case "endLevel" -> {
-                            return readMap && readEnv && readObjects;
+                            return readMap && readEnv && readObjects &&  readPlayer;
                         }
                         case "map" -> {
                             if (!readMap) {
@@ -110,6 +115,20 @@ public class LevelManager {
                                     environment = Integer.parseInt(numbers[0]);
                                 } catch (NumberFormatException e) {
                                     readEnv = false;
+                                }
+                            }
+                        }
+                        case "player" -> {
+                            if (!readPlayer) {
+                                readPlayer = true;
+                                try {
+                                    do {
+                                        line = bufferedReader.readLine();
+                                    } while (line.equals(""));
+                                    String[] numbers = TextParser.parse(line);
+                                    playerPosition = new Position(Integer.parseInt(numbers[0]) * Window.objectSize, Integer.parseInt(numbers[1]) * Window.objectSize);
+                                } catch (NumberFormatException e) {
+                                    readPlayer = false;
                                 }
                             }
                         }
@@ -331,6 +350,10 @@ public class LevelManager {
 
     public static int getNrEnvRocks() {
         return nrEnvRocks;
+    }
+
+    public static Position getPlayerPosition() {
+        return playerPosition;
     }
 }
 

@@ -1,35 +1,35 @@
 package game.states;
 
 import game.Camera;
-import game.entity.Player;
+import game.character.Character;
+import game.character.CharacterManager;
+import game.character.Player;
 import game.level.Map;
 
 import java.awt.*;
 
 public class GameState extends State {
-    private Player player;
-    private Map map;
-    private Camera camera;
+    private final Map map;
+    private final Camera camera;
+    private final CharacterManager characterManager;
 
     //TODO better loading
     public GameState() {
-        player = new Player();
-        camera = new Camera(player);
-        // TODO save file
         map = new Map("res/campaign.blwk");
+        characterManager = new CharacterManager();
+        camera = new Camera(characterManager.getPlayer());
+        // TODO save file
     }
 
     @Override
     public void update() {
-        player.update();
+        characterManager.update();
         camera.update();
     }
 
     @Override
     public void draw(Graphics graphics) {
-        // TODO better print
-        map.draw(graphics, camera);
-        player.draw(graphics, camera);
+        map.draw(graphics, camera, characterManager);
     }
 
     public Map getMap() {

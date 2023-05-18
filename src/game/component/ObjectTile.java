@@ -4,7 +4,7 @@ import game.component.texture.Texture;
 import game.graphics.assets.MapAssets;
 
 public enum ObjectTile {
-    tree, envTree, rock, envRock;
+    tmp, tree, envTree, rock, envRock;
 
     public static int getEnvObjectTileScale(ObjectTile objectTile, int environment) {
         if (objectTile == null) {
@@ -90,6 +90,8 @@ public enum ObjectTile {
             case envTree -> MapAssets.envTree;
             case rock -> MapAssets.rock;
             case envRock -> MapAssets.envRock;
+
+            default -> null;
         };
     }
 
@@ -97,6 +99,8 @@ public enum ObjectTile {
         return switch (objectTile) {
             case tree, envTree -> envTree;
             case rock, envRock -> envRock;
+
+            default -> null;
         };
     }
 
@@ -104,6 +108,8 @@ public enum ObjectTile {
         return switch (objectTile) {
             case tree, envTree -> tree;
             case rock, envRock -> rock;
+
+            default -> null;
         };
     }
 }

@@ -6,9 +6,7 @@ import game.component.TextureComponent;
 import game.component.position.Position;
 import game.component.texture.MakeTexture;
 
-public class CharacterEntity extends TextureComponent implements Character {
-
-    //TODO stuff
+public class EntityClass extends TextureComponent implements Entity {
 
     //TODO better animation management
 
@@ -26,8 +24,7 @@ public class CharacterEntity extends TextureComponent implements Character {
     private boolean aim;
     private double aimSpeed;
 
-
-    public CharacterEntity(Position position, Animation[][] animation, HitBox hitbox, PrintBox printBox, double normalSpeed, double sprintSpeed, int health, int maxHealth) {
+    EntityClass(Position position, Animation[][] animation, HitBox hitbox, PrintBox printBox, double normalSpeed, double sprintSpeed, int health) {
         super(position, MakeTexture.make(animation[0][0].texture, animation[0][0].width), printBox);
         this.animation = animation[0][0];
         altAnimation = animation;
@@ -41,7 +38,7 @@ public class CharacterEntity extends TextureComponent implements Character {
         this.sprintSpeed = sprintSpeed;
         sprint = false;
 
-        this.maxHealth = maxHealth;
+        maxHealth = health;
 
         travelDir = Direction.stop;
     }
@@ -91,12 +88,12 @@ public class CharacterEntity extends TextureComponent implements Character {
                 default -> 0;
             };
 
-            if (Game.getGame().getMap().canWalkOn((int) (tmpSpeed * signX + position.xPX), (int) (tmpSpeed * signY + position.yPX))) {
+            if (Game.getGame().getMap().canWalkOn((int) (tmpSpeed * (double) signX + position.tmpX), (int) (tmpSpeed * (double) signY + position.tmpY))) {
                 canMove = true;
-            } else if (Game.getGame().getMap().canWalkOn((int) (tmpSpeed * signX + position.xPX), position.yPX)) {
+            } else if (Game.getGame().getMap().canWalkOn((int) (tmpSpeed * (double) signX + position.tmpX), position.yPX)) {
                 canMove = true;
                 signY = 0;
-            } else if (Game.getGame().getMap().canWalkOn(position.xPX, (int) (tmpSpeed * signY + position.yPX))) {
+            } else if (Game.getGame().getMap().canWalkOn(position.xPX, (int) (tmpSpeed * (double) signY + position.tmpY))) {
                 canMove = true;
                 signX = 0;
             }
@@ -114,8 +111,8 @@ public class CharacterEntity extends TextureComponent implements Character {
 
 
         if (canMove) {
-            position.tmpX += tmpSpeed * signX;
-            position.tmpY += tmpSpeed * signY;
+            position.tmpX += tmpSpeed * (double) signX;
+            position.tmpY += tmpSpeed * (double) signY;
 
             position.xPX = (int) position.tmpX;
             position.yPX = (int) position.tmpY;
