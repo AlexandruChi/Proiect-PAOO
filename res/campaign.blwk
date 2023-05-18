@@ -32,10 +32,6 @@ nrLevels 1
 
     <enemies>
 
-        <normal>
-
-            3
-
         <undead>
 
             10

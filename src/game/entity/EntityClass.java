@@ -13,6 +13,7 @@ public class EntityClass extends TextureComponent implements Entity {
     private Direction travelDir;
     private HitBox hitBox;
     private double speed;
+    private int damage;
     private int health, maxHealth;
     private Animation animation;
     private Animation[][] altAnimation;
@@ -24,7 +25,7 @@ public class EntityClass extends TextureComponent implements Entity {
     private boolean aim;
     private double aimSpeed;
 
-    EntityClass(Position position, Animation[][] animation, HitBox hitbox, PrintBox printBox, double normalSpeed, double sprintSpeed, int health) {
+    EntityClass(Position position, Animation[][] animation, HitBox hitbox, PrintBox printBox, double normalSpeed, double sprintSpeed, int health, int damage) {
         super(position, MakeTexture.make(animation[0][0].texture, animation[0][0].width), printBox);
         this.animation = animation[0][0];
         altAnimation = animation;
@@ -32,6 +33,7 @@ public class EntityClass extends TextureComponent implements Entity {
 
         this.hitBox = hitbox;
         this.health = health;
+        this.damage = damage;
 
         this.normalSpeed = normalSpeed;
         speed = this.normalSpeed;

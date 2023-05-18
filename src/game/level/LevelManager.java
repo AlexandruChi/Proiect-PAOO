@@ -424,6 +424,14 @@ public class LevelManager {
     public static Position getPlayerPosition() {
         return playerPosition;
     }
+
+    public static int getNrEnemiesNormal() {
+        return nrEnemiesNormal;
+    }
+
+    public static int getNrEnemiesUndead() {
+        return nrEnemiesUndead;
+    }
 }
 
 class TextParser {

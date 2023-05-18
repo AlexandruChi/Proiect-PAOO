@@ -2,12 +2,13 @@ package game.character;
 
 import game.Camera;
 import game.component.position.Position;
+import game.entity.MakeEntity;
 
 import java.awt.*;
 
 public class NormalEnemy extends Enemy {
-    public NormalEnemy() {
-
+    public NormalEnemy(Position position) {
+        super(MakeEntity.britishCharacterID, position);
     }
 
     @Override
