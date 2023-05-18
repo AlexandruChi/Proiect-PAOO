@@ -1,33 +1,25 @@
 package game.character;
 
 import game.Camera;
+import game.component.Direction;
+import game.component.RandomNumber;
 import game.component.position.Position;
 import game.entity.Entity;
 
 import java.awt.*;
 
-public abstract class Enemy implements Character {
-    protected Entity entity;
+public abstract class Enemy extends NPC {
+    public Enemy() {
+
+    }
 
     @Override
     public void update() {
-        entity.update();
+        super.update();
     }
 
     @Override
     public void draw(Graphics graphics, Camera camera) {
-        entity.draw(graphics, camera);
-    }
-
-    public Entity getEntity() {
-        return entity;
-    }
-
-    public void setEntity(Entity entity) {
-        this.entity = entity;
-    }
-
-    public Position getPosition() {
-        return entity.getPosition();
+        super.draw(graphics, camera);
     }
 }

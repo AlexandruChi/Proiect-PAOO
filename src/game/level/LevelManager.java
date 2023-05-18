@@ -26,6 +26,9 @@ public class LevelManager {
     private static int nrRocks;
     private static int nrEnvRocks;
 
+    private static int nrEnemiesNormal;
+    private static int nrEnemiesUndead;
+
     private static Position playerPosition;
 
     public static void readFile(String file) {
@@ -86,6 +89,7 @@ public class LevelManager {
         boolean readEnv = false;
         boolean readObjects = false;
         boolean readPlayer = false;
+        boolean readEnemies = false;
         try {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
@@ -94,7 +98,7 @@ public class LevelManager {
                 if (data.length == 1) {
                     switch (data[0]) {
                         case "endLevel" -> {
-                            return readMap && readEnv && readObjects &&  readPlayer;
+                            return readMap && readEnv && readObjects && readPlayer && readEnemies;
                         }
                         case "map" -> {
                             if (!readMap) {
@@ -102,7 +106,14 @@ public class LevelManager {
                             }
                         }
                         case "objects" -> {
-                            readObjects = readObjectsData();
+                            if (!readObjects) {
+                                readObjects = readObjectsData();
+                            }
+                        }
+                        case "enemies" -> {
+                            if (!readEnemies) {
+                                readEnemies = readEnemiesData();
+                            }
                         }
                         case "env" -> {
                             if (!readEnv) {
@@ -138,6 +149,64 @@ public class LevelManager {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        return false;
+    }
+
+    private static boolean readEnemiesData() {
+        boolean readNrNormal = false;
+        boolean readNrUndead = false;
+
+        try {
+            String line;
+
+            while ((line = bufferedReader.readLine()) != null) {
+                String[] data = TextParser.parse(line);
+                if (data.length == 1) {
+                    switch (data[0]) {
+                        case "endEnemies" -> {
+                            if (!readNrNormal) {
+                                nrEnemiesNormal = 0;
+                            }
+                            if (!readNrUndead) {
+                                nrEnemiesUndead = 0;
+                            }
+                            return true;
+                        }
+                        case "normal" -> {
+                            if (!readNrNormal) {
+                                readNrNormal = true;
+                                try {
+                                    do {
+                                        line = bufferedReader.readLine();
+                                    } while (line.equals(""));
+                                    String[] numbers = TextParser.parse(line);
+                                    nrEnemiesNormal = Integer.parseInt(numbers[0]);
+                                } catch (NumberFormatException e) {
+                                    readNrNormal = false;
+                                }
+                            }
+                        }
+                        case "undead" -> {
+                            if (!readNrUndead) {
+                                readNrUndead = true;
+                                try {
+                                    do {
+                                        line = bufferedReader.readLine();
+                                    } while (line.equals(""));
+                                    String[] numbers = TextParser.parse(line);
+                                    nrEnemiesUndead = Integer.parseInt(numbers[0]);
+                                } catch (NumberFormatException e) {
+                                    readNrUndead = false;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         return false;
     }
 

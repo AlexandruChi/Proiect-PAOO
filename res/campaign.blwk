@@ -30,6 +30,18 @@ nrLevels 1
 
         435 408
 
+    <enemies>
+
+        <normal>
+
+            3
+
+        <undead>
+
+            10
+
+    <endEnemies>
+
     <map>
 
         <layer 1>
