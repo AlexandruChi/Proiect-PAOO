@@ -10,7 +10,7 @@ import java.awt.*;
 
 public abstract class Enemy extends NPC {
     public Enemy() {
-
+        super(null);
     }
 
     @Override
