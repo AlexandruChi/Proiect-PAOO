@@ -1,6 +1,7 @@
 package game.character;
 
 import game.Camera;
+import game.Window;
 import game.component.Direction;
 import game.component.RandomNumber;
 import game.component.position.Position;
@@ -40,11 +41,19 @@ public class NPC implements Character{
     }
 
     public void followCharacter(Character character) {
-        int signX = character.getPosition().xPX - getPosition().xPX;
-        int signY = character.getPosition().yPX - getPosition().yPX;
+        int signX = character.getPosition().xPX / Window.objectSize - getPosition().xPX / Window.objectSize;
+        int signY = character.getPosition().yPX / Window.objectSize - getPosition().yPX / Window.objectSize;
 
-        signX = signX / Math.abs(signX);
-        signY = signY / Math.abs(signY);
+        try {
+            signX = signX / Math.abs(signX);
+        } catch (ArithmeticException e) {
+            signX = 0;
+        }
+        try {
+            signY = signY / Math.abs(signY);
+        } catch (ArithmeticException e) {
+            signY = 0;
+        }
 
         getEntity().setTravelDir(switch (signX) {
             case 1 -> switch (signY) {

@@ -15,7 +15,7 @@ public class MapAssets {
     public static final int pathTileSize = Window.objectSize * Map.mapScale * Tile.getTileScale(Tile.path);
     public static final int roadTileSize = Window.objectSize * Map.mapScale * Tile.getTileScale(Tile.road);
 
-    public static final int textureSize = 500;
+    public static final int textureSize = 250;
 
     public static final int base = 0;
     public static final int beach = 1;

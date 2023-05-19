@@ -112,11 +112,11 @@ public class Game implements Runnable {
     }
 
     public int getWidth() {
-        return window.getWidth();
+        return getWindow().getWidth();
     }
 
     public int getHeight() {
-        return window.getHeight();
+        return getWindow().getHeight();
     }
 
     public void loadMainMenu() {

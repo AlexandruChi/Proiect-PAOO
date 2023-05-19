@@ -84,27 +84,32 @@ public class Map {
     }
 
     public boolean lineOfSight(Position p1, Position p2) {
+        int signX = p2.xPX / Window.objectSize - p1.xPX / Window.objectSize;
+        try {
+            signX = signX / Math.abs(signX);
+        } catch (ArithmeticException e) {
+            signX = 0;
+        }
 
-        int signX = p2.xPX - p1.xPX;
-        signX = signX / Math.abs(signX);
-
-        int signY = p2.yPX - p1.yPX;
-        signY = signY / Math.abs((signY));
+        int signY = p2.yPX / Window.objectSize - p1.yPX / Window.objectSize;
+        try {
+            signY = signY / Math.abs((signY));
+        } catch (ArithmeticException e) {
+            signY = 0;
+        }
 
         int prevX = -1 , prevY = -1;
 
-        for (int y = p1.yPX; switch (signY) {
-            case 1 -> y <= p2.yPX;
-            case -1 -> y >= p2.yPX;
+        for (int tileY = p1.yPX / Window.objectSize; switch (signY) {
+            case 1 -> tileY <= p2.yPX / Window.objectSize;
+            case -1 -> tileY >= p2.yPX / Window.objectSize;
             default -> false;
-        }; y += signY) {
-            for (int x = p1.xPX; switch (signX) {
-                case 1 -> x <= p2.xPX;
-                case -1 -> x >= p2.xPX;
+        }; tileY += signY) {
+            for (int tileX = p1.xPX / Window.objectSize; switch (signX) {
+                case 1 -> tileX <= p2.xPX / Window.objectSize;
+                case -1 -> tileX >= p2.xPX / Window.objectSize;
                 default -> false;
-            }; x += signX) {
-                int tileX = x / Window.objectSize;
-                int tileY = y / Window.objectSize;
+            }; tileX += signX) {
 
                 if (prevX == -1) {
                     prevX = tileX;
@@ -118,7 +123,7 @@ public class Map {
                 }
 
                 if (tileX != prevX && tileY != prevY) {
-                    if (!ObjectTile.canSeeThrew(objectMap[tileY + signY][tileX], environment) && !ObjectTile.canSeeThrew(objectMap[tileY][tileX + signX], environment)) {
+                    if (((tileY + signY >= 0 && tileY + signY < height) && !ObjectTile.canSeeThrew(objectMap[tileY + signY][tileX], environment)) && ((tileX + signX >= 0 && tileX + signX < height) && !ObjectTile.canSeeThrew(objectMap[tileY][tileX + signX], environment))) {
                         return false;
                     }
                 }

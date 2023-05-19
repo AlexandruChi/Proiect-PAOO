@@ -6,7 +6,7 @@ import game.character.Player;
 import game.graphics.assets.CharacterAssets;
 
 public class Camera extends Component {
-    private static final int cameraDistance = 175;
+    private static final int cameraDistance = 75;
     public static final int screenX = 367;
     public static final int screenY = 270 + CharacterAssets.characterTextureSize / 2;
     private final Player player;
@@ -20,7 +20,7 @@ public class Camera extends Component {
         int difX = position.xPX - player.getPosition().xPX;
         int difY = position.yPX - player.getPosition().yPX;
 
-        // TODO enter camera when changing character
+        // TODO center camera when changing character
 
         if (Math.abs(difX) > cameraDistance || Math.abs(difY) > cameraDistance) {
             followPlayer();

@@ -12,8 +12,6 @@ public abstract class TextureComponent extends Component {
     protected Texture texture;
     protected PrintBox printBox;
 
-    //TODO add screen position getCameraPosition();
-
     public TextureComponent(Position position, Texture texture, PrintBox printBox) {
         super(position);
         this.texture = texture;

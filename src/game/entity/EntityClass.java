@@ -91,6 +91,12 @@ public class EntityClass extends TextureComponent implements Entity {
                 default -> 0;
             };
 
+             if (signX == 0 && signY == 0) {
+                 position.tmpX = position.xPX;
+                 position.tmpY = position.yPX;
+                 return;
+             }
+
             if (Map.getMap().canWalkOn((int) (tmpSpeed * (double) signX + position.tmpX), (int) (tmpSpeed * (double) signY + position.tmpY))) {
                 canMove = true;
             } else if (Map.getMap().canWalkOn((int) (tmpSpeed * (double) signX + position.tmpX), position.yPX)) {
@@ -111,7 +117,6 @@ public class EntityClass extends TextureComponent implements Entity {
                 tmpSpeed--;
             }
         }
-
 
         if (canMove) {
             position.tmpX += tmpSpeed * (double) signX;

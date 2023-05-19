@@ -6,8 +6,6 @@ import game.component.position.Position;
 
 import java.awt.*;
 
-// TODO rename to Entity
-
 public interface Entity {
     void setTravelDir(Direction direction);
     Direction getTravelDir();
