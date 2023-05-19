@@ -81,7 +81,7 @@ public enum ObjectTile {
         };
     }
 
-    public static Texture getTexture (ObjectTile objectTile) {
+    public static Texture getTexture(ObjectTile objectTile) {
         if (objectTile == null) {
             return null;
         }
@@ -92,6 +92,30 @@ public enum ObjectTile {
             case envRock -> MapAssets.envRock;
 
             default -> null;
+        };
+    }
+
+    public static boolean canSeeThrew(ObjectTile objectTile, int environment) {
+        if (objectTile == null) {
+            return true;
+        }
+
+        switch (environment) {
+            case MapAssets.beach -> {
+                return switch (objectTile) {
+                    case envTree, envRock -> true;
+
+                    default -> canSeeThrew(objectTile, MapAssets.base);
+                };
+            }
+            case MapAssets.forest -> {
+
+            }
+        }
+        return switch (objectTile) {
+            case tree -> false;
+
+            default -> true;
         };
     }
 

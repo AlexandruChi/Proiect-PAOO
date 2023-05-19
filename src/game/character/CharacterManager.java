@@ -14,15 +14,23 @@ import java.util.Comparator;
 import java.util.List;
 
 public class CharacterManager {
-    private final List<Character> characters = new ArrayList<>();
+    private static CharacterManager characterManager = null;
+    private List<Character> characters;
+    private List<Character> enemyCharacters;
+    private List<Character> friendlyCharacters;
+    private final List<Character> alliedCharacters = new ArrayList<>();
     private final Player player;
 
     private final Map map;
 
+    public static CharacterManager getCharacterManager() {
+        return characterManager;
+    }
+
     public CharacterManager(Map map) {
+        characterManager = this;
         this.map = map;
         player = new Player(LevelManager.getPlayerPosition());
-        characters.add(player);
         load();
     }
 
@@ -35,6 +43,9 @@ public class CharacterManager {
     }
 
     public void load() {
+        characters = new ArrayList<>();
+        enemyCharacters = new ArrayList<>();
+
         for (int k = 0; k < 2; k++) {
 
             int nr = switch (k) {
@@ -67,7 +78,7 @@ public class CharacterManager {
                 }
 
                 if (ok) {
-                    characters.add(switch (k) {
+                    enemyCharacters.add(switch (k) {
                         case 0 -> new NormalEnemy(position);
                         case 1 -> new UndeadEnemy(position);
                         default -> null;
@@ -75,6 +86,12 @@ public class CharacterManager {
                 }
             }
         }
+
+        characters.add(player);
+        characters.addAll(alliedCharacters);
+
+        if (friendlyCharacters != null) characters.addAll(friendlyCharacters);
+        if (enemyCharacters != null) characters.addAll(enemyCharacters);
     }
 
     public Player getPlayer() {

@@ -9,6 +9,7 @@ import game.component.Pair;
 import game.component.RandomNumber;
 import game.component.Tile;
 import game.component.position.Corner;
+import game.component.position.Position;
 import game.component.position.RelativeCoordinates;
 import game.component.texture.Texture;
 
@@ -21,6 +22,8 @@ import static game.component.ObjectTile.tree;
 // TODO better coordinates system
 
 public class Map {
+    private static Map __map;
+
     private Vector<Tile[][]> map;
 
     private ObjectTile[][] objectMap;
@@ -44,7 +47,12 @@ public class Map {
 
     public static final int nrLayers = 4;
 
+    public static Map getMap() {
+        return __map;
+    }
+
     public Map() {
+        __map = this;
         curentMap = 0;
         if (!loadNextMap()) {
             // TODO add error
@@ -72,6 +80,50 @@ public class Map {
 
         generateObjects(objectMap);
 
+        return true;
+    }
+
+    public boolean lineOfSight(Position p1, Position p2) {
+
+        int signX = p2.xPX - p1.xPX;
+        signX = signX / Math.abs(signX);
+
+        int signY = p2.yPX - p1.yPX;
+        signY = signY / Math.abs((signY));
+
+        int prevX = -1 , prevY = -1;
+
+        for (int y = p1.yPX; switch (signY) {
+            case 1 -> y <= p2.yPX;
+            case -1 -> y >= p2.yPX;
+            default -> false;
+        }; y += signY) {
+            for (int x = p1.xPX; switch (signX) {
+                case 1 -> x <= p2.xPX;
+                case -1 -> x >= p2.xPX;
+                default -> false;
+            }; x += signX) {
+                int tileX = x / Window.objectSize;
+                int tileY = y / Window.objectSize;
+
+                if (prevX == -1) {
+                    prevX = tileX;
+                }
+                if (prevY == -1) {
+                    prevY = tileY;
+                }
+
+                if (!ObjectTile.canSeeThrew(objectMap[tileY][tileX], environment)) {
+                    return false;
+                }
+
+                if (tileX != prevX && tileY != prevY) {
+                    if (!ObjectTile.canSeeThrew(objectMap[tileY + signY][tileX], environment) && !ObjectTile.canSeeThrew(objectMap[tileY][tileX + signX], environment)) {
+                        return false;
+                    }
+                }
+            }
+        }
         return true;
     }
 
@@ -125,8 +177,6 @@ public class Map {
                                     map.get(2)[y / mapScale / Tile.getLayerScale(3)][x / mapScale / Tile.getLayerScale(3)] == null &&
                                     map.get(1)[y / mapScale / Tile.getLayerScale(2)][x / mapScale / Tile.getLayerScale(2)] != null
                     ) {
-
-                        // TODO check for full hitbox
 
                         if (map.get(1)[y / mapScale / Tile.getLayerScale(2)][x / mapScale / Tile.getLayerScale(2)] == Tile.ground) {
                             ok = addObject(objectMap, tile, x, y);
@@ -204,7 +254,7 @@ public class Map {
 
         for (int i = y; i < y + difY; i++) {
             for (int j = x; j < x + difX; j++) {
-                if (i != y || j != x) { // TODO dacă nu merge pune &&
+                if (i != y || j != x) {
 
                     if (i >= height - 1 || j >= width - 1) {
                         return false;

@@ -5,6 +5,7 @@ import game.component.*;
 import game.component.TextureComponent;
 import game.component.position.Position;
 import game.component.texture.MakeTexture;
+import game.level.Map;
 
 public class EntityClass extends TextureComponent implements Entity {
 
@@ -90,12 +91,12 @@ public class EntityClass extends TextureComponent implements Entity {
                 default -> 0;
             };
 
-            if (Game.getGame().getMap().canWalkOn((int) (tmpSpeed * (double) signX + position.tmpX), (int) (tmpSpeed * (double) signY + position.tmpY))) {
+            if (Map.getMap().canWalkOn((int) (tmpSpeed * (double) signX + position.tmpX), (int) (tmpSpeed * (double) signY + position.tmpY))) {
                 canMove = true;
-            } else if (Game.getGame().getMap().canWalkOn((int) (tmpSpeed * (double) signX + position.tmpX), position.yPX)) {
+            } else if (Map.getMap().canWalkOn((int) (tmpSpeed * (double) signX + position.tmpX), position.yPX)) {
                 canMove = true;
                 signY = 0;
-            } else if (Game.getGame().getMap().canWalkOn(position.xPX, (int) (tmpSpeed * (double) signY + position.tmpY))) {
+            } else if (Map.getMap().canWalkOn(position.xPX, (int) (tmpSpeed * (double) signY + position.tmpY))) {
                 canMove = true;
                 signX = 0;
             }

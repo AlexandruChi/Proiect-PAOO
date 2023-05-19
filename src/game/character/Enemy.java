@@ -16,7 +16,6 @@ public abstract class Enemy extends NPC {
 
     @Override
     public void update() {
-        moveAround();
         super.update();
     }
 

@@ -13,9 +13,9 @@ public class Game implements Runnable {
     private static Game game = null;
     private boolean isRunning;
     private Thread thread;
-    private Window window;
+    private final Window window;
 
-    private Input input;
+    private final Input input;
 
     public Input getInput() {
         return input;
@@ -31,10 +31,6 @@ public class Game implements Runnable {
             game = new Game("Beim letzten Weltkrieg", 960, 540);
         }
         return game;
-    }
-
-    public Map getMap() {
-        return ((GameState) states.gameState).getMap();
     }
 
     private Game(String title, int width, int height) {
