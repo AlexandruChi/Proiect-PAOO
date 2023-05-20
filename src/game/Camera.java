@@ -1,12 +1,15 @@
 package game;
 
 import game.component.Component;
+import game.component.Pair;
 import game.component.position.Position;
 import game.character.Player;
+import game.component.position.RelativeCoordinates;
 import game.graphics.assets.CharacterAssets;
 
 public class Camera extends Component {
-    private static final int cameraDistance = 75;
+    private static Camera camera;
+    private static final int cameraDistance = 100;
     public static final int screenX = 367;
     public static final int screenY = 270 + CharacterAssets.characterTextureSize / 2;
     private final Player player;
@@ -14,6 +17,11 @@ public class Camera extends Component {
     public Camera(Player player) {
         super(new Position(player.getPosition()));
         this.player = player;
+        camera = this;
+    }
+
+    public static Camera getCamera() {
+        return camera;
     }
 
     public void update() {
@@ -24,6 +32,9 @@ public class Camera extends Component {
 
         if (Math.abs(difX) > cameraDistance || Math.abs(difY) > cameraDistance) {
             followPlayer();
+        } else {
+            position.tmpY = position.yPX;
+            position.tmpX = position.xPX;
         }
     }
 
@@ -60,5 +71,10 @@ public class Camera extends Component {
 
         position.xPX = (int)position.tmpX;
         position.yPX = (int)position.tmpY;
+    }
+
+    public Position getMapPosition(Position position) {
+        Pair<Integer, Integer> relativePosition = RelativeCoordinates.getRelativeCoordinates(new Pair<>(screenX, screenY), new Pair<>(position.xPX, position.yPX));
+        return new Position(getPosition().xPX + relativePosition.getLeft(), getPosition().yPX + relativePosition.getRight());
     }
 }

@@ -4,8 +4,10 @@ import game.Game;
 import game.character.CharacterManager;
 import game.component.*;
 import game.component.TextureComponent;
+import game.component.position.Distance;
 import game.component.position.Position;
 import game.component.texture.MakeTexture;
+import game.component.weapon.Weapon;
 import game.level.Map;
 
 public class EntityClass extends TextureComponent implements Entity {
@@ -16,10 +18,17 @@ public class EntityClass extends TextureComponent implements Entity {
     private HitBox hitBox;
     private double speed;
     private int damage;
+    private int range;
+    private int delay;
+
     private int health, maxHealth;
     private Animation animation;
     private Animation[][] altAnimation;
     private int curentAnimation;
+
+    private Weapon[] weapons;
+    private Weapon curentWeapon;
+    private int attackTimer;
 
     private double normalSpeed;
     private boolean sprint;
@@ -27,7 +36,7 @@ public class EntityClass extends TextureComponent implements Entity {
     private boolean aim;
     private double aimSpeed;
 
-    EntityClass(Position position, Animation[][] animation, HitBox hitbox, PrintBox printBox, double normalSpeed, double sprintSpeed, int health, int damage) {
+    EntityClass(Position position, Animation[][] animation, HitBox hitbox, PrintBox printBox, double normalSpeed, double sprintSpeed, int health, int damage, int range, int delay, int weaponSlots) {
         super(position, MakeTexture.make(animation[0][0].texture, animation[0][0].width), printBox);
         this.animation = animation[0][0];
         altAnimation = animation;
@@ -36,6 +45,8 @@ public class EntityClass extends TextureComponent implements Entity {
         this.hitBox = hitbox;
         this.health = health;
         this.damage = damage;
+        this.range  = range;
+        this.delay = delay;
 
         this.normalSpeed = normalSpeed;
         speed = this.normalSpeed;
@@ -45,6 +56,15 @@ public class EntityClass extends TextureComponent implements Entity {
         maxHealth = health;
 
         travelDir = Direction.stop;
+
+        attackTimer = 0;
+
+        if (weaponSlots > 0) {
+            weapons = new Weapon[weaponSlots];
+        } else {
+            weapons = null;
+        }
+        curentWeapon = null;
     }
 
     public void setTravelDir(Direction direction) {
@@ -69,6 +89,10 @@ public class EntityClass extends TextureComponent implements Entity {
             case down_left, left, up_left -> animation = altAnimation[curentAnimation][0];
         }
         refreshTexture();
+
+        if (attackTimer > 0) {
+            attackTimer--;
+        }
     }
 
     private void refreshTexture() {
@@ -162,19 +186,25 @@ public class EntityClass extends TextureComponent implements Entity {
     }
 
     public void attack(Position position) {
-
+        try {
+            attack(CharacterManager.getCharacterManager().getCharacterAtPosition(position).getEntity());
+        } catch (NullPointerException ignored) {};
     }
 
     public void attack(Entity entity) {
+        if (attackTimer == 0) {
+            if (curentWeapon == null) {
+                if ((int)Distance.calculateDistance(new Pair<>(getPosition().tmpX, getPosition().tmpY), new Pair<>(entity.getPosition().tmpX, entity.getPosition().tmpY)) < range && Map.getMap().lineOfSight(getPosition(), entity.getPosition())) {
+                    attackTimer = delay;
+                    entity.decHealth(damage);
+                }
+            }
+        }
+    }
 
-        // TODO add weapons
-
-        // if (weapon)
-        // do something
-        // else
-        //   |
-        //   V
-        entity.decHealth(damage);
+    @Override
+    public HitBox getHitBox() {
+        return hitBox;
     }
 
     public double getSpeed() {
@@ -191,6 +221,10 @@ public class EntityClass extends TextureComponent implements Entity {
 
     public void setSprint(boolean sprint) {
         this.sprint = sprint;
+    }
 
+    @Override
+    public boolean isDead() {
+        return health <= 0;
     }
 }

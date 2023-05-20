@@ -3,6 +3,7 @@ package game.character;
 import game.Camera;
 import game.Window;
 import game.component.Direction;
+import game.component.HitBox;
 import game.component.RandomNumber;
 import game.component.position.Position;
 import game.entity.Entity;
@@ -76,6 +77,16 @@ public class NPC implements Character{
 
     public Entity getEntity() {
         return entity;
+    }
+
+    @Override
+    public HitBox getHitBox() {
+        return entity.getHitBox();
+    }
+
+    @Override
+    public boolean isDead() {
+        return entity.isDead();
     }
 
     public void setEntity(Entity entity) {

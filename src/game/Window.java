@@ -3,6 +3,8 @@ package game;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 public class Window {
     public static final int objectSize = 23; // 32
@@ -24,6 +26,9 @@ public class Window {
         canvas.setMinimumSize(new Dimension(width, height));
         jFrame.add(canvas);
         jFrame.pack();
+
+        canvas.setFocusable(true);
+        canvas.requestFocus();
     }
 
     public int getWidth() {
@@ -40,8 +45,9 @@ public class Window {
 
     public JFrame getJFrame() {return jFrame;}
 
-    public void setInput(KeyListener keyListener) {
-        jFrame.addKeyListener(keyListener);
+    public void setInput(Input input) {
+        canvas.addKeyListener(input);
+        canvas.addMouseListener(input);
     }
 
     public void setSize(int width, int height) {

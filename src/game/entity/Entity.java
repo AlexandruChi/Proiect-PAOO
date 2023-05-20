@@ -2,6 +2,7 @@ package game.entity;
 
 import game.Camera;
 import game.component.Direction;
+import game.component.HitBox;
 import game.component.position.Position;
 
 import java.awt.*;
@@ -15,7 +16,10 @@ public interface Entity {
     boolean incHealth(int health);
     boolean decHealth(int health);
     void attack(Position position);
+    void attack(Entity entity);
     Position getPosition();
+    HitBox getHitBox();
     double getSpeed();
     void setSprint(boolean sprint);
+    boolean isDead();
 }

@@ -11,6 +11,7 @@ import game.level.LevelManager;
 import game.level.Map;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -36,17 +37,46 @@ public class CharacterManager {
     }
 
     public void update(){
+
         for (Character character : characters) {
             character.update();
+            if (character.isDead()) {
+                if (character instanceof Player) {
+                    System.out.println("DEAD");
+                } else {
+                    removeCharacter(character);
+                }
+            }
         }
 
+        characters.removeAll(Collections.singleton(null));
+        alliedCharacters.removeAll(Collections.singleton(null));
+        if (enemyCharacters != null) enemyCharacters.removeAll(Collections.singleton(null));
+        if (friendlyCharacters != null) friendlyCharacters.removeAll(Collections.singleton(null));
+
         characters.sort(Comparator.comparingInt(o -> o.getPosition().yPX));
+    }
+
+    private void removeCharacter(Character characterInstance) {
+        for (int i = 0; i < characters.size(); i++) {
+            if (characters.get(i) == characterInstance) {
+                characters.set(i, null);
+            }
+        }
+        if (characterInstance instanceof Enemy) {
+            for (int i = 0; i < enemyCharacters.size(); i++) {
+                if (enemyCharacters.get(i) == characterInstance) {
+                    enemyCharacters.set(i, null);
+                }
+            }
+        }
+        // check for frendly and alied ones;
     }
 
     public boolean canWalkOn(Entity entity, int x, int y) {
 
         for (Character otherCharacter : characters) {
-            if (otherCharacter.getEntity() != entity) {
+            if (otherCharacter != null && otherCharacter.getEntity() != entity) {
                 if (Distance.calculateDistance(new Pair<>((double) x, (double) y), new Pair<>(otherCharacter.getPosition().tmpX, otherCharacter.getPosition().tmpY)) < CharacterAssets.collisionDistance) {
                     return false;
                 }
@@ -114,5 +144,22 @@ public class CharacterManager {
 
     public List<Character> getCharacters() {
         return characters;
+    }
+
+    public Character getCharacterAtPosition(Position position) {
+
+        for (Character character : characters) {
+            if (character != null) {
+                if (!(character instanceof Player) && checkHitBox(character, position)) {
+                    return character;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private boolean checkHitBox(Character character, Position position) {
+        return position.xPX >= character.getPosition().xPX - character.getHitBox().hitBoxDifX && position.xPX <= character.getPosition().xPX + character.getHitBox().hitBoxDifX && position.yPX >= character.getPosition().yPX - character.getHitBox().hitBoxDifY && position.yPX <= character.getPosition().yPX;
     }
 }

@@ -1,6 +1,7 @@
 package game.character;
 
 import game.Camera;
+import game.component.HitBox;
 import game.component.position.Position;
 import game.entity.Entity;
 
@@ -13,4 +14,7 @@ public interface Character {
 
     Position getPosition();
     Entity getEntity();
+    HitBox getHitBox();
+
+    boolean isDead();
 }

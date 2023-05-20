@@ -23,7 +23,7 @@ public class UndeadEnemy extends Enemy{
         Character characterToFollow = null;
         int minDistance = -1;
         for (Character character : CharacterManager.getCharacterManager().getCharacters()) {
-            if (!(character instanceof UndeadEnemy)) {
+            if (!(character instanceof UndeadEnemy) && character != null) {
                 int distance = (int)Distance.calculateDistance(new Pair<>(getPosition().tmpX, getPosition().tmpY), new Pair<>(character.getPosition().tmpX, character.getPosition().tmpY));
                 if (Map.getMap().lineOfSight(getPosition(), character.getPosition()) && distance < followDistance) {
                     if (distance < minDistance) {
@@ -34,6 +34,9 @@ public class UndeadEnemy extends Enemy{
                         characterToFollow = character;
                     }
                 }
+            }
+            if (characterToFollow != null) {
+                getEntity().attack(characterToFollow.getEntity());
             }
         }
 

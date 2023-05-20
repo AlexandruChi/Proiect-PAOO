@@ -1,21 +1,31 @@
 package game;
 
 import game.component.Direction;
+import game.component.position.Position;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Set;
 
-public class Input implements KeyListener {
+public class Input implements KeyListener, MouseListener {
     private final Set<Direction> validDirections;
     boolean input;
     boolean sprint;
     Direction direction;
 
+    Position position;
+
     public Input() {
         input = false;
         direction = Direction.stop;
         validDirections = Set.of(Direction.up, Direction.down, Direction.left, Direction.right);
+        position = null;
+    }
+
+    public Position getPosition() {
+        return position;
     }
 
     @Override
@@ -35,8 +45,6 @@ public class Input implements KeyListener {
 
             case KeyEvent.VK_SHIFT -> sprint = true;
         }
-
-        System.out.println(direction);
     }
 
     @Override
@@ -172,5 +180,30 @@ public class Input implements KeyListener {
 
     public Direction getDirection() {
         return direction;
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        position = new Position(e.getX(), e.getY());
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        position = null;
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
     }
 }
