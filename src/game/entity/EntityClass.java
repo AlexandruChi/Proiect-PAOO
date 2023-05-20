@@ -1,6 +1,7 @@
 package game.entity;
 
 import game.Game;
+import game.character.CharacterManager;
 import game.component.*;
 import game.component.TextureComponent;
 import game.component.position.Position;
@@ -47,6 +48,11 @@ public class EntityClass extends TextureComponent implements Entity {
     }
 
     public void setTravelDir(Direction direction) {
+        if (this.travelDir != direction) {
+            position.tmpX = position.xPX;
+            position.tmpY = position.yPX;
+        }
+
         travelDir = direction;
     }
 
@@ -97,12 +103,21 @@ public class EntityClass extends TextureComponent implements Entity {
                  return;
              }
 
-            if (Map.getMap().canWalkOn((int) (tmpSpeed * (double) signX + position.tmpX), (int) (tmpSpeed * (double) signY + position.tmpY))) {
+            if (
+                    Map.getMap().canWalkOn((int) (tmpSpeed * (double) signX + position.tmpX), (int) (tmpSpeed * (double) signY + position.tmpY)) &&
+                            CharacterManager.getCharacterManager().canWalkOn(this, (int) (tmpSpeed * (double) signX + position.tmpX), (int) (tmpSpeed * (double) signY + position.tmpY))
+            ) {
                 canMove = true;
-            } else if (Map.getMap().canWalkOn((int) (tmpSpeed * (double) signX + position.tmpX), position.yPX)) {
+            } else if (
+                    Map.getMap().canWalkOn((int) (tmpSpeed * (double) signX + position.tmpX), position.yPX) &&
+                            CharacterManager.getCharacterManager().canWalkOn(this, (int) (tmpSpeed * (double) signX + position.tmpX), position.yPX)
+            ) {
                 canMove = true;
                 signY = 0;
-            } else if (Map.getMap().canWalkOn(position.xPX, (int) (tmpSpeed * (double) signY + position.tmpY))) {
+            } else if (
+                    Map.getMap().canWalkOn(position.xPX, (int) (tmpSpeed * (double) signY + position.tmpY)) &&
+                            CharacterManager.getCharacterManager().canWalkOn(this, position.xPX, (int) (tmpSpeed * (double) signY + position.tmpY))
+            ) {
                 canMove = true;
                 signX = 0;
             }

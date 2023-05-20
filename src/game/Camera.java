@@ -28,8 +28,8 @@ public class Camera extends Component {
     }
 
     private void followPlayer() {
-        double speedX = player.getCharacter().getSpeed();
-        double speedY = player.getCharacter().getSpeed();
+        double speedX = player.getEntity().getSpeed();
+        double speedY = player.getEntity().getSpeed();
         int difX = position.xPX - player.getPosition().xPX;
         int difY = position.yPX - player.getPosition().yPX;
 

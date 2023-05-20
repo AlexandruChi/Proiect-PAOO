@@ -1,11 +1,12 @@
 package game.character;
 
-import game.Game;
 import game.Window;
 import game.component.Pair;
 import game.component.RandomNumber;
 import game.component.position.Distance;
 import game.component.position.Position;
+import game.entity.Entity;
+import game.graphics.assets.CharacterAssets;
 import game.level.LevelManager;
 import game.level.Map;
 
@@ -40,6 +41,19 @@ public class CharacterManager {
         }
 
         characters.sort(Comparator.comparingInt(o -> o.getPosition().yPX));
+    }
+
+    public boolean canWalkOn(Entity entity, int x, int y) {
+
+        for (Character otherCharacter : characters) {
+            if (otherCharacter.getEntity() != entity) {
+                if (Distance.calculateDistance(new Pair<>((double) x, (double) y), new Pair<>(otherCharacter.getPosition().tmpX, otherCharacter.getPosition().tmpY)) < CharacterAssets.collisionDistance) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     public void load() {

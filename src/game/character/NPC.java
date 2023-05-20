@@ -41,8 +41,8 @@ public class NPC implements Character{
     }
 
     public void followCharacter(Character character) {
-        int signX = character.getPosition().xPX / Window.objectSize - getPosition().xPX / Window.objectSize;
-        int signY = character.getPosition().yPX / Window.objectSize - getPosition().yPX / Window.objectSize;
+        int signX = (character.getPosition().xPX / Window.objectSize) - (getPosition().xPX / Window.objectSize);
+        int signY = (character.getPosition().yPX / Window.objectSize) - (getPosition().yPX / Window.objectSize);
 
         try {
             signX = signX / Math.abs(signX);

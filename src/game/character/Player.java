@@ -28,7 +28,7 @@ public class Player implements Character {
         entity.draw(graphics, camera);
     }
 
-    public Entity getCharacter() {
+    public Entity getEntity() {
         return entity;
     }
 
