@@ -1,6 +1,7 @@
 package game.states;
 
 import game.Camera;
+import game.UI;
 import game.character.Character;
 import game.character.CharacterManager;
 import game.character.Player;
@@ -32,6 +33,7 @@ public class GameState extends State {
     @Override
     public void draw(Graphics graphics) {
         map.draw(graphics, camera, characterManager);
+        UI.draw(graphics);
     }
 
     public Map getMap() {

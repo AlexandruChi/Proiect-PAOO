@@ -14,43 +14,53 @@ public interface Weapon {
     int BritishRifle = 5;
 
     class GermanRifleStats {
-        static int range = 25 * Window.objectSize;
-        static int delay = 5;
+        static int range = 30 * Window.objectSize;
+        static int delay = 15;
         static int damage = 5;
         static int hitRate = 90;
         static int maxAmmo = 5;
+        static boolean auto = false;
+        static boolean selectFire = false;
     }
 
     class GermanSMGStats {
-        static int range = 15 * Window.objectSize;
-        static int delay = 3;
+        static int range = 20 * Window.objectSize;
+        static int delay = 4;
         static int damage = 3;
         static int hitRate = 70;
         static int maxAmmo = 32;
+        static boolean auto = true;
+        static boolean selectFire = false;
     }
 
     class GermanARStats {
-        static int range = 20 * Window.objectSize;
-        static int delay = 4;
+        static int range = 25 * Window.objectSize;
+        static int delay = 6;
         static int damage = 4;
         static int hitRate = 80;
         static int maxAmmo = 30;
+        static boolean auto = true;
+        static boolean selectFire = true;
     }
 
     class GermanSidearmStats {
-        static int range = 10 * Window.objectSize;
-        static int delay = 2;
+        static int range = 15 * Window.objectSize;
+        static int delay = 10;
         static int damage = 2;
         static int hitRate = 60;
         static int maxAmmo = 8;
+        static boolean auto = false;
+        static boolean selectFire = false;
     }
 
     class BritishRifleStats {
         static int range = 20 * Window.objectSize;
-        static int delay = 5;
-        static int damage = 5;
+        static int delay = 10;
+        static int damage = 3;
         static int hitRate = 33;
         static int maxAmmo = 10;
+        static boolean auto = false;
+        static boolean selectFire = false;
     }
 
     boolean canAim();
@@ -58,6 +68,8 @@ public interface Weapon {
     int getDelay();
     boolean hasAmmo();
     int getNrAmmo();
+    int getMaxAmmo();
+    int getTotalAmmo();
     int getDamage();
     int getRange();
     int getType();
@@ -66,6 +78,11 @@ public interface Weapon {
     void reload();
 
     boolean fireRound();
+
+    boolean isAuto();
+    boolean isSelectFire();
+    boolean getMode();
+    boolean setMode(boolean mode);
 
     void addAmmo(int ammo);
     void subAmmo(int ammo);

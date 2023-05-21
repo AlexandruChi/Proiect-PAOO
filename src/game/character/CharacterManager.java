@@ -23,6 +23,8 @@ public class CharacterManager {
     private final List<Character> alliedCharacters = new ArrayList<>();
     private final Player player;
 
+    private boolean hasPlayer;
+
     private final Map map;
 
     public static CharacterManager getCharacterManager() {
@@ -33,28 +35,36 @@ public class CharacterManager {
         characterManager = this;
         this.map = map;
         player = new Player(LevelManager.getPlayerPosition());
+        hasPlayer = true;
         load();
     }
 
     public void update(){
 
-        for (Character character : characters) {
-            character.update();
-            if (character.isDead()) {
-                if (character instanceof Player) {
-                    System.out.println("DEAD");
-                } else {
-                    removeCharacter(character);
+        if (hasPlayer) {
+            for (Character character : characters) {
+                character.update();
+                if (character.isDead()) {
+                    if (character instanceof Player) {
+                        hasPlayer = false;
+                    } else {
+                        removeCharacter(character);
+                        player.addKill();
+                    }
                 }
             }
+
+            characters.removeAll(Collections.singleton(null));
+            alliedCharacters.removeAll(Collections.singleton(null));
+            if (enemyCharacters != null) enemyCharacters.removeAll(Collections.singleton(null));
+            if (friendlyCharacters != null) friendlyCharacters.removeAll(Collections.singleton(null));
+
+            characters.sort(Comparator.comparingInt(o -> o.getPosition().yPX));
+
+        } else {
+            player.setCharacter(null);
+            characters.remove(player);
         }
-
-        characters.removeAll(Collections.singleton(null));
-        alliedCharacters.removeAll(Collections.singleton(null));
-        if (enemyCharacters != null) enemyCharacters.removeAll(Collections.singleton(null));
-        if (friendlyCharacters != null) friendlyCharacters.removeAll(Collections.singleton(null));
-
-        characters.sort(Comparator.comparingInt(o -> o.getPosition().yPX));
     }
 
     private void removeCharacter(Character characterInstance) {
@@ -70,7 +80,7 @@ public class CharacterManager {
                 }
             }
         }
-        // check for frendly and alied ones;
+        // TODO check for friendly and allied ones and remove references inside character class
     }
 
     public boolean canWalkOn(Entity entity, int x, int y) {
@@ -161,5 +171,13 @@ public class CharacterManager {
 
     private boolean checkHitBox(Character character, Position position) {
         return position.xPX >= character.getPosition().xPX - character.getHitBox().hitBoxDifX && position.xPX <= character.getPosition().xPX + character.getHitBox().hitBoxDifX && position.yPX >= character.getPosition().yPX - character.getHitBox().hitBoxDifY && position.yPX <= character.getPosition().yPX;
+    }
+
+    public int getNrSoldiers() {
+        int nrSoldiers = alliedCharacters.size();
+        if (!player.isDead()) {
+            nrSoldiers++;
+        }
+        return nrSoldiers;
     }
 }

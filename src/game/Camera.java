@@ -25,8 +25,16 @@ public class Camera extends Component {
     }
 
     public void update() {
-        int difX = position.xPX - player.getPosition().xPX;
-        int difY = position.yPX - player.getPosition().yPX;
+        int difX;
+        int difY;
+
+        if (!player.isDead()) {
+            difX = position.xPX - player.getPosition().xPX;
+            difY = position.yPX - player.getPosition().yPX;
+        } else {
+            difX = 0;
+            difY = 0;
+        }
 
         // TODO center camera when changing character
 

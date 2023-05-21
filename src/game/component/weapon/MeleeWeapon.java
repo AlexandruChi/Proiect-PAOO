@@ -34,6 +34,16 @@ public class MeleeWeapon extends WeaponBase {
     }
 
     @Override
+    public int getMaxAmmo() {
+        return 0;
+    }
+
+    @Override
+    public int getTotalAmmo() {
+        return 0;
+    }
+
+    @Override
     public int getType() {
         return MelleWeapon;
     }
@@ -48,6 +58,26 @@ public class MeleeWeapon extends WeaponBase {
 
     @Override
     public boolean fireRound() {
+        return false;
+    }
+
+    @Override
+    public boolean isAuto() {
+        return false;
+    }
+
+    @Override
+    public boolean isSelectFire() {
+        return false;
+    }
+
+    @Override
+    public boolean getMode() {
+        return false;
+    }
+
+    @Override
+    public boolean setMode(boolean mode) {
         return false;
     }
 

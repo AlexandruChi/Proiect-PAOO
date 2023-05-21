@@ -8,6 +8,9 @@ public class RangeWeapon extends WeaponBase {
     private int curentAmmo;
     private final int maxAmmo;
     private final int hitRate;
+    private final boolean auto;
+    private final boolean selectFire;
+    private boolean mode;
 
     protected RangeWeapon(int weaponID) {
         super(switch (weaponID) {
@@ -43,7 +46,7 @@ public class RangeWeapon extends WeaponBase {
             default -> 0;
         };
 
-        ammo = maxAmmo = switch (weaponID) {
+        curentAmmo = maxAmmo = switch (weaponID) {
             case GermanRifle -> GermanRifleStats.maxAmmo;
             case GermanAR -> GermanARStats.maxAmmo;
             case GermanSMG -> GermanSMGStats.maxAmmo;
@@ -51,6 +54,32 @@ public class RangeWeapon extends WeaponBase {
             case BritishRifle -> BritishRifleStats.maxAmmo;
             default -> 0;
         };
+
+        auto = switch (weaponID) {
+            case GermanRifle -> GermanRifleStats.auto;
+            case GermanAR -> GermanARStats.auto;
+            case GermanSMG -> GermanSMGStats.auto;
+            case GermanSidearm -> GermanSidearmStats.auto;
+            case BritishRifle -> BritishRifleStats.auto;
+            default -> false;
+        };
+
+        selectFire = switch (weaponID) {
+            case GermanRifle -> GermanRifleStats.selectFire;
+            case GermanAR -> GermanARStats.selectFire;
+            case GermanSMG -> GermanSMGStats.selectFire;
+            case GermanSidearm -> GermanSidearmStats.selectFire;
+            case BritishRifle -> BritishRifleStats.selectFire;
+            default -> false;
+        };
+
+        if (selectFire) {
+            mode = false;
+        } else {
+            mode = auto;
+        }
+
+        ammo = 0;
 
     }
 
@@ -66,12 +95,22 @@ public class RangeWeapon extends WeaponBase {
 
     @Override
     public boolean hasAmmo() {
-        return false;
+        return true;
     }
 
     @Override
     public int getNrAmmo() {
+        return curentAmmo;
+    }
+
+    @Override
+    public int getTotalAmmo() {
         return ammo;
+    }
+
+    @Override
+    public int getMaxAmmo() {
+        return maxAmmo;
     }
 
     @Override
@@ -104,6 +143,26 @@ public class RangeWeapon extends WeaponBase {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean isAuto() {
+        return auto;
+    }
+
+    @Override
+    public boolean isSelectFire() {
+        return selectFire;
+    }
+
+    @Override
+    public boolean getMode() {
+        return mode;
+    }
+
+    @Override
+    public boolean setMode(boolean mode) {
+        return this.mode = mode;
     }
 
     @Override

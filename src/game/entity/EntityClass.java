@@ -7,6 +7,7 @@ import game.component.TextureComponent;
 import game.component.position.Distance;
 import game.component.position.Position;
 import game.component.texture.MakeTexture;
+import game.component.weapon.RangeWeapon;
 import game.component.weapon.Weapon;
 import game.level.Map;
 
@@ -35,6 +36,7 @@ public class EntityClass extends TextureComponent implements Entity {
     private double sprintSpeed;
     private boolean aim;
     private double aimSpeed;
+    private int nrClips;
 
     EntityClass(Position position, Animation[][] animation, HitBox hitbox, PrintBox printBox, double normalSpeed, double sprintSpeed, int health, int damage, int range, int delay, int weaponSlots) {
         super(position, MakeTexture.make(animation[0][0].texture, animation[0][0].width), printBox);
@@ -48,6 +50,10 @@ public class EntityClass extends TextureComponent implements Entity {
         this.range  = range;
         this.delay = delay;
 
+        aim = false;
+
+        // TODO aim speed;
+
         this.normalSpeed = normalSpeed;
         speed = this.normalSpeed;
         this.sprintSpeed = sprintSpeed;
@@ -59,12 +65,33 @@ public class EntityClass extends TextureComponent implements Entity {
 
         attackTimer = 0;
 
+        nrClips = 0;
+
         if (weaponSlots > 0) {
             weapons = new Weapon[weaponSlots];
         } else {
             weapons = null;
         }
         curentWeapon = null;
+    }
+
+    public Weapon[] getWeapons() {
+        return weapons;
+    }
+
+    @Override
+    public Weapon getWeapon() {
+        return curentWeapon;
+    }
+
+    @Override
+    public void setWeapon(int weapon) {
+        curentWeapon = weapons[weapon];
+    }
+
+    @Override
+    public int getHealth() {
+        return health;
     }
 
     public void setTravelDir(Direction direction) {
@@ -93,6 +120,11 @@ public class EntityClass extends TextureComponent implements Entity {
         if (attackTimer > 0) {
             attackTimer--;
         }
+    }
+
+    public void setOrientation(int orientation) {
+        animation = altAnimation[curentAnimation][orientation];
+        refreshTexture();
     }
 
     private void refreshTexture() {
@@ -188,15 +220,44 @@ public class EntityClass extends TextureComponent implements Entity {
     public void attack(Position position) {
         try {
             attack(CharacterManager.getCharacterManager().getCharacterAtPosition(position).getEntity());
-        } catch (NullPointerException ignored) {};
+        } catch (NullPointerException e) {
+            attack((Entity)null);
+        };
     }
 
     public void attack(Entity entity) {
+        attackEntity(entity);
+    }
+
+    private void attackEntity(Entity entity) {
         if (attackTimer == 0) {
+
+            int range, delay, damage, hitRate;
+
             if (curentWeapon == null) {
-                if ((int)Distance.calculateDistance(new Pair<>(getPosition().tmpX, getPosition().tmpY), new Pair<>(entity.getPosition().tmpX, entity.getPosition().tmpY)) < range && Map.getMap().lineOfSight(getPosition(), entity.getPosition())) {
-                    attackTimer = delay;
-                    entity.decHealth(damage);
+                range = this.range;
+                delay = this.delay;
+                damage = this.damage;
+                hitRate = 100;
+            } else {
+                range = curentWeapon.getRange();
+                delay = curentWeapon.getDelay();
+                damage = curentWeapon.getDamage();
+                hitRate = curentWeapon.getHitRate();
+
+                if (!aim && curentWeapon.canAim()) {
+                    hitRate /= 2;
+                }
+            }
+
+            if (curentWeapon == null || curentWeapon.fireRound() || curentWeapon.getType() == Weapon.MelleWeapon) {
+                attackTimer = delay;
+                if (entity != null) {
+                    if ((int)Distance.calculateDistance(new Pair<>(getPosition().tmpX, getPosition().tmpY), new Pair<>(entity.getPosition().tmpX, entity.getPosition().tmpY)) < range && Map.getMap().lineOfSight(getPosition(), entity.getPosition())) {
+                        if (RandomNumber.randomNumber(0, 100) <= hitRate) {
+                            entity.decHealth(damage);
+                        }
+                    }
                 }
             }
         }

@@ -4,6 +4,7 @@ import game.Camera;
 import game.component.Direction;
 import game.component.HitBox;
 import game.component.position.Position;
+import game.component.weapon.Weapon;
 
 import java.awt.*;
 
@@ -22,4 +23,9 @@ public interface Entity {
     double getSpeed();
     void setSprint(boolean sprint);
     boolean isDead();
+    Weapon[] getWeapons();
+    Weapon getWeapon();
+    void setOrientation(int orientation);
+    void setWeapon(int weapon);
+    int getHealth();
 }

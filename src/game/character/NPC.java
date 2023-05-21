@@ -56,6 +56,22 @@ public class NPC implements Character{
             signY = 0;
         }
 
+        if (signX == 0 && signY == 0) {
+            signX = (character.getPosition().xPX / Window.objectSize) - (getPosition().xPX / Window.objectSize);
+            signY = (character.getPosition().yPX / Window.objectSize) - (getPosition().yPX / Window.objectSize);
+
+            try {
+                signX = signX / Math.abs(signX);
+            } catch (ArithmeticException e) {
+                signX = 0;
+            }
+            try {
+                signY = signY / Math.abs(signY);
+            } catch (ArithmeticException e) {
+                signY = 0;
+            }
+        }
+
         getEntity().setTravelDir(switch (signX) {
             case 1 -> switch (signY) {
                 case 1 -> down_right;
@@ -82,6 +98,11 @@ public class NPC implements Character{
     @Override
     public HitBox getHitBox() {
         return entity.getHitBox();
+    }
+
+    @Override
+    public void setWeapon(int weapon) {
+
     }
 
     @Override

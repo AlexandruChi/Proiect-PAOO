@@ -16,5 +16,7 @@ public interface Character {
     Entity getEntity();
     HitBox getHitBox();
 
+    void setWeapon(int weapon);
+
     boolean isDead();
 }

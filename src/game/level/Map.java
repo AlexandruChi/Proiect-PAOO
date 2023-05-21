@@ -37,6 +37,9 @@ public class Map {
     private int nrRocks;
     private int nrEnvRocks;
 
+    private int nrObjectives = 3;
+    private int nrFinishedObjectives = 2;
+
     public static final int mapScale = 2;
 
     public static final int width = 500;
@@ -339,7 +342,7 @@ public class Map {
                     characterIndex++;
                 }
                 Texture texture = ObjectTile.getTexture(objectMap[i][j]);
-                if (objectMap[i][j] == tree) {
+                if (objectMap[i][j] == tree && !characterManager.getPlayer().isDead()) {
                     if (i > (characterManager.getPlayer().getPosition().yPX / Window.objectSize) + 2 && Math.abs(j - characterManager.getPlayer().getPosition().xPX / Window.objectSize) < 25) {
                         texture = ObjectTile.getTransparentTexture(objectMap[i][j]);
 
@@ -425,5 +428,13 @@ public class Map {
         }
 
         return Tile.getNormal(map.get(layer)[y][x]) == Tile.getNormal(map.get(layer)[y][x + 1]) && Tile.getNormal(map.get(layer)[y][x]) == Tile.getNormal(map.get(layer)[y][x - 1]) && Tile.getNormal(map.get(layer)[y][x]) == Tile.getNormal(map.get(layer)[y + 1][x]) && Tile.getNormal(map.get(layer)[y][x]) == Tile.getNormal(map.get(layer)[y - 1][x]);
+    }
+
+    public int getNrObjectives() {
+        return nrObjectives;
+    }
+
+    public int getNrFinishedObjectives() {
+        return nrFinishedObjectives;
     }
 }

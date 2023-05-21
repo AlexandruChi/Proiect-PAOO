@@ -13,6 +13,11 @@ public class Input implements KeyListener, MouseListener {
     private final Set<Direction> validDirections;
     boolean input;
     boolean sprint;
+    boolean singleClick;
+    boolean changMode;
+    int curentWeapon;
+
+    boolean reload;
     Direction direction;
 
     Position position;
@@ -22,10 +27,38 @@ public class Input implements KeyListener, MouseListener {
         direction = Direction.stop;
         validDirections = Set.of(Direction.up, Direction.down, Direction.left, Direction.right);
         position = null;
+        singleClick = false;
+        changMode = false;
+        curentWeapon = 2;
     }
 
     public Position getPosition() {
+        singleClick = false;
         return position;
+    }
+
+    public boolean getSingleClick() {
+        return singleClick;
+    }
+
+    public boolean getChangeMode() {
+        if (changMode) {
+            changMode = false;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean getReload() {
+        if (reload) {
+            reload = false;
+            return true;
+        }
+        return false;
+    }
+
+    public int getCurentWeapon() {
+        return curentWeapon;
     }
 
     @Override
@@ -43,6 +76,13 @@ public class Input implements KeyListener, MouseListener {
             case KeyEvent.VK_A -> addMovement(Direction.left);
             case KeyEvent.VK_D -> addMovement(Direction.right);
 
+            case KeyEvent.VK_1 -> curentWeapon = 0;
+            case KeyEvent.VK_2 -> curentWeapon = 1;
+            case KeyEvent.VK_3 -> curentWeapon = 2;
+
+            case KeyEvent.VK_V -> changMode = true;
+            case KeyEvent.VK_R -> reload = true;
+
             case KeyEvent.VK_SHIFT -> sprint = true;
         }
     }
@@ -54,6 +94,9 @@ public class Input implements KeyListener, MouseListener {
             case KeyEvent.VK_S -> subMovement(Direction.down);
             case KeyEvent.VK_A -> subMovement(Direction.left);
             case KeyEvent.VK_D -> subMovement(Direction.right);
+
+            case KeyEvent.VK_V -> changMode = false;
+            case KeyEvent.VK_R -> reload = false;
 
             case KeyEvent.VK_SHIFT -> sprint = false;
         }
@@ -189,11 +232,13 @@ public class Input implements KeyListener, MouseListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
+        singleClick = true;
         position = new Position(e.getX(), e.getY());
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        singleClick = false;
         position = null;
     }
 
