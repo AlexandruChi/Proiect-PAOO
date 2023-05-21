@@ -16,7 +16,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import static game.character.Ranks.Unterfeldwebel;
+import static game.character.Ranks.*;
 
 public class CharacterManager {
     private static CharacterManager characterManager = null;
@@ -203,6 +203,8 @@ public class CharacterManager {
 
         Position position;
 
+        // main character
+
         List<Character> commanding = new ArrayList<>();
 
         position = getPositionNextToPlayer();
@@ -218,11 +220,55 @@ public class CharacterManager {
         player.setCommanding(commanding);
         alliedCharacters.addAll(commanding);
 
+        // secondary character 1
+
+        List<Character> commanding1 = new ArrayList<>();
+        position = getPositionNextToPlayer();
+        if (position != null) {
+            commanding1.add(new Unit(position, commanding.get(0), null, Unteroffiziere));
+        }
+        if (position != null) {
+            commanding1.add(new Unit(position, commanding.get(0), null, Obergefreiten));
+        }
+        if (position != null) {
+            commanding1.add(new Unit(position, commanding.get(0), null, Obergefreiten));
+        }
+        if (position != null) {
+            commanding1.add(new Unit(position, commanding.get(0), null, Obergefreiten));
+        }
+        commanding.get(0).setCommanding(commanding1);
+        alliedCharacters.addAll(commanding1);
+
+
+        // secondary character 2
+
+        List<Character> commanding2 = new ArrayList<>();
+        position = getPositionNextToPlayer();
+        if (position != null) {
+            commanding2.add(new Unit(position, commanding.get(1), null, Unteroffiziere));
+        }
+        position = getPositionNextToPlayer();
+        if (position != null) {
+            commanding2.add(new Unit(position, commanding.get(1), null, Obergefreiten));
+        }
+        if (position != null) {
+            commanding2.add(new Unit(position, commanding.get(1), null, Obergefreiten));
+        }
+        if (position != null) {
+            commanding2.add(new Unit(position, commanding.get(1), null, Obergefreiten));
+        }
+        commanding.get(1).setCommanding(commanding2);
+        alliedCharacters.addAll(commanding2);
+
+
+
+
+
         characters.add(player);
         characters.addAll(alliedCharacters);
 
         changeableCharacters.add(player);
-        changeableCharacters.addAll(alliedCharacters);
+        changeableCharacters.addAll(commanding);
 
         if (friendlyCharacters != null) characters.addAll(friendlyCharacters);
         if (enemyCharacters != null) characters.addAll(enemyCharacters);
