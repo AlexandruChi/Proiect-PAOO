@@ -6,6 +6,7 @@ import game.component.position.Position;
 import game.entity.Entity;
 
 import java.awt.*;
+import java.util.List;
 
 public interface Character {
     void update();
@@ -18,5 +19,16 @@ public interface Character {
 
     void setWeapon(int weapon);
 
+    List<Character> getCommanding();
+    Ranks getRank();
+    void setRank(Ranks rank);
+
+    void setEntity(Entity entity);
+
     boolean isDead();
+
+    void setLeader(Character leader);
+    Character getLeader();
+
+    void setCommanding(List<Character> commanding);
 }

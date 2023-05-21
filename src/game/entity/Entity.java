@@ -28,4 +28,6 @@ public interface Entity {
     void setOrientation(int orientation);
     void setWeapon(int weapon);
     int getHealth();
+    void setAim(boolean aim);
+    int getRange();
 }

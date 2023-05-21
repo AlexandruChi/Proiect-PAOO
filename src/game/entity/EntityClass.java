@@ -36,7 +36,6 @@ public class EntityClass extends TextureComponent implements Entity {
     private double sprintSpeed;
     private boolean aim;
     private double aimSpeed;
-    private int nrClips;
 
     EntityClass(Position position, Animation[][] animation, HitBox hitbox, PrintBox printBox, double normalSpeed, double sprintSpeed, int health, int damage, int range, int delay, int weaponSlots) {
         super(position, MakeTexture.make(animation[0][0].texture, animation[0][0].width), printBox);
@@ -50,22 +49,19 @@ public class EntityClass extends TextureComponent implements Entity {
         this.range  = range;
         this.delay = delay;
 
-        aim = false;
-
-        // TODO aim speed;
-
         this.normalSpeed = normalSpeed;
         speed = this.normalSpeed;
         this.sprintSpeed = sprintSpeed;
         sprint = false;
+
+        aim = false;
+        aimSpeed = 0.5 * normalSpeed;
 
         maxHealth = health;
 
         travelDir = Direction.stop;
 
         attackTimer = 0;
-
-        nrClips = 0;
 
         if (weaponSlots > 0) {
             weapons = new Weapon[weaponSlots];
@@ -275,17 +271,29 @@ public class EntityClass extends TextureComponent implements Entity {
     private void updateSpeed() {
         if (sprint) {
             speed = sprintSpeed;
+        } else if (aim) {
+            speed = aimSpeed;
         } else {
             speed = normalSpeed;
         }
     }
 
+    @Override
     public void setSprint(boolean sprint) {
         this.sprint = sprint;
     }
 
     @Override
+    public void setAim(boolean aim) {
+        this.aim = aim;
+    }
+
+    @Override
     public boolean isDead() {
         return health <= 0;
+    }
+
+    public int getRange() {
+        return range;
     }
 }

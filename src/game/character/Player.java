@@ -2,17 +2,15 @@ package game.character;
 
 import game.Camera;
 import game.Game;
-import game.Input;
 import game.component.HitBox;
 import game.component.position.Position;
-import game.component.weapon.MeleeWeapon;
 import game.component.weapon.Weapon;
-import game.component.weapon.WeaponBase;
 import game.component.weapon.WeaponFactory;
 import game.entity.Entity;
 import game.entity.MakeEntity;
 
 import java.awt.*;
+import java.util.List;
 
 import static game.character.Ranks.Oberleutnant;
 
@@ -23,6 +21,8 @@ public class Player implements Character {
     private int nrKills;
     private int medal;
 
+    protected List<Character> commanding;
+    Character leader;
     private Ranks rank;
 
     public static final int scoreForKill = 10;
@@ -34,6 +34,9 @@ public class Player implements Character {
         attack = true;
         nrKills = 0;
         medal = 0;
+
+        commanding = null;
+        leader = null;
 
         Weapon[] weapons = entity.getWeapons();
 
@@ -49,10 +52,26 @@ public class Player implements Character {
         rank = Oberleutnant;
     }
 
+    public List<Character> getCommanding() {
+        return commanding;
+    }
+
+    public void setCommanding(List<Character> commanding) {
+        this.commanding = commanding;
+    }
+
+    public void setRank(Ranks rank) {
+        this.rank = rank;
+    }
+
     public void update() {
         entity.setTravelDir(Game.getGame().getInput().getDirection());
         entity.setSprint(Game.getGame().getInput().getSprint());
-        entity.setWeapon(Game.getGame().getInput().getCurentWeapon());
+
+        int weapon = Game.getGame().getInput().getCurentWeapon();
+        if (weapon != -1) {
+            entity.setWeapon(weapon);
+        }
 
         if (entity.getWeapon() != null && Game.getGame().getInput().getReload()) {
             entity.getWeapon().reload();
@@ -91,6 +110,12 @@ public class Player implements Character {
         if(changeOrientation) {
                 entity.setOrientation(orientation);
         }
+
+        int change = Game.getGame().getInput().getChange();
+        if (change != 0) {
+            CharacterManager.getCharacterManager().changeCharacter(change);
+        }
+
     }
     public void draw(Graphics graphics, Camera camera) {
         entity.draw(graphics, camera);
@@ -150,11 +175,20 @@ public class Player implements Character {
         return entity.isDead();
     }
 
+    @Override
+    public void setLeader(Character leader) {
+        this.leader = leader;
+    }
+
+    public Character getLeader() {
+        return leader;
+    }
+
     public void canAttack(boolean attack) {
         this.attack = attack;
     }
 
-    public void setCharacter(Entity entity) {
+    public void setEntity(Entity entity) {
         this.entity = entity;
     }
 

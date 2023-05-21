@@ -12,7 +12,7 @@ import java.awt.*;
 
 import static game.component.Direction.*;
 
-public class NPC implements Character{
+public abstract class NPC implements Character {
     private Entity entity;
 
     private static final int changeDirectionDelay = 180;
@@ -42,8 +42,12 @@ public class NPC implements Character{
     }
 
     public void followCharacter(Character character) {
-        int signX = (character.getPosition().xPX / Window.objectSize) - (getPosition().xPX / Window.objectSize);
-        int signY = (character.getPosition().yPX / Window.objectSize) - (getPosition().yPX / Window.objectSize);
+        goToLocation(character.getPosition());
+    }
+
+    public void goToLocation(Position location) {
+        int signX = (location.xPX / Window.objectSize) - (getPosition().xPX / Window.objectSize);
+        int signY = (location.yPX / Window.objectSize) - (getPosition().yPX / Window.objectSize);
 
         try {
             signX = signX / Math.abs(signX);
@@ -57,8 +61,8 @@ public class NPC implements Character{
         }
 
         if (signX == 0 && signY == 0) {
-            signX = (character.getPosition().xPX / Window.objectSize) - (getPosition().xPX / Window.objectSize);
-            signY = (character.getPosition().yPX / Window.objectSize) - (getPosition().yPX / Window.objectSize);
+            signX = (location.xPX / Window.objectSize) - (getPosition().xPX / Window.objectSize);
+            signY = (location.yPX / Window.objectSize) - (getPosition().yPX / Window.objectSize);
 
             try {
                 signX = signX / Math.abs(signX);
@@ -102,7 +106,7 @@ public class NPC implements Character{
 
     @Override
     public void setWeapon(int weapon) {
-
+        getEntity().setWeapon(weapon);
     }
 
     @Override

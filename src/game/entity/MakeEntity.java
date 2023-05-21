@@ -15,14 +15,14 @@ public class MakeEntity {
         static double sprintSpeed = 5 * ((double) Window.objectSize / 32);
         static int health = 5;
         static int damage = 2;
-        static int delay = 10;
+        static int delay = 60;
     }
 
     static class undeadStats {
         static double speed = 1 * ((double) Window.objectSize / 32);
         static int health = 2;
         static int damage = 2;
-        static int delay = 20;
+        static int delay = 60;
     }
 
     public static EntityClass makeEntity(int characterID, Position position) {

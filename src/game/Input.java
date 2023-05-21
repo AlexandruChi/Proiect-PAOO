@@ -17,6 +17,8 @@ public class Input implements KeyListener, MouseListener {
     boolean changMode;
     int curentWeapon;
 
+    int change;
+
     boolean reload;
     Direction direction;
 
@@ -30,11 +32,21 @@ public class Input implements KeyListener, MouseListener {
         singleClick = false;
         changMode = false;
         curentWeapon = 2;
+        change = 0;
     }
 
     public Position getPosition() {
         singleClick = false;
         return position;
+    }
+
+    public int getChange() {
+        if (change != 0) {
+            int returnChange = change;
+            change = 0;
+            return returnChange;
+        }
+        return change;
     }
 
     public boolean getSingleClick() {
@@ -58,6 +70,11 @@ public class Input implements KeyListener, MouseListener {
     }
 
     public int getCurentWeapon() {
+        if (curentWeapon != -1) {
+            int returnCurentWeapon = curentWeapon;
+            curentWeapon = -1;
+            return returnCurentWeapon;
+        }
         return curentWeapon;
     }
 
@@ -80,6 +97,9 @@ public class Input implements KeyListener, MouseListener {
             case KeyEvent.VK_2 -> curentWeapon = 1;
             case KeyEvent.VK_3 -> curentWeapon = 2;
 
+            case KeyEvent.VK_UP -> change = 1;
+            case KeyEvent.VK_DOWN -> change = -1;
+
             case KeyEvent.VK_V -> changMode = true;
             case KeyEvent.VK_R -> reload = true;
 
@@ -95,8 +115,12 @@ public class Input implements KeyListener, MouseListener {
             case KeyEvent.VK_A -> subMovement(Direction.left);
             case KeyEvent.VK_D -> subMovement(Direction.right);
 
+            case KeyEvent.VK_1, KeyEvent.VK_3, KeyEvent.VK_2 -> curentWeapon = -1;
+
             case KeyEvent.VK_V -> changMode = false;
             case KeyEvent.VK_R -> reload = false;
+
+            case KeyEvent.VK_UP, KeyEvent.VK_DOWN -> change = 0;
 
             case KeyEvent.VK_SHIFT -> sprint = false;
         }

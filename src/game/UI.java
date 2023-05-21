@@ -1,5 +1,6 @@
 package game;
 
+import game.character.Character;
 import game.character.CharacterManager;
 import game.character.Player;
 import game.character.Ranks;
@@ -8,6 +9,7 @@ import game.level.Map;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 public class UI {
 
@@ -24,6 +26,30 @@ public class UI {
         int y = 10;
 
         graphics.drawImage(playerHealthBar, 0, 0, (int)(3.5 * iconSize), iconSize, null);
+
+        List<Character> commanding = CharacterManager.getCharacterManager().getPlayer().getCommanding();
+        BufferedImage alliedHealthBar;
+        BufferedImage alliedRank;
+        int tmpY = iconSize;
+        int printSize = 50;
+        if (commanding != null) for (Character character : commanding) {
+            if (!character.isDead()) {
+
+                alliedHealthBar = UIAssets.healthBar[character.getEntity().getHealth()];
+                alliedRank = switch (character.getRank()) {
+                    case Oberleutnant -> UIAssets.ranks[3];
+                    case Unterfeldwebel -> UIAssets.ranks[2];
+                    case Unteroffiziere -> UIAssets.ranks[1];
+                    case Obergefreiten -> UIAssets.ranks[0];
+                };
+
+                graphics.drawImage(alliedHealthBar, 0, tmpY, (int)(3.5 * printSize), printSize, null);
+                graphics.drawImage(alliedRank, (int)(3.5 * printSize) + 5, tmpY, printSize, printSize, null);
+
+                tmpY += printSize;
+            }
+        }
+
         printTopBar(graphics, 4 * iconSize, y);
         printWeapon(graphics, y);
         printInventory(graphics, y);

@@ -1,5 +1,6 @@
 package game.character;
 
+import game.Camera;
 import game.Window;
 import game.component.Pair;
 import game.component.RandomNumber;
@@ -15,6 +16,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import static game.character.Ranks.Unterfeldwebel;
+
 public class CharacterManager {
     private static CharacterManager characterManager = null;
     private List<Character> characters;
@@ -22,6 +25,9 @@ public class CharacterManager {
     private List<Character> friendlyCharacters;
     private final List<Character> alliedCharacters = new ArrayList<>();
     private final Player player;
+
+    private List<Character> changeableCharacters;
+    int curentCharacter;
 
     private boolean hasPlayer;
 
@@ -62,7 +68,7 @@ public class CharacterManager {
             characters.sort(Comparator.comparingInt(o -> o.getPosition().yPX));
 
         } else {
-            player.setCharacter(null);
+            player.setEntity(null);
             characters.remove(player);
         }
     }
@@ -96,9 +102,63 @@ public class CharacterManager {
         return true;
     }
 
+    public void changeCharacter(int character) {
+        Character newPlayer = null;
+
+        int availableCharacters = changeableCharacters.size();
+        int nextCharacter = curentCharacter + character;
+
+        if (availableCharacters > 1) {
+            if (nextCharacter < 0) {
+                nextCharacter = availableCharacters - 1;
+            }
+            if (nextCharacter > availableCharacters - 1) {
+                nextCharacter = 0;
+            }
+
+            newPlayer = changeableCharacters.get(nextCharacter);
+        }
+
+        if (newPlayer != null) {
+
+            curentCharacter = nextCharacter;
+
+            Entity playerEntity = player.getEntity();
+            player.setEntity(newPlayer.getEntity());
+            newPlayer.setEntity(playerEntity);
+
+            Ranks rank = player.getRank();
+            player.setRank(newPlayer.getRank());
+            newPlayer.setRank((rank));
+
+            Character leader = player.getLeader();
+            player.setLeader(newPlayer.getLeader());
+            newPlayer.setLeader(leader);
+
+            List<Character> commanding = player.getCommanding();
+            if (commanding != null) {
+                for (Character characterCommanding : commanding) {
+                    characterCommanding.setLeader(newPlayer);
+                }
+            }
+            List<Character> commanding2 = newPlayer.getCommanding();
+            if (commanding2 != null) {
+                for (Character characterCommanding : commanding2) {
+                    characterCommanding.setLeader(player);
+                }
+            }
+            player.setCommanding(commanding2);
+            newPlayer.setCommanding(commanding);
+        }
+
+        Camera.getCamera().setPosition(player.getPosition());
+    }
+
     public void load() {
         characters = new ArrayList<>();
         enemyCharacters = new ArrayList<>();
+        changeableCharacters = new ArrayList<>();
+        curentCharacter = 0;
 
         for (int k = 0; k < 2; k++) {
 
@@ -141,11 +201,51 @@ public class CharacterManager {
             }
         }
 
+        Position position;
+
+        List<Character> commanding = new ArrayList<>();
+
+        position = getPositionNextToPlayer();
+        if (position != null) {
+            commanding.add(new Unit(position, player, null, Unterfeldwebel));
+        }
+
+        position = getPositionNextToPlayer();
+        if (position != null) {
+            commanding.add(new Unit(position, player, null, Unterfeldwebel));
+        }
+
+        player.setCommanding(commanding);
+        alliedCharacters.addAll(commanding);
+
         characters.add(player);
         characters.addAll(alliedCharacters);
 
+        changeableCharacters.add(player);
+        changeableCharacters.addAll(alliedCharacters);
+
         if (friendlyCharacters != null) characters.addAll(friendlyCharacters);
         if (enemyCharacters != null) characters.addAll(enemyCharacters);
+    }
+
+    public Position getPositionNextToPlayer() {
+        int generateTimer = 0;
+        boolean ok = false;
+
+        Position position = null;
+
+        while (generateTimer < 100 && !ok) {
+            generateTimer++;
+
+            int x = RandomNumber.randomNumber(player.getPosition().xPX - 5 * Window.objectSize, player.getPosition().xPX + 5 * Window.objectSize);
+            int y = RandomNumber.randomNumber(player.getPosition().yPX - 5 * Window.objectSize, player.getPosition().yPX + 5 * Window.objectSize);
+
+            if (Map.getMap().canWalkOn(x, y)) {
+                position = new Position(x, y);
+            }
+        }
+
+        return position;
     }
 
     public Player getPlayer() {
