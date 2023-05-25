@@ -29,6 +29,8 @@ public class EntityClass extends TextureComponent implements Entity {
 
     private Weapon[] weapons;
     private Weapon curentWeapon;
+
+    private int nrMedKits;
     private int attackTimer;
 
     private double normalSpeed;
@@ -36,6 +38,8 @@ public class EntityClass extends TextureComponent implements Entity {
     private double sprintSpeed;
     private boolean aim;
     private double aimSpeed;
+
+    private Entity attackedBy;
 
     EntityClass(Position position, Animation[][] animation, HitBox hitbox, PrintBox printBox, double normalSpeed, double sprintSpeed, int health, int damage, int range, int delay, int weaponSlots) {
         super(position, MakeTexture.make(animation[0][0].texture, animation[0][0].width), printBox);
@@ -49,6 +53,8 @@ public class EntityClass extends TextureComponent implements Entity {
         this.range  = range;
         this.delay = delay;
 
+        attackedBy = null;
+
         this.normalSpeed = normalSpeed;
         speed = this.normalSpeed;
         this.sprintSpeed = sprintSpeed;
@@ -56,6 +62,8 @@ public class EntityClass extends TextureComponent implements Entity {
 
         aim = false;
         aimSpeed = 0.5 * normalSpeed;
+
+        nrMedKits = 0;
 
         maxHealth = health;
 
@@ -88,6 +96,28 @@ public class EntityClass extends TextureComponent implements Entity {
     @Override
     public int getHealth() {
         return health;
+    }
+
+    public void addMedKit(int nr) {
+        nrMedKits += nr;
+    }
+
+    public void useMedKit() {
+        if (incHealth(1)) {
+            nrMedKits--;
+        }
+    }
+
+    public Entity getAttackedBy() {
+        return attackedBy;
+    }
+
+    public void setAttackedBy(Entity entity) {
+        attackedBy = entity;
+    }
+
+    public int getNrMedKits() {
+        return nrMedKits;
     }
 
     public void setTravelDir(Direction direction) {
@@ -242,7 +272,11 @@ public class EntityClass extends TextureComponent implements Entity {
                 hitRate = curentWeapon.getHitRate();
 
                 if (!aim && curentWeapon.canAim()) {
-                    hitRate /= 2;
+                    hitRate /= 4;
+                }
+
+                if (travelDir != Direction.stop) {
+                    hitRate /= 4;
                 }
             }
 
@@ -252,6 +286,7 @@ public class EntityClass extends TextureComponent implements Entity {
                     if ((int)Distance.calculateDistance(new Pair<>(getPosition().tmpX, getPosition().tmpY), new Pair<>(entity.getPosition().tmpX, entity.getPosition().tmpY)) < range && Map.getMap().lineOfSight(getPosition(), entity.getPosition())) {
                         if (RandomNumber.randomNumber(0, 100) <= hitRate) {
                             entity.decHealth(damage);
+                            ((EntityClass)entity).setAttackedBy(this);
                         }
                     }
                 }

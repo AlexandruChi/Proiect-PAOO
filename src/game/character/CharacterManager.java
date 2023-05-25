@@ -2,10 +2,12 @@ package game.character;
 
 import game.Camera;
 import game.Window;
+import game.component.Collectable;
 import game.component.Pair;
 import game.component.RandomNumber;
 import game.component.position.Distance;
 import game.component.position.Position;
+import game.component.weapon.Weapon;
 import game.entity.Entity;
 import game.graphics.assets.CharacterAssets;
 import game.level.LevelManager;
@@ -22,11 +24,10 @@ public class CharacterManager {
     private static CharacterManager characterManager = null;
     private List<Character> characters;
     private List<Character> enemyCharacters;
-    private List<Character> friendlyCharacters;
     private final List<Character> alliedCharacters = new ArrayList<>();
     private final Player player;
 
-    private List<Character> changeableCharacters;
+    private final List<Character> changeableCharacters = new ArrayList<>();
     int curentCharacter;
 
     private boolean hasPlayer;
@@ -52,41 +53,109 @@ public class CharacterManager {
                 character.update();
                 if (character.isDead()) {
                     if (character instanceof Player) {
-                        hasPlayer = false;
+                        if (!changeCharacter(1)) {
+                            hasPlayer = false;
+                        }
                     } else {
+                        if (character instanceof Unit) {
+                            player.decScore(100);
+                        } else for (Character allied : alliedCharacters) {
+                            if (character.getEntity().getAttackedBy() == allied.getEntity()) {
+                                player.addKill();
+                            }
+                        }
                         removeCharacter(character);
-                        player.addKill();
                     }
                 }
+
+                for (Collectable objective : map.getObjectives()) {
+                    if (Distance.calculateDistance(new Pair<>(player.getPosition().tmpX, player.getPosition().tmpY), new Pair<>(objective.getPosition().tmpX, objective.getPosition().tmpY)) < 2 * Window.objectSize) {
+                        Pair<Integer, Integer> collected = objective.collect();
+
+                        switch (collected.getLeft()) {
+                            case Collectable.map -> map.incFinalizedObjectives();
+                            case Collectable.ammo -> {
+                                if (player.getEntity().getWeapon() != null && player.getEntity().getWeapon().getType() == Weapon.RangeWeapon) {
+                                    player.getEntity().getWeapon().addAmmo(collected.getRight() * player.getEntity().getWeapon().getMaxAmmo());
+                                } else if (player.getEntity().getWeapons() != null && player.getEntity().getWeapons()[1] != null) {
+                                    player.getEntity().getWeapons()[1].addAmmo(collected.getRight() * player.getEntity().getWeapons()[1].getMaxAmmo());
+                                }
+                            }
+                            case Collectable.medKit -> player.getEntity().addMedKit(collected.getRight());
+                            case Collectable.toolBox -> player.addScore(collected.getRight());
+                        }
+                    }
+                }
+
+                for (int i = 0; i < map.getObjectives().size(); i++) {
+                    if (map.getObjectives().get(i).isCollected()) {
+                        map.getObjectives().set(i, null);
+                    }
+                }
+
+                map.getObjectives().removeAll(Collections.singleton(null));
+                map.getObjectives().sort(Comparator.comparingInt(o -> o.getPosition().yPX));
+            }
+
+            if (!hasPlayer) {
+                player.setEntity(null);
+                characters.remove(player);
+                changeableCharacters.remove(player);
             }
 
             characters.removeAll(Collections.singleton(null));
             alliedCharacters.removeAll(Collections.singleton(null));
+            changeableCharacters.removeAll(Collections.singleton(null));
             if (enemyCharacters != null) enemyCharacters.removeAll(Collections.singleton(null));
-            if (friendlyCharacters != null) friendlyCharacters.removeAll(Collections.singleton(null));
 
             characters.sort(Comparator.comparingInt(o -> o.getPosition().yPX));
 
         } else {
-            player.setEntity(null);
-            characters.remove(player);
+            System.out.println("DEAD");
         }
     }
 
     private void removeCharacter(Character characterInstance) {
-        for (int i = 0; i < characters.size(); i++) {
+
+        if (characters != null) {
+            for (Character character : characters) {
+                if (character.getLeader() == characterInstance) {
+                    if (characterInstance.getLeader() != null) {
+                        character.setLeader(characterInstance.getLeader());
+                    } else if (characterInstance.getCommanding() != null && characterInstance.getCommanding().get(0) != null) {
+                        character.setLeader(characterInstance.getCommanding().get(0));
+                    } else {
+                        character.setLeader(null);
+                    }
+                }
+                for (int i = 0; character.getCommanding() != null && i < character.getCommanding().size(); i++) {
+                    if (character.getCommanding().get(i) == characterInstance) {
+                        character.getCommanding().set(i, null);
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; characters != null && i < characters.size(); i++) {
             if (characters.get(i) == characterInstance) {
                 characters.set(i, null);
             }
         }
-        if (characterInstance instanceof Enemy) {
-            for (int i = 0; i < enemyCharacters.size(); i++) {
-                if (enemyCharacters.get(i) == characterInstance) {
-                    enemyCharacters.set(i, null);
-                }
+        for (int i = 0; enemyCharacters != null && i < enemyCharacters.size(); i++) {
+            if (enemyCharacters.get(i) == characterInstance) {
+                enemyCharacters.set(i, null);
             }
         }
-        // TODO check for friendly and allied ones and remove references inside character class
+        for (int i = 0; i < alliedCharacters.size(); i++) {
+            if (alliedCharacters.get(i) == characterInstance) {
+                alliedCharacters.set(i, null);
+            }
+        }
+        for (int i = 0; i < changeableCharacters.size(); i++) {
+            if (changeableCharacters.get(i) == characterInstance) {
+                changeableCharacters.set(i, null);
+            }
+        }
     }
 
     public boolean canWalkOn(Entity entity, int x, int y) {
@@ -102,7 +171,7 @@ public class CharacterManager {
         return true;
     }
 
-    public void changeCharacter(int character) {
+    public boolean changeCharacter(int character) {
         Character newPlayer = null;
 
         int availableCharacters = changeableCharacters.size();
@@ -138,26 +207,33 @@ public class CharacterManager {
             List<Character> commanding = player.getCommanding();
             if (commanding != null) {
                 for (Character characterCommanding : commanding) {
-                    characterCommanding.setLeader(newPlayer);
+                    if (characterCommanding != null) {
+                        characterCommanding.setLeader(newPlayer);
+                    }
                 }
             }
             List<Character> commanding2 = newPlayer.getCommanding();
             if (commanding2 != null) {
                 for (Character characterCommanding : commanding2) {
-                    characterCommanding.setLeader(player);
+                    if (characterCommanding != null) {
+                        characterCommanding.setLeader(player);
+                    }
                 }
             }
             player.setCommanding(commanding2);
             newPlayer.setCommanding(commanding);
+
+            Camera.getCamera().setPosition(player.getPosition());
+
+            return true;
         }
 
-        Camera.getCamera().setPosition(player.getPosition());
+        return false;
     }
 
     public void load() {
         characters = new ArrayList<>();
-        enemyCharacters = new ArrayList<>();
-        changeableCharacters = new ArrayList<>();
+        enemyCharacters = new ArrayList<>();;
         curentCharacter = 0;
 
         for (int k = 0; k < 2; k++) {
@@ -227,15 +303,12 @@ public class CharacterManager {
         if (position != null) {
             commanding1.add(new Unit(position, commanding.get(0), null, Unteroffiziere));
         }
+
+        position = getPositionNextToPlayer();
         if (position != null) {
             commanding1.add(new Unit(position, commanding.get(0), null, Obergefreiten));
         }
-        if (position != null) {
-            commanding1.add(new Unit(position, commanding.get(0), null, Obergefreiten));
-        }
-        if (position != null) {
-            commanding1.add(new Unit(position, commanding.get(0), null, Obergefreiten));
-        }
+
         commanding.get(0).setCommanding(commanding1);
         alliedCharacters.addAll(commanding1);
 
@@ -247,20 +320,14 @@ public class CharacterManager {
         if (position != null) {
             commanding2.add(new Unit(position, commanding.get(1), null, Unteroffiziere));
         }
+
         position = getPositionNextToPlayer();
         if (position != null) {
             commanding2.add(new Unit(position, commanding.get(1), null, Obergefreiten));
         }
-        if (position != null) {
-            commanding2.add(new Unit(position, commanding.get(1), null, Obergefreiten));
-        }
-        if (position != null) {
-            commanding2.add(new Unit(position, commanding.get(1), null, Obergefreiten));
-        }
+
         commanding.get(1).setCommanding(commanding2);
         alliedCharacters.addAll(commanding2);
-
-
 
 
 
@@ -270,7 +337,6 @@ public class CharacterManager {
         changeableCharacters.add(player);
         changeableCharacters.addAll(commanding);
 
-        if (friendlyCharacters != null) characters.addAll(friendlyCharacters);
         if (enemyCharacters != null) characters.addAll(enemyCharacters);
     }
 
@@ -283,11 +349,12 @@ public class CharacterManager {
         while (generateTimer < 100 && !ok) {
             generateTimer++;
 
-            int x = RandomNumber.randomNumber(player.getPosition().xPX - 5 * Window.objectSize, player.getPosition().xPX + 5 * Window.objectSize);
-            int y = RandomNumber.randomNumber(player.getPosition().yPX - 5 * Window.objectSize, player.getPosition().yPX + 5 * Window.objectSize);
+            int x = RandomNumber.randomNumber(player.getPosition().xPX - 10 * Window.objectSize, player.getPosition().xPX + 10 * Window.objectSize);
+            int y = RandomNumber.randomNumber(player.getPosition().yPX - 10 * Window.objectSize, player.getPosition().yPX + 10 * Window.objectSize);
 
-            if (Map.getMap().canWalkOn(x, y)) {
+            if (Map.getMap().canWalkOn(x, y) && CharacterManager.characterManager.canWalkOn(null, x, y)) {
                 position = new Position(x, y);
+                ok = true;
             }
         }
 

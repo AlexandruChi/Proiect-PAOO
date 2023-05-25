@@ -25,11 +25,16 @@ public class Unit extends NPC {
 
     protected Position locationToFollow;
 
+    private int searchForEnemyTimer = 0;
+    private Character characterToFollow;
+
     protected Unit(Position position, Character leader, List<Character> commanding, Ranks rank) {
         super(MakeEntity.makeEntity(MakeEntity.germanCharacterID, position));
         this.leader = leader;
         this.commanding = commanding;
         this.rank = rank;
+
+        characterToFollow = null;
 
         followDistance = switch (rank) {
             case Oberleutnant -> 5 * Window.objectSize;
@@ -139,7 +144,6 @@ public class Unit extends NPC {
                 followCharacter(enemy);
 
             } else {
-                getEntity().setAim(true);
                 getEntity().attack(enemy.getEntity());
             }
         } else if (locationToFollow != null) {
@@ -170,26 +174,27 @@ public class Unit extends NPC {
     }
 
     public Character searchForEnemy() {
-        Character characterToFollow = null;
-        int minDistance = -1;
-        for (Character character : CharacterManager.getCharacterManager().getCharacters()) {
-            if (!(character instanceof Player) && !(character instanceof Unit) && character != null) {
-                int distance = (int) Distance.calculateDistance(new Pair<>(getPosition().tmpX, getPosition().tmpY), new Pair<>(character.getPosition().tmpX, character.getPosition().tmpY));
-                if (Map.getMap().lineOfSight(getPosition(), character.getPosition()) && distance < followDistance) {
-                    if (distance < minDistance) {
-                        minDistance = distance;
-                        characterToFollow = character;
-                    } else if (minDistance == -1) {
-                        minDistance = distance;
-                        characterToFollow = character;
+        searchForEnemyTimer++;
+        if (searchForEnemyTimer < 120) {
+
+            characterToFollow = null;
+            int minDistance = -1;
+            for (Character character : CharacterManager.getCharacterManager().getCharacters()) {
+                if (!(character instanceof Player) && !(character instanceof Unit) && character != null) {
+                    int distance = (int) Distance.calculateDistance(new Pair<>(getPosition().tmpX, getPosition().tmpY), new Pair<>(character.getPosition().tmpX, character.getPosition().tmpY));
+                    if (Map.getMap().lineOfSight(getPosition(), character.getPosition()) && distance < followDistance) {
+                        if (distance < minDistance) {
+                            minDistance = distance;
+                            characterToFollow = character;
+                        } else if (minDistance == -1) {
+                            minDistance = distance;
+                            characterToFollow = character;
+                        }
                     }
                 }
             }
-            if (characterToFollow != null) {
-                getEntity().attack(characterToFollow.getEntity());
-            }
+            searchForEnemyTimer = 0;
         }
-
         return characterToFollow;
     }
 

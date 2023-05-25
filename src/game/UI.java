@@ -2,7 +2,6 @@ package game;
 
 import game.character.Character;
 import game.character.CharacterManager;
-import game.character.Player;
 import game.character.Ranks;
 import game.graphics.assets.UIAssets;
 import game.level.Map;
@@ -15,7 +14,32 @@ public class UI {
 
     public static final int iconSize = 64;
 
+    private static int frames = 0;
+    private static int framesToPrint = 60;
+
+    private static long time = System.currentTimeMillis();
+
     public static void draw(Graphics graphics) {
+
+        if (System.currentTimeMillis() - time > 1000) {
+            time = System.currentTimeMillis();
+            framesToPrint = frames;
+            frames = -1;
+        }
+
+        frames++;
+
+        int fpsPrintSize = 30;
+
+        Font font = UIAssets.font.deriveFont(Font.PLAIN, fpsPrintSize);
+        graphics.setFont(font);
+        graphics.setColor(Color.black);
+        FontMetrics fontMetrics = graphics.getFontMetrics(font);
+
+        String fps = "FPS: " + framesToPrint;
+
+        graphics.drawString(fps,Game.getGame().getWidth() - fontMetrics.stringWidth(fps) - 10, Game.getGame().getHeight() - 260);
+
         BufferedImage playerHealthBar;
         if (!CharacterManager.getCharacterManager().getPlayer().isDead()) {
             playerHealthBar = UIAssets.healthBar[CharacterManager.getCharacterManager().getPlayer().getEntity().getHealth()];
@@ -33,7 +57,7 @@ public class UI {
         int tmpY = iconSize;
         int printSize = 50;
         if (commanding != null) for (Character character : commanding) {
-            if (!character.isDead()) {
+            if (character != null && !character.isDead()) {
 
                 alliedHealthBar = UIAssets.healthBar[character.getEntity().getHealth()];
                 alliedRank = switch (character.getRank()) {
@@ -74,7 +98,7 @@ public class UI {
         graphics.setColor(Color.black);
         graphics.drawString(score, Game.getGame().getWidth() - 2 - fontMetrics.stringWidth(score), Game.getGame().getHeight() - (printSize / 2) + 3);
 
-        // TODO add minimap
+        Minimap.draw(graphics, Game.getGame().getWidth() - 224, Game.getGame().getHeight() - 249, 223);
 
     }
 
@@ -87,7 +111,7 @@ public class UI {
         graphics.setColor(Color.black);
         FontMetrics fontMetrics = graphics.getFontMetrics(font);
 
-        graphics.drawImage(UIAssets.orders[2], x, y, printSize, printSize, null);
+        graphics.drawImage(UIAssets.friendlyLocation, x, y, printSize, printSize, null);
 
         x += printSize + 10;
         String objectives = Map.getMap().getNrFinishedObjectives() + " / " + Map.getMap().getNrObjectives();
@@ -188,12 +212,23 @@ public class UI {
             }
 
             if (clips != 0) {
-                graphics.drawImage(UIAssets.magazine, tmpX, tmpY, printSize, printSize, null);
+                graphics.drawImage(UIAssets.clip, tmpX, tmpY, printSize, printSize, null);
                 tmpX += printSize + 10;
                 if (clips > 1) {
                     String nrClipsString = "X " + clips;
                     graphics.drawString(nrClipsString, tmpX, tmpY + (printSize / 2) + y - 3);
+                    tmpX += fontMetrics.stringWidth(nrClipsString) + 10;
                 }
+            }
+        }
+
+        if (CharacterManager.getCharacterManager().getPlayer().getEntity() != null && CharacterManager.getCharacterManager().getPlayer().getEntity().getNrMedKits() > 0) {
+            graphics.drawImage(UIAssets.medKit, tmpX, tmpY, printSize, printSize, null);
+            tmpX += printSize + 10;
+            if (CharacterManager.getCharacterManager().getPlayer().getEntity().getNrMedKits() > 1) {
+                String nrMedKitsString = "X " + CharacterManager.getCharacterManager().getPlayer().getEntity().getNrMedKits();
+                graphics.drawString(nrMedKitsString, tmpX, tmpY + (printSize / 2) + y - 3);
+                tmpX += fontMetrics.stringWidth(nrMedKitsString) + 10;
             }
         }
     }

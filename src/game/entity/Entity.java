@@ -30,4 +30,8 @@ public interface Entity {
     int getHealth();
     void setAim(boolean aim);
     int getRange();
+    void addMedKit(int nr);
+    void useMedKit();
+    int getNrMedKits();
+    Entity getAttackedBy();
 }

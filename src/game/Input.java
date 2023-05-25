@@ -16,9 +16,8 @@ public class Input implements KeyListener, MouseListener {
     boolean singleClick;
     boolean changMode;
     int curentWeapon;
-
     int change;
-
+    boolean medKit;
     boolean reload;
     Direction direction;
 
@@ -33,6 +32,7 @@ public class Input implements KeyListener, MouseListener {
         changMode = false;
         curentWeapon = 2;
         change = 0;
+        medKit = false;
     }
 
     public Position getPosition() {
@@ -56,6 +56,14 @@ public class Input implements KeyListener, MouseListener {
     public boolean getChangeMode() {
         if (changMode) {
             changMode = false;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean getMedKit() {
+        if (medKit) {
+            medKit = false;
             return true;
         }
         return false;
@@ -93,6 +101,8 @@ public class Input implements KeyListener, MouseListener {
             case KeyEvent.VK_A -> addMovement(Direction.left);
             case KeyEvent.VK_D -> addMovement(Direction.right);
 
+            case KeyEvent.VK_M -> medKit = true;
+
             case KeyEvent.VK_1 -> curentWeapon = 0;
             case KeyEvent.VK_2 -> curentWeapon = 1;
             case KeyEvent.VK_3 -> curentWeapon = 2;
@@ -114,6 +124,8 @@ public class Input implements KeyListener, MouseListener {
             case KeyEvent.VK_S -> subMovement(Direction.down);
             case KeyEvent.VK_A -> subMovement(Direction.left);
             case KeyEvent.VK_D -> subMovement(Direction.right);
+
+            case KeyEvent.VK_M -> medKit = false;
 
             case KeyEvent.VK_1, KeyEvent.VK_3, KeyEvent.VK_2 -> curentWeapon = -1;
 

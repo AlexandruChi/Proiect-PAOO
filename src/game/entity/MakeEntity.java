@@ -11,7 +11,7 @@ public class MakeEntity {
     public static final int undeadCharacterID = 3;
 
     static class characterStats {
-        static double normalSpeed = 1.5 * ((double) Window.objectSize / 32);
+        static double normalSpeed = 1.7 * ((double) Window.objectSize / 32);
         static double sprintSpeed = 5 * ((double) Window.objectSize / 32);
         static int health = 5;
         static int damage = 2;

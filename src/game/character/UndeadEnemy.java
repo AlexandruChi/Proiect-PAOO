@@ -14,35 +14,40 @@ import java.util.List;
 public class UndeadEnemy extends Enemy {
 
     private static final int followDistance = 10 * Window.objectSize;
+    private Character characterToFollow;
+    private int searchForEnemyTimer = 0;
 
     public UndeadEnemy(Position position) {
         super(MakeEntity.undeadCharacterID, position);
+        characterToFollow = null;
     }
 
     @Override
     public void update() {
-        Character characterToFollow = null;
-        int minDistance = -1;
-        for (Character character : CharacterManager.getCharacterManager().getCharacters()) {
-            if (!(character instanceof UndeadEnemy) && character != null) {
-                int distance = (int)Distance.calculateDistance(new Pair<>(getPosition().tmpX, getPosition().tmpY), new Pair<>(character.getPosition().tmpX, character.getPosition().tmpY));
-                if (Map.getMap().lineOfSight(getPosition(), character.getPosition()) && distance < followDistance) {
-                    if (distance < minDistance) {
-                        minDistance = distance;
-                        characterToFollow = character;
-                    } else if (minDistance == -1) {
-                        minDistance = distance;
-                        characterToFollow = character;
+        searchForEnemyTimer++;
+        if (searchForEnemyTimer < 120) {
+            characterToFollow = null;
+            int minDistance = -1;
+            for (Character character : CharacterManager.getCharacterManager().getCharacters()) {
+                if (!(character instanceof UndeadEnemy) && character != null) {
+                    int distance = (int) Distance.calculateDistance(new Pair<>(getPosition().tmpX, getPosition().tmpY), new Pair<>(character.getPosition().tmpX, character.getPosition().tmpY));
+                    if (Map.getMap().lineOfSight(getPosition(), character.getPosition()) && distance < followDistance) {
+                        if (distance < minDistance) {
+                            minDistance = distance;
+                            characterToFollow = character;
+                        } else if (minDistance == -1) {
+                            minDistance = distance;
+                            characterToFollow = character;
+                        }
                     }
                 }
             }
-            if (characterToFollow != null) {
-                getEntity().attack(characterToFollow.getEntity());
-            }
+            searchForEnemyTimer = 0;
         }
 
         if (characterToFollow != null) {
             followCharacter(characterToFollow);
+            getEntity().attack(characterToFollow.getEntity());
         } else {
             moveAround();
         }

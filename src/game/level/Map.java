@@ -4,16 +4,16 @@ import game.Camera;
 import game.Draw;
 import game.Window;
 import game.character.CharacterManager;
-import game.component.ObjectTile;
-import game.component.Pair;
-import game.component.RandomNumber;
-import game.component.Tile;
+import game.component.*;
 import game.component.position.Corner;
 import game.component.position.Position;
 import game.component.position.RelativeCoordinates;
 import game.component.texture.Texture;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Vector;
 
 import static game.component.ObjectTile.tmp;
@@ -28,6 +28,8 @@ public class Map {
 
     private ObjectTile[][] objectMap;
 
+    private List<Collectable> objectives;
+
     private int curentMap;
 
     private int environment;
@@ -37,8 +39,8 @@ public class Map {
     private int nrRocks;
     private int nrEnvRocks;
 
-    private int nrObjectives = 3;
-    private int nrFinishedObjectives = 2;
+    private int nrObjectives;
+    private int nrFinishedObjectives;
 
     public static final int mapScale = 2;
 
@@ -83,7 +85,37 @@ public class Map {
 
         generateObjects(objectMap);
 
+        nrObjectives = LevelManager.getNrObjectives();
+        nrFinishedObjectives = 0;
+        objectives = new ArrayList<>();
+
+        addObjectives();
+
         return true;
+    }
+
+    private void addObjectives() {
+        int objectivesToGenerate = nrObjectives;
+        nrObjectives = 0;
+        int maxCollectables = 30;
+        for (int i = 0; nrObjectives != objectivesToGenerate && i <= maxCollectables; i++) {
+            int generateTimer = 0;
+            boolean ok = false;
+            while (generateTimer < 100 && !ok) {
+                generateTimer++;
+                int x = RandomNumber.randomNumber(0, widthPX - 1);
+                int y = RandomNumber.randomNumber(0, heightPX - 1);
+
+                if (canWalkOn(x, y)) {
+                    Collectable collectable = new Collectable(new Position(x, y));
+                    objectives.add(collectable);
+                    ok = true;
+                    if (collectable.getType() == Collectable.map) {
+                        nrObjectives++;
+                    }
+                }
+            }
+        }
     }
 
     public boolean lineOfSight(Position p1, Position p2) {
@@ -334,6 +366,7 @@ public class Map {
         }
 
         int characterIndex = 0;
+        int collectableIndex = 0;
 
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
@@ -341,6 +374,12 @@ public class Map {
                     characterManager.getCharacters().get(characterIndex).draw(graphics, camera);
                     characterIndex++;
                 }
+
+                while (collectableIndex < objectives.size() && objectives.get(collectableIndex).getPosition().yPX / Window.objectSize == i) {
+                    objectives.get(collectableIndex).draw(graphics, camera);
+                    collectableIndex++;
+                }
+
                 Texture texture = ObjectTile.getTexture(objectMap[i][j]);
                 if (objectMap[i][j] == tree && !characterManager.getPlayer().isDead()) {
                     if (i > (characterManager.getPlayer().getPosition().yPX / Window.objectSize) + 2 && Math.abs(j - characterManager.getPlayer().getPosition().xPX / Window.objectSize) < 25) {
@@ -356,6 +395,10 @@ public class Map {
                 }
             }
         }
+    }
+
+    public List<Collectable> getObjectives() {
+        return objectives;
     }
 
     public boolean canWalkOn(int x, int y) {
@@ -436,5 +479,13 @@ public class Map {
 
     public int getNrFinishedObjectives() {
         return nrFinishedObjectives;
+    }
+
+    public int curentLevel() {
+        return curentMap;
+    }
+
+    public void incFinalizedObjectives() {
+        nrFinishedObjectives++;
     }
 }

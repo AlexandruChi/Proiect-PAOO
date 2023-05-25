@@ -12,6 +12,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Vector;
 
+import java.sql.*;
+
 public class LevelManager {
     //TODO read data from file and database
     private static FileReader fileReader;
@@ -28,6 +30,8 @@ public class LevelManager {
 
     private static int nrEnemiesNormal;
     private static int nrEnemiesUndead;
+
+    private static int nrObjectives;
 
     private static Position playerPosition;
 
@@ -54,6 +58,28 @@ public class LevelManager {
             e.printStackTrace();
             // TODO error;
         }
+    }
+
+    public static void save() {
+        try {
+            Class.forName("org.sqlite.JDBC");
+            Connection c = DriverManager.getConnection("jdbc:sqlite:save.db");
+            c.setAutoCommit(false);
+            Statement s = c.createStatement();
+
+            String createTable = "CREATE TABLE GAME (ID INT PRIMARY KEY NOT NULL, SCORE INT NOT NULL, NRCHARACTERS INT NOT NULL, PLAYERID INT NOTNULL, NRNORMALENEMY INT NOT NULL, NRUNDEADENEMY INT NOTNULL, NROBJCTIVES INT NOT NULL, NRTOTALOBJECTIVES INT NOT NULL, OBJECTMAP CHAR(50) NOT NULL)";
+            s.execute(createTable);
+
+            c.close();
+            s.close();
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+            System.exit(0);
+        }
+    }
+
+    public static void loadSave() {
+
     }
 
     public static boolean loadLevel(int level) {
@@ -90,6 +116,7 @@ public class LevelManager {
         boolean readObjects = false;
         boolean readPlayer = false;
         boolean readEnemies = false;
+        boolean readObjectives = false;
         try {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
@@ -126,6 +153,20 @@ public class LevelManager {
                                     environment = Integer.parseInt(numbers[0]);
                                 } catch (NumberFormatException e) {
                                     readEnv = false;
+                                }
+                            }
+                        }
+                        case "objective" -> {
+                            if (!readObjectives) {
+                                readObjectives = true;
+                                try {
+                                    do {
+                                        line = bufferedReader.readLine();
+                                    } while (line.equals(""));
+                                    String[] numbers = TextParser.parse(line);
+                                    nrObjectives = Integer.parseInt(numbers[0]);
+                                } catch (NumberFormatException e) {
+                                    readObjectives = false;
                                 }
                             }
                         }
@@ -403,6 +444,10 @@ public class LevelManager {
 
     public static int getEnvironment() {
         return environment;
+    }
+
+    public static int getNrObjectives() {
+        return nrObjectives;
     }
 
     public static int getNrTrees() {

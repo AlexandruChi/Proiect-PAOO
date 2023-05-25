@@ -68,6 +68,15 @@ public class Player implements Character {
         entity.setTravelDir(Game.getGame().getInput().getDirection());
         entity.setSprint(Game.getGame().getInput().getSprint());
 
+        if (Game.getGame().getInput().getMedKit()) {
+            entity.useMedKit();
+        }
+
+        int change = Game.getGame().getInput().getChange();
+        if (change != 0) {
+            CharacterManager.getCharacterManager().changeCharacter(change);
+        }
+
         int weapon = Game.getGame().getInput().getCurentWeapon();
         if (weapon != -1) {
             entity.setWeapon(weapon);
@@ -109,11 +118,6 @@ public class Player implements Character {
         entity.update();
         if(changeOrientation) {
                 entity.setOrientation(orientation);
-        }
-
-        int change = Game.getGame().getInput().getChange();
-        if (change != 0) {
-            CharacterManager.getCharacterManager().changeCharacter(change);
         }
 
     }
