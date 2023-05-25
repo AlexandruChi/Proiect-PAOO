@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
+import java.util.logging.Level;
 
 import static game.component.ObjectTile.tmp;
 import static game.component.ObjectTile.tree;
@@ -42,6 +43,9 @@ public class Map {
     private int nrObjectives;
     private int nrFinishedObjectives;
 
+    private boolean exit;
+    private Position exitPosition;
+
     public static final int mapScale = 2;
 
     public static final int width = 500;
@@ -58,6 +62,7 @@ public class Map {
 
     public Map() {
         __map = this;
+        exit = false;
         curentMap = 0;
         if (!loadNextMap()) {
             // TODO add error
@@ -82,6 +87,12 @@ public class Map {
         nrEnvRocks = LevelManager.getNrEnvRocks();
 
         environment = LevelManager.getEnvironment();
+
+        exitPosition = LevelManager.getExitPosition();
+        exitPosition.xPX *= Window.objectSize;
+        exitPosition.tmpX = exitPosition.xPX;
+        exitPosition.yPX *= Window.objectSize;
+        exitPosition.tmpY = exitPosition.yPX;
 
         generateObjects(objectMap);
 
@@ -375,6 +386,13 @@ public class Map {
                     characterIndex++;
                 }
 
+                if (i == height - 1) {
+                    while (characterIndex < characterManager.getCharacters().size() && characterManager.getCharacters().get(characterIndex).getPosition().yPX / Window.objectSize == i) {
+                        characterManager.getCharacters().get(characterIndex).draw(graphics, camera);
+                        characterIndex++;
+                    }
+                }
+
                 while (collectableIndex < objectives.size() && objectives.get(collectableIndex).getPosition().yPX / Window.objectSize == i) {
                     objectives.get(collectableIndex).draw(graphics, camera);
                     collectableIndex++;
@@ -487,5 +505,15 @@ public class Map {
 
     public void incFinalizedObjectives() {
         nrFinishedObjectives++;
+        if (nrFinishedObjectives == nrObjectives) {
+            exit = true;
+        }
+    }
+
+    public Position getExit() {
+        if (exit) {
+            return exitPosition;
+        }
+        return null;
     }
 }

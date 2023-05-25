@@ -59,9 +59,13 @@ public class CharacterManager {
                     } else {
                         if (character instanceof Unit) {
                             player.decScore(100);
-                        } else for (Character allied : alliedCharacters) {
-                            if (character.getEntity().getAttackedBy() == allied.getEntity()) {
+                        } else {
+                            if (character.getEntity().getAttackedBy() == player.getEntity()){
                                 player.addKill();
+                            } else for (Character allied : alliedCharacters) {
+                                if (character.getEntity().getAttackedBy() == allied.getEntity()) {
+                                    player.addKill();
+                                }
                             }
                         }
                         removeCharacter(character);
@@ -109,6 +113,15 @@ public class CharacterManager {
             if (enemyCharacters != null) enemyCharacters.removeAll(Collections.singleton(null));
 
             characters.sort(Comparator.comparingInt(o -> o.getPosition().yPX));
+
+            if (map.getExit() != null) {
+                if (Distance.calculateDistance(new Pair<>(player.getPosition().tmpX, player.getPosition().tmpY), new Pair<>(map.getExit().tmpX, map.getExit().tmpY)) < 5 * Window.objectSize) {
+                    if (!map.loadNextMap())  {
+                        // TODO add end screen
+                        System.exit(0);
+                    }
+                }
+            }
 
         } else {
             System.out.println("DEAD");
@@ -328,8 +341,6 @@ public class CharacterManager {
 
         commanding.get(1).setCommanding(commanding2);
         alliedCharacters.addAll(commanding2);
-
-
 
         characters.add(player);
         characters.addAll(alliedCharacters);

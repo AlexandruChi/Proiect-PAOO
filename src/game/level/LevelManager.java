@@ -35,6 +35,8 @@ public class LevelManager {
 
     private static Position playerPosition;
 
+    private static Position exitPosition;
+
     public static void readFile(String file) {
         try {
             fileReader = new FileReader(file);
@@ -117,6 +119,7 @@ public class LevelManager {
         boolean readPlayer = false;
         boolean readEnemies = false;
         boolean readObjectives = false;
+        boolean readExitLocation = false;
         try {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
@@ -125,7 +128,7 @@ public class LevelManager {
                 if (data.length == 1) {
                     switch (data[0]) {
                         case "endLevel" -> {
-                            return readMap && readEnv && readObjects && readPlayer && readEnemies;
+                            return readMap && readEnv && readObjects && readPlayer && readEnemies && readExitLocation;
                         }
                         case "map" -> {
                             if (!readMap) {
@@ -140,6 +143,20 @@ public class LevelManager {
                         case "enemies" -> {
                             if (!readEnemies) {
                                 readEnemies = readEnemiesData();
+                            }
+                        }
+                        case "exit" -> {
+                            if (!readExitLocation) {
+                                readExitLocation = true;
+                                try {
+                                    do {
+                                        line = bufferedReader.readLine();
+                                    } while (line.equals(""));
+                                    String[] numbers = TextParser.parse(line);
+                                    exitPosition = new Position(Integer.parseInt(numbers[0]), Integer.parseInt(numbers[1]));
+                                } catch (NumberFormatException e) {
+                                    readExitLocation = false;
+                                }
                             }
                         }
                         case "env" -> {
@@ -476,6 +493,9 @@ public class LevelManager {
 
     public static int getNrEnemiesUndead() {
         return nrEnemiesUndead;
+    }
+    public static Position getExitPosition() {
+        return exitPosition;
     }
 }
 

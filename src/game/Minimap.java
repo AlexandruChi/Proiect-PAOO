@@ -53,5 +53,15 @@ public class Minimap {
                 graphics.drawImage(UIAssets.friendlyLocation, (int) (x + cX) - (iconSize * 2) / 2, (int) (y + cY) - (iconSize * 2) / 2, iconSize * 2, iconSize * 2, null);
             }
         }
+
+        if (Map.getMap().getExit() != null) {
+            double cX = Map.getMap().getExit().tmpX / (double) Map.widthPX;
+            double cY = Map.getMap().getExit().tmpY / (double) Map.heightPX;
+
+            cX *= size;
+            cY *= size;
+
+            graphics.drawImage(UIAssets.enemyLocation, (int) (x + cX) - (iconSize * 2) / 2, (int) (y + cY) - (iconSize * 2) / 2, iconSize * 2, iconSize * 2, null);
+        }
     }
 }

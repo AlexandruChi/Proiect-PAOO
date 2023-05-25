@@ -34,15 +34,15 @@ nrLevels 1
 
         435 408
 
+    <exit>
+
+        392 5
+
     <enemies>
 
         <undead>
 
             30
-
-        <normal>
-
-            0
 
     <endEnemies>
 
