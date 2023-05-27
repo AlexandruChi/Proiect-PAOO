@@ -34,4 +34,5 @@ public interface Entity {
     void useMedKit();
     int getNrMedKits();
     Entity getAttackedBy();
+    void setPosition(Position position);
 }

@@ -60,6 +60,11 @@ public class Player implements Character {
         this.commanding = commanding;
     }
 
+    @Override
+    public void setPosition(Position position) {
+        getEntity().setPosition(position);
+    }
+
     public void setRank(Ranks rank) {
         this.rank = rank;
     }

@@ -13,10 +13,7 @@ import game.graphics.assets.CharacterAssets;
 import game.level.LevelManager;
 import game.level.Map;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 import static game.character.Ranks.*;
 
@@ -25,7 +22,7 @@ public class CharacterManager {
     private List<Character> characters;
     private List<Character> enemyCharacters;
     private final List<Character> alliedCharacters = new ArrayList<>();
-    private final Player player;
+    private Player player;
 
     private final List<Character> changeableCharacters = new ArrayList<>();
     int curentCharacter;
@@ -41,9 +38,69 @@ public class CharacterManager {
     public CharacterManager(Map map) {
         characterManager = this;
         this.map = map;
+        loadAlliedCharacters();
+        loadCharacters();
+    }
+
+    private void loadAlliedCharacters() {
         player = new Player(LevelManager.getPlayerPosition());
         hasPlayer = true;
-        load();
+
+        Position position;
+
+        // main character
+
+        List<Character> commanding = new ArrayList<>();
+
+        position = getPositionNextToPlayer();
+        if (position != null) {
+            commanding.add(new Unit(position, player, null, Unterfeldwebel));
+        }
+
+        position = getPositionNextToPlayer();
+        if (position != null) {
+            commanding.add(new Unit(position, player, null, Unterfeldwebel));
+        }
+
+        player.setCommanding(commanding);
+        alliedCharacters.addAll(commanding);
+
+        // secondary character 1
+
+        List<Character> commanding1 = new ArrayList<>();
+        position = getPositionNextToPlayer();
+        if (position != null) {
+            commanding1.add(new Unit(position, commanding.get(0), null, Unteroffiziere));
+        }
+
+        position = getPositionNextToPlayer();
+        if (position != null) {
+            commanding1.add(new Unit(position, commanding.get(0), null, Obergefreiten));
+        }
+
+        commanding.get(0).setCommanding(commanding1);
+        alliedCharacters.addAll(commanding1);
+
+
+        // secondary character 2
+
+        List<Character> commanding2 = new ArrayList<>();
+        position = getPositionNextToPlayer();
+        if (position != null) {
+            commanding2.add(new Unit(position, commanding.get(1), null, Unteroffiziere));
+        }
+
+        position = getPositionNextToPlayer();
+        if (position != null) {
+            commanding2.add(new Unit(position, commanding.get(1), null, Obergefreiten));
+        }
+
+        commanding.get(1).setCommanding(commanding2);
+        alliedCharacters.addAll(commanding2);
+
+        changeableCharacters.add(player);
+        changeableCharacters.addAll(commanding);
+
     }
 
     public void update(){
@@ -116,7 +173,10 @@ public class CharacterManager {
 
             if (map.getExit() != null) {
                 if (Distance.calculateDistance(new Pair<>(player.getPosition().tmpX, player.getPosition().tmpY), new Pair<>(map.getExit().tmpX, map.getExit().tmpY)) < 5 * Window.objectSize) {
-                    if (!map.loadNextMap())  {
+                    if (map.loadNextMap())  {
+                        refreshAlliedPosition();
+                        loadCharacters();
+                    } else {
                         // TODO add end screen
                         System.exit(0);
                     }
@@ -125,6 +185,20 @@ public class CharacterManager {
 
         } else {
             System.out.println("DEAD");
+        }
+    }
+
+    private void refreshAlliedPosition() {
+        Position position;
+
+        player.setPosition(LevelManager.getPlayerPosition());
+        Camera.getCamera().setPosition(player.getPosition());
+
+        for (Character character : alliedCharacters) {
+             do {
+                position = getPositionNextToPlayer();
+            } while (position == null);
+            character.setPosition(position);
         }
     }
 
@@ -172,8 +246,11 @@ public class CharacterManager {
     }
 
     public boolean canWalkOn(Entity entity, int x, int y) {
+        List<Character> characterList;
 
-        for (Character otherCharacter : characters) {
+        characterList = Objects.requireNonNullElse(characters, alliedCharacters);
+
+        for (Character otherCharacter : characterList) {
             if (otherCharacter != null && otherCharacter.getEntity() != entity) {
                 if (Distance.calculateDistance(new Pair<>((double) x, (double) y), new Pair<>(otherCharacter.getPosition().tmpX, otherCharacter.getPosition().tmpY)) < CharacterAssets.collisionDistance) {
                     return false;
@@ -244,7 +321,7 @@ public class CharacterManager {
         return false;
     }
 
-    public void load() {
+    public void loadCharacters() {
         characters = new ArrayList<>();
         enemyCharacters = new ArrayList<>();;
         curentCharacter = 0;
@@ -290,63 +367,8 @@ public class CharacterManager {
             }
         }
 
-        Position position;
-
-        // main character
-
-        List<Character> commanding = new ArrayList<>();
-
-        position = getPositionNextToPlayer();
-        if (position != null) {
-            commanding.add(new Unit(position, player, null, Unterfeldwebel));
-        }
-
-        position = getPositionNextToPlayer();
-        if (position != null) {
-            commanding.add(new Unit(position, player, null, Unterfeldwebel));
-        }
-
-        player.setCommanding(commanding);
-        alliedCharacters.addAll(commanding);
-
-        // secondary character 1
-
-        List<Character> commanding1 = new ArrayList<>();
-        position = getPositionNextToPlayer();
-        if (position != null) {
-            commanding1.add(new Unit(position, commanding.get(0), null, Unteroffiziere));
-        }
-
-        position = getPositionNextToPlayer();
-        if (position != null) {
-            commanding1.add(new Unit(position, commanding.get(0), null, Obergefreiten));
-        }
-
-        commanding.get(0).setCommanding(commanding1);
-        alliedCharacters.addAll(commanding1);
-
-
-        // secondary character 2
-
-        List<Character> commanding2 = new ArrayList<>();
-        position = getPositionNextToPlayer();
-        if (position != null) {
-            commanding2.add(new Unit(position, commanding.get(1), null, Unteroffiziere));
-        }
-
-        position = getPositionNextToPlayer();
-        if (position != null) {
-            commanding2.add(new Unit(position, commanding.get(1), null, Obergefreiten));
-        }
-
-        commanding.get(1).setCommanding(commanding2);
-        alliedCharacters.addAll(commanding2);
-
         characters.add(player);
         characters.addAll(alliedCharacters);
-
-        changeableCharacters.add(player);
-        changeableCharacters.addAll(commanding);
 
         if (enemyCharacters != null) characters.addAll(enemyCharacters);
     }

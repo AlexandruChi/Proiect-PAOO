@@ -19,8 +19,8 @@ public class MapAssets {
 
     public static final int base = 0;
     public static final int beach = 1;
-    public static final int forest = 2;
-    public static final int city = 3;
+    public static final int field = 2;
+    public static final int forest = 3;
 
     public static final String basePath = "res/textures/map/base.png";
     public static final String beachPath = "res/textures/map/beach.png";

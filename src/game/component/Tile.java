@@ -54,16 +54,6 @@ public enum Tile {
         };
     }
 
-    public static boolean hasOrientation(Tile tile) {
-        if (tile == null) {
-            return false;
-        }
-        return switch (tile) {
-            case water, envWater, ground, envGround, path, envPath -> false;
-            case road, envRoad -> true;
-        };
-    }
-
     public static boolean hasCorner(Tile tile) {
         if (tile == null) {
             return false;

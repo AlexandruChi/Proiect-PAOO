@@ -121,4 +121,9 @@ public abstract class NPC implements Character {
     public Position getPosition() {
         return entity.getPosition();
     }
+
+    @Override
+    public void setPosition(Position position) {
+        getEntity().setPosition(position);
+    }
 }

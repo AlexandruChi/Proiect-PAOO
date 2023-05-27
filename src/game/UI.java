@@ -21,10 +21,10 @@ public class UI {
 
     public static void draw(Graphics graphics) {
 
-        if (System.currentTimeMillis() - time > 1000) {
+        if (System.currentTimeMillis() - time >= 1000) {
             time = System.currentTimeMillis();
             framesToPrint = frames;
-            frames = -1;
+            frames = 0;
         }
 
         frames++;

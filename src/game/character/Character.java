@@ -31,4 +31,6 @@ public interface Character {
     Character getLeader();
 
     void setCommanding(List<Character> commanding);
+
+    void setPosition(Position position);
 }

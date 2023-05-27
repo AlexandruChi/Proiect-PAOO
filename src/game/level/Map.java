@@ -9,6 +9,7 @@ import game.component.position.Corner;
 import game.component.position.Position;
 import game.component.position.RelativeCoordinates;
 import game.component.texture.Texture;
+import game.graphics.assets.MapAssets;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -75,7 +76,10 @@ public class Map {
         if (!LevelManager.loadLevel(curentMap)) {
             return false;
         }
+
         map = LevelManager.loadMap();
+
+        environment = LevelManager.getEnvironment();
 
         objectMap = new ObjectTile[height][width];
 
@@ -86,8 +90,7 @@ public class Map {
         nrRocks = LevelManager.getNrRocks();
         nrEnvRocks = LevelManager.getNrEnvRocks();
 
-        environment = LevelManager.getEnvironment();
-
+        exit = false;
         exitPosition = LevelManager.getExitPosition();
         exitPosition.xPX *= Window.objectSize;
         exitPosition.tmpX = exitPosition.xPX;

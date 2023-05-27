@@ -25,7 +25,7 @@ public class UndeadEnemy extends Enemy {
     @Override
     public void update() {
         searchForEnemyTimer++;
-        if (searchForEnemyTimer < 120) {
+        if (searchForEnemyTimer >= 30) {
             characterToFollow = null;
             int minDistance = -1;
             for (Character character : CharacterManager.getCharacterManager().getCharacters()) {

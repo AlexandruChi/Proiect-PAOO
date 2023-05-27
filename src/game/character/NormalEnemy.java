@@ -32,7 +32,7 @@ public class NormalEnemy extends Enemy {
 
     public Character searchForEnemy() {
         searchForEnemyTimer++;
-        if (searchForEnemyTimer < 120) {
+        if (searchForEnemyTimer >= 30) {
 
             characterToFollow = null;
             int minDistance = -1;

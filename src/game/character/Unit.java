@@ -72,10 +72,10 @@ public class Unit extends NPC {
         this.rank = rank;
 
         followDistance = switch (rank) {
-            case Oberleutnant -> 5 * Window.objectSize;
-            case Unterfeldwebel -> 10 * Window.objectSize;
-            case Unteroffiziere -> 15 * Window.objectSize;
-            case Obergefreiten -> 20 * Window.objectSize;
+            case Oberleutnant -> 10 * Window.objectSize;
+            case Unterfeldwebel -> 20 * Window.objectSize;
+            case Unteroffiziere -> 30 * Window.objectSize;
+            case Obergefreiten -> 40 * Window.objectSize;
         };
     }
 
@@ -156,14 +156,14 @@ public class Unit extends NPC {
 
             }
         } else if (leader != null) {
-            if (Distance.calculateDistance(new Pair<>(getPosition().tmpX, getPosition().tmpY), new Pair<>(leader.getPosition().tmpX, leader.getPosition().tmpY)) > 7 * Window.objectSize) {
-                if (Distance.calculateDistance(new Pair<>(getPosition().tmpX, getPosition().tmpY), new Pair<>(leader.getPosition().tmpX, leader.getPosition().tmpY)) > 10 * Window.objectSize) {
+            if (Distance.calculateDistance(new Pair<>(getPosition().tmpX, getPosition().tmpY), new Pair<>(leader.getPosition().tmpX, leader.getPosition().tmpY)) > followDistance) {
+                if (Distance.calculateDistance(new Pair<>(getPosition().tmpX, getPosition().tmpY), new Pair<>(leader.getPosition().tmpX, leader.getPosition().tmpY)) > followDistance * 1.5) {
                     getEntity().setSprint(true);
                 }
 
                followCharacter(leader);
 
-            } else if (Distance.calculateDistance(new Pair<>(getPosition().tmpX, getPosition().tmpY), new Pair<>(leader.getPosition().tmpX, leader.getPosition().tmpY)) <= 7 * Window.objectSize){
+            } else /*if (Distance.calculateDistance(new Pair<>(getPosition().tmpX, getPosition().tmpY), new Pair<>(leader.getPosition().tmpX, leader.getPosition().tmpY)) <= followDistance)*/{
                 moveAround();
             }
         } else {
@@ -175,7 +175,7 @@ public class Unit extends NPC {
 
     public Character searchForEnemy() {
         searchForEnemyTimer++;
-        if (searchForEnemyTimer < 120) {
+        if (searchForEnemyTimer >= 30) {
 
             characterToFollow = null;
             int minDistance = -1;
