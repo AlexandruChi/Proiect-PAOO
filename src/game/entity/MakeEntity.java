@@ -22,7 +22,7 @@ public class MakeEntity {
         static double speed = 1 * ((double) Window.objectSize / 32);
         static int health = 2;
         static int damage = 2;
-        static int delay = 60;
+        static int delay = 30;
     }
 
     public static EntityClass makeEntity(int characterID, Position position) {

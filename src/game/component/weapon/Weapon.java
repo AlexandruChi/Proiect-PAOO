@@ -57,7 +57,7 @@ public interface Weapon {
         static int range = 20 * Window.objectSize;
         static int delay = 10;
         static int damage = 3;
-        static int hitRate = 33;
+        static int hitRate = 50;
         static int maxAmmo = 10;
         static boolean auto = false;
         static boolean selectFire = false;
@@ -82,7 +82,7 @@ public interface Weapon {
     boolean isAuto();
     boolean isSelectFire();
     boolean getMode();
-    boolean setMode(boolean mode);
+    void setMode(boolean mode);
 
     void addAmmo(int ammo);
     void subAmmo(int ammo);

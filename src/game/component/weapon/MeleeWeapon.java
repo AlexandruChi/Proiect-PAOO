@@ -77,8 +77,7 @@ public class MeleeWeapon extends WeaponBase {
     }
 
     @Override
-    public boolean setMode(boolean mode) {
-        return false;
+    public void setMode(boolean mode) {
     }
 
     @Override

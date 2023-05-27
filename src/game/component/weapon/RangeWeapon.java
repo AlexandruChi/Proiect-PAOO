@@ -1,7 +1,5 @@
 package game.component.weapon;
 
-import game.Window;
-
 public class RangeWeapon extends WeaponBase {
     private final int ID;
     private int ammo;
@@ -161,8 +159,8 @@ public class RangeWeapon extends WeaponBase {
     }
 
     @Override
-    public boolean setMode(boolean mode) {
-        return this.mode = mode;
+    public void setMode(boolean mode) {
+        this.mode = mode;
     }
 
     @Override

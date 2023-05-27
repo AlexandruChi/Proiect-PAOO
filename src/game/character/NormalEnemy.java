@@ -90,16 +90,15 @@ public class NormalEnemy extends Enemy {
             } else {
                 range = getEntity().getRange();
             }
-            if (Distance.calculateDistance(new Pair<>(getPosition().tmpX, getPosition().tmpY), new Pair<>(enemy.getPosition().tmpX, enemy.getPosition().tmpY)) > 7 * Window.objectSize) {
+            if (Distance.calculateDistance(new Pair<>(getPosition().tmpX, getPosition().tmpY), new Pair<>(enemy.getPosition().tmpX, enemy.getPosition().tmpY)) > range) {
 
-                if (Distance.calculateDistance(new Pair<>(getPosition().tmpX, getPosition().tmpY), new Pair<>(enemy.getPosition().tmpX, enemy.getPosition().tmpY)) > range) {
+                if (Distance.calculateDistance(new Pair<>(getPosition().tmpX, getPosition().tmpY), new Pair<>(enemy.getPosition().tmpX, enemy.getPosition().tmpY)) > range + 3 * Window.objectSize) {
                     getEntity().setSprint(true);
                 }
 
                 followCharacter(enemy);
 
             } else {
-                //getEntity().setAim(true);
                 getEntity().attack(enemy.getEntity());
             }
         } else {
