@@ -207,18 +207,18 @@ public class CharacterManager {
 
         removeCommandNode(characterInstance);
 
-//        if (characters != null) {
-//            for (Character character : characters) {
-//                if (character.getLeader() == characterInstance) {
-//                    character.setLeader(null);
-//                }
-//                for (int i = 0; character.getCommanding() != null && i < character.getCommanding().size(); i++) {
-//                    if (character.getCommanding().get(i) == characterInstance) {
-//                        character.getCommanding().set(i, null);
-//                    }
-//                }
-//            }
-//        }
+        if (characters != null) {
+            for (Character character : characters) {
+                if (character.getLeader() == characterInstance) {
+                    character.setLeader(null);
+                }
+                for (int i = 0; character.getCommanding() != null && i < character.getCommanding().size(); i++) {
+                    if (character.getCommanding().get(i) == characterInstance) {
+                        character.getCommanding().set(i, null);
+                    }
+                }
+            }
+        }
 
         for (int i = 0; characters != null && i < characters.size(); i++) {
             if (characters.get(i) == characterInstance) {
@@ -341,10 +341,6 @@ public class CharacterManager {
     private Character removeCommandNode(Character character) {
         if (character != null) {
             Character oldCharacter = character;
-            if (character.getCommanding() != null) {
-                character.getCommanding().removeAll(Collections.singleton(null));
-                character.getCommanding().sort(Comparator.comparingInt(o -> o.getRank().ordinal()));
-            }
             character = removeCommandNode(getRemoveCommandNodeCommandingLeft(character));
             if (character != null) {
                 List<Character> newCharacterCommanding = new ArrayList<>();
@@ -357,8 +353,6 @@ public class CharacterManager {
                     }
                 }
                 character.setLeader(oldCharacter.getLeader());
-                character.getCommanding().removeAll(Collections.singleton(null));
-                character.getCommanding().sort(Comparator.comparingInt(o -> o.getRank().ordinal()));
                 for (int i = 0; character.getLeader() != null && character.getLeader().getCommanding() != null && i < character.getLeader().getCommanding().size(); i++) {
                     if (character.getLeader().getCommanding().get(i) == oldCharacter) {
                         character.getLeader().getCommanding().set(i, character);
@@ -372,8 +366,6 @@ public class CharacterManager {
 
     private Character getRemoveCommandNodeCommandingLeft(Character character) {
         if (character != null && character.getCommanding() != null) {
-            character.getCommanding().removeAll(Collections.singleton(null));
-            character.getCommanding().sort(Comparator.comparingInt(o -> o.getRank().ordinal()));
             if (character.getCommanding().size() > 0) {
                 return character.getCommanding().get(0);
             }
@@ -384,8 +376,6 @@ public class CharacterManager {
     private List<Character> getRemoveCommandNodeCommandingRight(Character character) {
         List<Character> commandingRight = new ArrayList<>();
         if (character != null && character.getCommanding() != null) {
-            character.getCommanding().removeAll(Collections.singleton(null));
-            character.getCommanding().sort(Comparator.comparingInt(o -> o.getRank().ordinal()));
             commandingRight.addAll(character.getCommanding());
             if (character.getCommanding().size() > 0) {
                 commandingRight.set(0, null);
