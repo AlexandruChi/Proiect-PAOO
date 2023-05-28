@@ -21,7 +21,11 @@ public class GameState extends State {
         map = new Map();
         characterManager = new CharacterManager(map);
         camera = new Camera(characterManager.getPlayer());
-        // TODO save file
+
+        boolean newGame = true;
+        if (newGame) {
+            LevelManager.saveLevelStart();
+        }
     }
 
     @Override
@@ -34,13 +38,5 @@ public class GameState extends State {
     public void draw(Graphics graphics) {
         map.draw(graphics, camera, characterManager);
         UI.draw(graphics);
-    }
-
-    public Map getMap() {
-        return map;
-    }
-
-    public CharacterManager getCharacterManager() {
-        return characterManager;
     }
 }

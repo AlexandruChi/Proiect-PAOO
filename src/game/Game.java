@@ -21,11 +21,6 @@ public class Game implements Runnable {
         return input;
     }
 
-    static class states {
-        //TODO more states
-        static State gameState;
-    }
-
     public static Game getGame() {
         if (game == null) {
             game = new Game("Beim letzten Weltkrieg", 960, 540);
@@ -42,8 +37,6 @@ public class Game implements Runnable {
         AssetManager.load();
 
         State.setState(new StartState());
-
-        states.gameState = new GameState();
 
         //TODO states
     }
@@ -125,6 +118,6 @@ public class Game implements Runnable {
     }
 
     public void loadGame() {
-        State.setState(states.gameState);
+        State.setState(new GameState());
     }
 }

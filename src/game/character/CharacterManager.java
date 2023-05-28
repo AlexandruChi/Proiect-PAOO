@@ -290,6 +290,8 @@ public class CharacterManager {
             swapCommandNode(player, newPlayer);
 
             Camera.getCamera().setPosition(player.getPosition());
+
+            LevelManager.saveGame();
             return true;
         }
 
@@ -464,6 +466,13 @@ public class CharacterManager {
 
     public List<Character> getCharacters() {
         return characters;
+    }
+    public List<Character> getEnemyCharacters() {
+        return enemyCharacters;
+    }
+
+    public List<Character> getAlliedCharacters() {
+        return alliedCharacters;
     }
 
     public Character getCharacterAtPosition(Position position) {

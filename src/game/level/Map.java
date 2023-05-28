@@ -83,8 +83,6 @@ public class Map {
 
         objectMap = new ObjectTile[height][width];
 
-        // TODO add loading for objects from save
-
         nrTrees = LevelManager.getNrTrees();
         nrEnvTrees = LevelManager.getNrEnvTrees();
         nrRocks = LevelManager.getNrRocks();
@@ -422,6 +420,10 @@ public class Map {
         return objectives;
     }
 
+    public ObjectTile[][] getObjectMap() {
+        return  objectMap;
+    }
+
     public boolean canWalkOn(int x, int y) {
 
         // Tile -> layer indexat de la 1
@@ -518,5 +520,9 @@ public class Map {
             return exitPosition;
         }
         return null;
+    }
+
+    public int getCurentMap() {
+        return curentMap;
     }
 }

@@ -32,6 +32,20 @@ public class Collectable extends TextureComponent {
         };
     }
 
+    public Collectable(Position position, int type) {
+        super(position, null, new PrintBox(textureSize / 2, textureSize));
+        collected = false;
+
+        this.type = type;
+
+        texture = switch (this.type) {
+            case medKit, ammo -> MakeTexture.make(UIAssets.collectable, textureSize);
+            case toolBox -> MakeTexture.make(UIAssets.toolBox, textureSize);
+            case map -> MakeTexture.make(UIAssets.map, textureSize);
+            default -> throw new IllegalStateException("Unexpected value: " + type);
+        };
+    }
+
     public Pair<Integer, Integer> collect() {
         collected = true;
         return new Pair<>(type, switch (type) {
