@@ -17,7 +17,7 @@ public class GameState extends State {
 
     //TODO better loading
     public GameState() {
-        LevelManager.readFile("res/campaign.blwk");
+        LevelManager.readFile("campaign.blwk");
         map = new Map();
         characterManager = new CharacterManager(map);
         camera = new Camera(characterManager.getPlayer());
