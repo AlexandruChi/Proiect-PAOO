@@ -296,42 +296,6 @@ public class CharacterManager {
         return false;
     }
 
-//    private void swapCommandNode(Character character1, Character character2) {
-//        List<Character> character2Commanding = character2.getCommanding();
-//        character2.setCommanding(character1.getCommanding());
-//        character1.setCommanding(character2Commanding);
-//
-//        Character character2Leader = character2.getLeader();
-//        character2.setLeader(character2.getLeader());
-//        character1.setLeader(character2Leader);
-//
-//        List<Character> character1LeaderCommanding = null;
-//        List<Character> character2LeaderCommanding = null;
-//
-//        if (character1.getLeader() != null && character1.getLeader().getCommanding() != null) {
-//            character1LeaderCommanding = character1.getLeader().getCommanding();
-//        }
-//
-//        if (character2.getLeader() != null && character2.getLeader().getCommanding() != null) {
-//            character2LeaderCommanding = character2.getLeader().getCommanding();
-//        }
-//
-//        if (character1.getCommanding() != null) {
-//            for (Character character : character1.getCommanding()) {
-//                character.setLeader(character1);
-//            }
-//        }
-//
-//        if (character2.getCommanding() != null) {
-//            for (Character character : character2.getCommanding()) {
-//                character.setLeader(character2);
-//            }
-//        }
-//
-//        swapCommandNodesCommanding(character1, character2, character1LeaderCommanding);
-//        swapCommandNodesCommanding(character2, character1, character2LeaderCommanding);
-//    }
-
     private void swapCommandNode(Character character1, Character character2) {
         List<Character> commandingCharacter1 = character1.getCommanding();
         character1.setCommanding(character2.getCommanding());
@@ -368,56 +332,7 @@ public class CharacterManager {
                 }
             }
         }
-
-//        for (int i = 0; character1.getLeader() != null && character1.getLeader().getCommanding() != null && i < character1.getLeader().getCommanding().size(); i++) {
-//            if (character1.getLeader().getCommanding().get(i) == character2) {
-//                character1.getLeader().getCommanding().set(i, character1);
-//            }
-//        }
-//
-//        for (int i = 0; character2.getLeader() != null && character2.getLeader().getCommanding() != null && i < character2.getLeader().getCommanding().size(); i++) {
-//            if (character2.getLeader().getCommanding().get(i) == character1) {
-//                character2.getLeader().getCommanding().set(i, character2);
-//            }
-//        }
     }
-
-//    private void swapCommandNodesCommanding(Character character1, Character character2, List<Character> character1LeaderCommanding) {
-//        for (int i = 0; character1LeaderCommanding != null && i < character1LeaderCommanding.size(); i++) {
-//            if (character1LeaderCommanding.get(i) == character2) {
-//                character1LeaderCommanding.set(i, character1);
-//            }
-//            character1LeaderCommanding.removeAll(Collections.singleton(null));
-//            character1LeaderCommanding.sort(Comparator.comparingInt(o -> o.getRank().ordinal()));
-//        }
-//    }
-
-//    private void removeCommandNode(Character characterInstance) {
-//        Character newNode = null;
-//        if (characterInstance.getCommanding() != null && characterInstance.getCommanding().size() > 0) {
-//            characterInstance.getCommanding().sort(Comparator.comparingInt(o -> o.getRank().ordinal()));
-//            newNode = characterInstance.getCommanding().get(0);
-//            characterInstance.getCommanding().removeAll(Collections.singleton(null));
-//            for (Character character : characterInstance.getCommanding()) {
-//                character.setLeader(newNode);
-//            }
-//            newNode.setCommanding(characterInstance.getCommanding());
-//        }
-//        if (characterInstance.getLeader() != null) {
-//            if (characterInstance.getLeader().getCommanding() != null) {
-//                for (int i = 0; i < characterInstance.getLeader().getCommanding().size(); i++) {
-//                    if (characterInstance == characterInstance.getLeader().getCommanding().get(i)) {
-//                        characterInstance.getLeader().getCommanding().set(i, newNode);
-//                        if (newNode != null) {
-//                            newNode.setLeader(characterInstance.getLeader());
-//                        }
-//                    }
-//                }
-//                characterInstance.getLeader().getCommanding().removeAll(Collections.singleton(null));
-//                characterInstance.getLeader().getCommanding().sort(Comparator.comparingInt(o -> o.getRank().ordinal()));
-//            }
-//        }
-//    }
 
     private Character removeCommandNode(Character character) {
         if (character != null) {
