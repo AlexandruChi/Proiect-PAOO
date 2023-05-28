@@ -99,6 +99,7 @@ public class NormalEnemy extends Enemy {
                 followCharacter(enemy);
 
             } else {
+                getEntity().setAim(true);
                 getEntity().attack(enemy.getEntity());
             }
         } else {

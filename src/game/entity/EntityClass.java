@@ -1,15 +1,16 @@
 package game.entity;
 
-import game.Game;
 import game.character.CharacterManager;
 import game.component.*;
 import game.component.TextureComponent;
 import game.component.position.Distance;
 import game.component.position.Position;
 import game.component.texture.MakeTexture;
-import game.component.weapon.RangeWeapon;
 import game.component.weapon.Weapon;
 import game.level.Map;
+
+import javax.print.attribute.standard.PrinterMoreInfoManufacturer;
+import java.util.List;
 
 public class EntityClass extends TextureComponent implements Entity {
 
@@ -25,6 +26,9 @@ public class EntityClass extends TextureComponent implements Entity {
     private int health, maxHealth;
     private Animation animation;
     private Animation[][] altAnimation;
+
+    private List<Animation[][]> animationList;
+
     private int curentAnimation;
 
     private Weapon[] weapons;
@@ -37,15 +41,19 @@ public class EntityClass extends TextureComponent implements Entity {
     private boolean sprint;
     private double sprintSpeed;
     private boolean aim;
-    private double aimSpeed;
+
+    private int orientation;
 
     private Entity attackedBy;
 
-    EntityClass(Position position, Animation[][] animation, HitBox hitbox, PrintBox printBox, double normalSpeed, double sprintSpeed, int health, int damage, int range, int delay, int weaponSlots) {
-        super(position, MakeTexture.make(animation[0][0].texture, animation[0][0].width), printBox);
-        this.animation = animation[0][0];
-        altAnimation = animation;
+    EntityClass(Position position, List<Animation[][]> animation, HitBox hitbox, PrintBox printBox, double normalSpeed, double sprintSpeed, int health, int damage, int range, int delay, int weaponSlots) {
+        super(position, MakeTexture.make(animation.get(0)[0][0].texture, animation.get(0)[0][0].width), printBox);
+        this.animation = animation.get(0)[0][0];
+        altAnimation = animation.get(0);
+        animationList = animation;
         curentAnimation = 0;
+
+        orientation = 0;
 
         this.hitBox = hitbox;
         this.health = health;
@@ -61,7 +69,6 @@ public class EntityClass extends TextureComponent implements Entity {
         sprint = false;
 
         aim = false;
-        aimSpeed = 0.5 * normalSpeed;
 
         nrMedKits = 0;
 
@@ -138,9 +145,10 @@ public class EntityClass extends TextureComponent implements Entity {
         move();
 
         switch (travelDir) {
-            case up_right, right, down_right -> animation = altAnimation[curentAnimation][1];
-            case down_left, left, up_left -> animation = altAnimation[curentAnimation][0];
+            case up_right, right, down_right -> orientation = 1;
+            case down_left, left, up_left -> orientation = 0;
         }
+
         refreshTexture();
 
         if (attackTimer > 0) {
@@ -149,17 +157,31 @@ public class EntityClass extends TextureComponent implements Entity {
     }
 
     public void setOrientation(int orientation) {
-        animation = altAnimation[curentAnimation][orientation];
-        refreshTexture();
+        this.orientation = orientation;
     }
 
     private void refreshTexture() {
-        texture.texture = animation.texture;
+        if (aim) {
+            altAnimation = animationList.get(2);
+        } else if (travelDir != Direction.stop) {
+            altAnimation = animationList.get(1);
+        } else {
+            altAnimation = animationList.get(0);
+        }
+
+        if (curentWeapon == null) {
+            curentAnimation = 0;
+        } else {
+            curentAnimation = curentWeapon.getID() + 1;
+            if (curentAnimation == 6) {
+                curentAnimation = 0;
+            }
+        }
+        animation = altAnimation[orientation][curentAnimation];
+        texture.texture = animation.getTexture();
     }
 
     public void move() {
-
-        // TODO fix and add fractional movement
 
         boolean canMove = false;
         double tmpSpeed = speed;
@@ -248,7 +270,7 @@ public class EntityClass extends TextureComponent implements Entity {
             attack(CharacterManager.getCharacterManager().getCharacterAtPosition(position).getEntity());
         } catch (NullPointerException e) {
             attack((Entity)null);
-        };
+        }
     }
 
     public void attack(Entity entity) {
@@ -272,10 +294,6 @@ public class EntityClass extends TextureComponent implements Entity {
                 hitRate = curentWeapon.getHitRate();
 
                 if (!aim && curentWeapon.canAim()) {
-                    hitRate /= 4;
-                }
-
-                if (travelDir != Direction.stop) {
                     hitRate /= 4;
                 }
             }
@@ -307,7 +325,7 @@ public class EntityClass extends TextureComponent implements Entity {
         if (sprint) {
             speed = sprintSpeed;
         } else if (aim) {
-            speed = aimSpeed;
+            speed = 0;
         } else {
             speed = normalSpeed;
         }
@@ -320,7 +338,11 @@ public class EntityClass extends TextureComponent implements Entity {
 
     @Override
     public void setAim(boolean aim) {
-        this.aim = aim;
+        if (sprint) {
+            this.aim = false;
+        } else {
+            this.aim = aim;
+        }
     }
 
     @Override

@@ -77,6 +77,7 @@ public class Player implements Character {
     public void update() {
         entity.setTravelDir(Game.getGame().getInput().getDirection());
         entity.setSprint(Game.getGame().getInput().getSprint());
+        entity.setAim(Game.getGame().getInput().getAim());
 
         if (Game.getGame().getInput().getMedKit()) {
             entity.useMedKit();
@@ -122,8 +123,6 @@ public class Player implements Character {
                 }
             }
         }
-
-        // TODO add aim
 
         entity.update();
         if(changeOrientation) {

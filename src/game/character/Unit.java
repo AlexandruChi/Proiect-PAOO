@@ -149,6 +149,7 @@ public class Unit extends NPC {
                 followCharacter(enemy);
 
             } else {
+                getEntity().setAim(true);
                 getEntity().attack(enemy.getEntity());
             }
         } else if (locationToFollow != null) {

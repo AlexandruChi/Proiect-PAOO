@@ -3,7 +3,9 @@ package game.entity;
 import game.Window;
 import game.component.position.Position;
 import game.graphics.assets.CharacterAssets;
+import game.graphics.assets.character.BritishCharacterAssets;
 import game.graphics.assets.character.GermanCharacterAssets;
+import game.graphics.assets.character.UndeadCharacterAssets;
 
 public class MakeEntity {
     public static final int germanCharacterID = 1;
@@ -28,9 +30,9 @@ public class MakeEntity {
     public static EntityClass makeEntity(int characterID, Position position) {
         return switch (characterID) {
 
-            case germanCharacterID -> new EntityClass(position, GermanCharacterAssets.characterWeapon1, CharacterAssets.hitbox, CharacterAssets.printBox, characterStats.normalSpeed, characterStats.sprintSpeed, characterStats.health, characterStats.damage, 2 * CharacterAssets.collisionDistance, characterStats.delay, 3);
-            case britishCharacterID -> new EntityClass(position, GermanCharacterAssets.characterWeapon1, CharacterAssets.hitbox, CharacterAssets.printBox, characterStats.normalSpeed, characterStats.sprintSpeed, characterStats.health, characterStats.damage, 2 * CharacterAssets.collisionDistance, characterStats.delay, 1);
-            case undeadCharacterID -> new EntityClass(position, GermanCharacterAssets.characterWeapon1, CharacterAssets.hitbox, CharacterAssets.printBox, undeadStats.speed, undeadStats.speed, undeadStats.health, undeadStats.damage, 2 * CharacterAssets.collisionDistance, undeadStats.delay, 0);
+            case germanCharacterID -> new EntityClass(position, GermanCharacterAssets.characterAnimation, CharacterAssets.hitbox, CharacterAssets.printBox, characterStats.normalSpeed, characterStats.sprintSpeed, characterStats.health, characterStats.damage, 2 * CharacterAssets.collisionDistance, characterStats.delay, 3);
+            case britishCharacterID -> new EntityClass(position, BritishCharacterAssets.characterAnimation, CharacterAssets.hitbox, CharacterAssets.printBox, characterStats.normalSpeed, characterStats.sprintSpeed, characterStats.health, characterStats.damage, 2 * CharacterAssets.collisionDistance, characterStats.delay, 1);
+            case undeadCharacterID -> new EntityClass(position, UndeadCharacterAssets.characterAnimation, CharacterAssets.hitbox, CharacterAssets.printBox, undeadStats.speed, undeadStats.speed, undeadStats.health, undeadStats.damage, 2 * CharacterAssets.collisionDistance, undeadStats.delay, 0);
 
             default -> throw new IllegalStateException("Unexpected value: " + characterID);
         };
