@@ -13,6 +13,7 @@ public class Input implements KeyListener, MouseListener {
     private final Set<Direction> validDirections;
     boolean input;
     boolean sprint;
+    boolean aim;
     boolean singleClick;
     boolean changMode;
     int curentWeapon;
@@ -34,6 +35,7 @@ public class Input implements KeyListener, MouseListener {
         curentWeapon = 2;
         change = 0;
         medKit = false;
+        aim = false;
     }
 
     public Position getPosition() {
@@ -52,6 +54,10 @@ public class Input implements KeyListener, MouseListener {
 
     public boolean getSingleClick() {
         return singleClick;
+    }
+
+    public boolean getAim() {
+        return aim;
     }
 
     public boolean getChangeMode() {
@@ -115,6 +121,7 @@ public class Input implements KeyListener, MouseListener {
             case KeyEvent.VK_R -> reload = true;
 
             case KeyEvent.VK_SHIFT -> sprint = true;
+            case KeyEvent.VK_SPACE -> aim = true;
         }
     }
 
@@ -136,6 +143,7 @@ public class Input implements KeyListener, MouseListener {
             case KeyEvent.VK_UP, KeyEvent.VK_DOWN -> change = 0;
 
             case KeyEvent.VK_SHIFT -> sprint = false;
+            case KeyEvent.VK_SPACE -> aim = false;
         }
     }
 

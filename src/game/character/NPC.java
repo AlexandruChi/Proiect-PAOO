@@ -35,7 +35,7 @@ public abstract class NPC implements Character {
 
     public void moveAround() {
         changeDirectionTimer++;
-        if (changeDirectionTimer == changeDirectionDelay) {
+        if (changeDirectionTimer >= changeDirectionDelay) {
             changeDirectionTimer = 0;
             entity.setTravelDir(Direction.values()[RandomNumber.randomNumber(0, 8)]);
         }

@@ -65,6 +65,8 @@ public class Map {
         __map = this;
         exit = false;
         curentMap = 0;
+        loadNextMap();
+        loadNextMap();
         if (!loadNextMap()) {
             // TODO add error
             System.exit(1);
@@ -102,6 +104,10 @@ public class Map {
         objectives = new ArrayList<>();
 
         addObjectives();
+
+        if (nrFinishedObjectives == nrObjectives) {
+            exit = true;
+        }
 
         return true;
     }
