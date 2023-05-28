@@ -7,10 +7,10 @@ public interface Weapon {
     int RangeWeapon = 1;
 
     int Sword = 0;
-    int GermanRifle = 1;
-    int GermanSMG = 2;
-    int GermanAR = 3;
-    int GermanSidearm = 4;
+    int GermanRifle = 4;
+    int GermanSMG = 3;
+    int GermanAR = 2;
+    int GermanSidearm = 1;
     int BritishRifle = 5;
 
     class GermanRifleStats {
@@ -54,10 +54,10 @@ public interface Weapon {
     }
 
     class BritishRifleStats {
-        static int range = 20 * Window.objectSize;
+        static int range = 10 * Window.objectSize;
         static int delay = 10;
-        static int damage = 3;
-        static int hitRate = 50;
+        static int damage = 1;
+        static int hitRate = 10;
         static int maxAmmo = 10;
         static boolean auto = false;
         static boolean selectFire = false;

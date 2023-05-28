@@ -82,10 +82,10 @@ public class UIAssets {
         clip = spriteSheet.crop(6.5, 1, 128);
 
         weapons[0] = spriteSheet.crop(3.75, 0, 256, 128);
-        weapons[1] = spriteSheet.crop(3.75, 5, 256, 128);
-        weapons[2] = spriteSheet.crop(3.75, 4, 256, 128);
-        weapons[3] = spriteSheet.crop(3.75, 3, 256, 128);
-        weapons[4] = spriteSheet.crop(3.75, 2, 256, 128);
+        weapons[1] = spriteSheet.crop(3.75, 2, 256, 128);
+        weapons[2] = spriteSheet.crop(3.75, 3, 256, 128);
+        weapons[3] = spriteSheet.crop(3.75, 4, 256, 128);
+        weapons[4] = spriteSheet.crop(3.75, 5, 256, 128);
         weapons[5] = spriteSheet.crop(3.75, 1, 256, 128);
 
         medals[0] = spriteSheet.cropAbsX(1216, 0, 384, 128);
