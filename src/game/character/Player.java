@@ -65,6 +65,11 @@ public class Player implements Character {
         getEntity().setPosition(position);
     }
 
+    @Override
+    public void setCharacterToFollow(Character character) {
+
+    }
+
     public void setRank(Ranks rank) {
         this.rank = rank;
     }

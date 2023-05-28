@@ -89,4 +89,9 @@ public class UndeadEnemy extends Enemy {
     public void setCommanding(List<Character> commanding) {
 
     }
+
+    @Override
+    public void setCharacterToFollow(Character character) {
+        characterToFollow = character;
+    }
 }

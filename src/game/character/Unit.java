@@ -92,6 +92,11 @@ public class Unit extends NPC {
         this.commanding = commanding;
     }
 
+    @Override
+    public void setCharacterToFollow(Character character) {
+        characterToFollow = character;
+    }
+
     public List<Character> getCommanding() {
         return commanding;
     }

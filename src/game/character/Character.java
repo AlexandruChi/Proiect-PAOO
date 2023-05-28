@@ -33,4 +33,6 @@ public interface Character {
     void setCommanding(List<Character> commanding);
 
     void setPosition(Position position);
+
+    void setCharacterToFollow(Character character);
 }
