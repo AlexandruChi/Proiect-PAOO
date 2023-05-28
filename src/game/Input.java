@@ -19,6 +19,7 @@ public class Input implements KeyListener, MouseListener {
     int change;
     boolean medKit;
     boolean reload;
+
     Direction direction;
 
     Position position;
