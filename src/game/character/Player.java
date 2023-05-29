@@ -149,9 +149,7 @@ public class Player implements Character {
     public void addKill() {
         nrKills++;
         switch (nrKills) {
-            case 5, 10, 15, 25, 35, 45, 55, 65, 75 -> {
-                addMedal();
-            }
+            case 5, 10, 15, 20, 25, 30, 35, 40, 45 -> addMedal();
         }
         score += scoreForKill;
     }
