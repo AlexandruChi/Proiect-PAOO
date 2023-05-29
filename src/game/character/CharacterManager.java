@@ -201,6 +201,7 @@ public class CharacterManager {
                     if (map.loadNextMap())  {
                         refreshAlliedPosition();
                         loadCharacters();
+                        LevelManager.saveLevelStart();
                     } else {
                         Game.getGame().startScreen();
                     }
