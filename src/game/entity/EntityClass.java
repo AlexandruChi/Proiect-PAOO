@@ -19,9 +19,6 @@ import java.util.List;
  */
 
 public class EntityClass extends TextureComponent implements Entity {
-
-    //TODO better animation management
-
     private Direction travelDir;
     private HitBox hitBox;
     private double speed;

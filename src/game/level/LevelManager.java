@@ -49,11 +49,9 @@ public class LevelManager {
             String line = bufferedReader.readLine();
             String[] data = line.split(" ");
             if (data.length != 2) {
-                // TODO error
                 System.exit(1);
             }
             if (!data[0].equals("nrLevels")) {
-                // TODO error
                 System.exit(1);
             }
             try {
@@ -63,7 +61,6 @@ public class LevelManager {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            // TODO error;
         }
     }
 
@@ -122,7 +119,6 @@ public class LevelManager {
         try {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                // TODO add more tags
                 String[] data = TextParser.parse(line);
                 if (data.length == 1) {
                     switch (data[0]) {
@@ -426,14 +422,11 @@ public class LevelManager {
                                             case 1 -> layer[i][j] = tile;
                                             case 2 -> layer[i][j] = envTile;
                                             case 0 -> layer[i][j] = null;
-                                            default ->
-                                                // TODO add error
-                                                    System.exit(1);
+                                            default -> System.exit(1);
                                         }
                                     }
                                 }
                             } catch (NumberFormatException e) {
-                                // TODO add error;
                                 e.printStackTrace();
                             }
                         }

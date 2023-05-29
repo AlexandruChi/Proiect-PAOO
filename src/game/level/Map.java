@@ -19,8 +19,6 @@ import java.util.Vector;
 import static game.component.ObjectTile.tmp;
 import static game.component.ObjectTile.tree;
 
-// TODO better coordinates system
-
 /*
     Clasa petru harta jocului.
     Harta este împărțită în 4 layer-e, fiecare cu un tip diferit de tile, un layer cu obiectele generate pe tile-uri care
