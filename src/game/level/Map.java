@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-import static game.component.ObjectTile.tmp;
-import static game.component.ObjectTile.tree;
+import static game.component.ObjectTile.*;
+import static game.graphics.assets.MapAssets.forest;
 
 /*
     Clasa petru harta jocului.
@@ -109,10 +109,8 @@ public class Map {
         exit = false;
         exitPosition = LevelManager.getExitPosition();
         exitPosition.xPX *= Window.objectSize;
-        //exitPosition.xPX *= (int)((double)Game.getGame().getHeight() / 540);
         exitPosition.tmpX = exitPosition.xPX;
         exitPosition.yPX *= Window.objectSize;
-        //exitPosition.yPX *= (int)((double)Game.getGame().getHeight() / 540);
         exitPosition.tmpY = exitPosition.yPX;
 
         generateObjects(objectMap);
@@ -440,7 +438,7 @@ public class Map {
                 }
 
                 Texture texture = ObjectTile.getTexture(objectMap[i][j]);
-                if (objectMap[i][j] == tree && !characterManager.getPlayer().isDead()) {
+                if ((objectMap[i][j] == tree || (objectMap[i][j] == envTree && environment == forest) ) && !characterManager.getPlayer().isDead()) {
                     if (i > (characterManager.getPlayer().getPosition().yPX / Window.objectSize) + 2 && Math.abs(j - characterManager.getPlayer().getPosition().xPX / Window.objectSize) < 25) {
                         texture = ObjectTile.getTransparentTexture(objectMap[i][j]);
 
@@ -529,9 +527,17 @@ public class Map {
                 difY = 1;
             }
 
-            if ((map.get(layer)[y + difY][x] != map.get(layer)[y][x]) && (map.get(layer)[y][x + difX] != map.get(layer)[y][x])) {
-                if ((Tile.getNormal(map.get(layer)[y - difY][x]) == Tile.getNormal(map.get(layer)[y][x])) && (Tile.getNormal(map.get(layer)[y][x - difX]) == Tile.getNormal(map.get(layer)[y][x]))) {
-                    return i;
+            if (layer == 2 || layer == 3) {
+                if ((Tile.getNormal(map.get(layer)[y + difY][x]) != Tile.getNormal(map.get(layer)[y][x])) && (Tile.getNormal(map.get(layer)[y][x + difX]) != Tile.getNormal(map.get(layer)[y][x]))) {
+                    if ((Tile.getNormal(map.get(layer)[y - difY][x]) == Tile.getNormal(map.get(layer)[y][x])) && (Tile.getNormal(map.get(layer)[y][x - difX]) == Tile.getNormal(map.get(layer)[y][x]))) {
+                        return i;
+                    }
+                }
+            } else {
+                if ((map.get(layer)[y + difY][x] != map.get(layer)[y][x]) && (map.get(layer)[y][x + difX] != map.get(layer)[y][x])) {
+                    if ((Tile.getNormal(map.get(layer)[y - difY][x]) == Tile.getNormal(map.get(layer)[y][x])) && (Tile.getNormal(map.get(layer)[y][x - difX]) == Tile.getNormal(map.get(layer)[y][x]))) {
+                        return i;
+                    }
                 }
             }
         }

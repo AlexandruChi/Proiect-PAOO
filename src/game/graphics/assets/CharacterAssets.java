@@ -1,6 +1,5 @@
 package game.graphics.assets;
 
-import game.Game;
 import game.Window;
 import game.component.Animation;
 import game.component.HitBox;
@@ -27,7 +26,7 @@ public class CharacterAssets {
         UndeadCharacterAssets.load();
     }
 
-    public static List<Animation[][]> newAnimation(List<Animation[][]> animations) {
+    public static List<Animation[][]> cloneAnimation(List<Animation[][]> animations) {
         List<Animation[][]> newAnimation = new ArrayList<>();
         for (Animation[][] animation : animations) {
             Animation[][] newAnimationVector = new Animation[animation.length][animation[0].length];

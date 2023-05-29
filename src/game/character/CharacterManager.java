@@ -24,8 +24,10 @@ import static game.character.Ranks.*;
     din joc. Toate caracterele sunt utilizate folosind interfața Character, fiind stocate într-o listă de caractere când
     sunt folosite de funcțiile de update sau de trimise la funcția de draw din clasa Map.
 
-    Caracterele sunt organizate în arbori care determină caracterul pe care îl urmăresc.
-    Lista de caractere commanding returnată de metoda getCommanding reprezintă nodurile fiu.
+    Caracterele sunt organizate în arbori utilizând șablonul de proiectare Composite care determină caracterul pe care
+    îl urmăresc.
+
+    Lista de caractere commanding returnată de metoda getCommanding reprezintă nodurile fiu
     Caracterul leader  returnat de metoda getLeader reprezintă nodul părinte și caracterul pe care îl urmărește pe hartă
 
     Elementele din listele de caractere și lista de obiective sunt ordonate în funcție de poziția de pe hartă pentru a
@@ -236,12 +238,14 @@ public class CharacterManager {
 
         if (characters != null) {
             for (Character character : characters) {
-                if (character.getLeader() == characterInstance) {
-                    character.setLeader(null);
-                }
-                for (int i = 0; character.getCommanding() != null && i < character.getCommanding().size(); i++) {
-                    if (character.getCommanding().get(i) == characterInstance) {
-                        character.getCommanding().set(i, null);
+                if (character != null) {
+                    if (character.getLeader() == characterInstance) {
+                        character.setLeader(null);
+                    }
+                    for (int i = 0; character.getCommanding() != null && i < character.getCommanding().size(); i++) {
+                        if (character.getCommanding().get(i) == characterInstance) {
+                            character.getCommanding().set(i, null);
+                        }
                     }
                 }
             }

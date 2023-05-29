@@ -13,14 +13,14 @@ import game.graphics.assets.CharacterAssets;
 
 public class Camera extends Component {
     private static Camera camera;
-    private static final int cameraDistance = 100;
+    private static final int cameraDistance = (int) (100 * ((double)Game.height / 540));
 
     /*
         constante pentru definirea poziției camerei pe ecran;
      */
 
-    public static final int screenX = 367;
-    public static final int screenY = 270 + CharacterAssets.characterTextureSize / 2;
+    public static final int screenX = (int) (367 * ((double)Game.height / 540));
+    public static final int screenY = (int) (270 * ((double)Game.height / 540) + CharacterAssets.characterTextureSize / 2);
     private final Player player;
 
     public Camera(Player player) {

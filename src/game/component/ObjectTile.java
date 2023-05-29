@@ -2,6 +2,7 @@ package game.component;
 
 import game.component.texture.Texture;
 import game.graphics.assets.MapAssets;
+import game.level.Map;
 
 /*
     Conține tile-uri pentru obiectele generate. Modul de funcționare este identic cu cel al tile-urilor obișnuite cu
@@ -17,7 +18,7 @@ public enum ObjectTile {
         }
 
         switch (environment) {
-            case MapAssets.beach -> {
+            case MapAssets.beach, MapAssets.field -> {
                 return switch (objectTile) {
                     case envTree, envRock -> 2;
 
@@ -25,7 +26,12 @@ public enum ObjectTile {
                 };
             }
             case MapAssets.forest -> {
+                return switch (objectTile) {
+                    case envTree -> 25;
+                    case envRock -> 1;
 
+                    default -> getEnvObjectTileScale(objectTile, MapAssets.base);
+                };
             }
         }
         return switch (objectTile) {
@@ -42,7 +48,7 @@ public enum ObjectTile {
         }
 
         switch (environment) {
-            case MapAssets.beach -> {
+            case MapAssets.beach, MapAssets.field -> {
                 return switch (objectTile) {
                     case envTree, envRock -> new Pair<>(2, 1);
 
@@ -50,7 +56,11 @@ public enum ObjectTile {
                 };
             }
             case MapAssets.forest -> {
+                return switch (objectTile) {
+                    case envTree, envRock -> new Pair<>(1, 1);
 
+                    default -> getHitBoxSize(objectTile, MapAssets.base);
+                };
             }
         }
         return switch (objectTile) {
@@ -67,7 +77,7 @@ public enum ObjectTile {
         }
 
         switch (environment) {
-            case MapAssets.beach -> {
+            case MapAssets.beach, MapAssets.field -> {
                 return switch (objectTile) {
                     case envTree, envRock -> new Pair<>(0, 1);
 
@@ -75,7 +85,12 @@ public enum ObjectTile {
                 };
             }
             case MapAssets.forest -> {
+                return switch (objectTile) {
+                    case envTree -> new Pair<>(11,24);
+                    case envRock -> new Pair<>(0, 0);
 
+                    default -> getPrintBoxSize(objectTile, MapAssets.base);
+                };
             }
         }
         return switch (objectTile) {
@@ -106,7 +121,7 @@ public enum ObjectTile {
         }
 
         switch (environment) {
-            case MapAssets.beach -> {
+            case MapAssets.beach, MapAssets.field -> {
                 return switch (objectTile) {
                     case envTree, envRock -> true;
 
@@ -114,7 +129,12 @@ public enum ObjectTile {
                 };
             }
             case MapAssets.forest -> {
+                return switch (objectTile) {
+                    case envTree -> false;
+                    case envRock -> true;
 
+                    default -> canSeeThrew(objectTile, MapAssets.base);
+                };
             }
         }
         return switch (objectTile) {
@@ -130,6 +150,7 @@ public enum ObjectTile {
         }
         return switch (objectTile) {
             case tree -> MapAssets.treeTransparent;
+            case envTree -> MapAssets.envTreeTransparent;
 
             default -> null;
         };

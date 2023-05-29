@@ -29,6 +29,8 @@ public class MapAssets {
 
     public static final String basePath = "res/textures/map/base.png";
     public static final String beachPath = "res/textures/map/beach.png";
+    public static final String fieldPath = "res/textures/map/field.png";
+    public static final String forestPath = "res/textures/map/forest.png";
     public static Texture water;
     public static Texture ground;
     public static Texture path;
@@ -43,6 +45,7 @@ public class MapAssets {
     public static Texture envRock;
 
     public static Texture treeTransparent;
+    public static Texture envTreeTransparent;
 
     public static Texture[] waterCorner;
     public static Texture[] groundCorner;
@@ -86,6 +89,8 @@ public class MapAssets {
     public static void loadEnvironment(int environment) {
         String path = switch (environment) {
             case beach -> beachPath;
+            case forest -> forestPath;
+            case field -> fieldPath;
             default -> basePath;
         };
         SpriteSheet spriteSheet = new SpriteSheet(ImageLoader.loadImage(path));
@@ -101,6 +106,13 @@ public class MapAssets {
         envGroundCorner = new Texture[4];
         envPathCorner = new Texture[4];
         envRoadCorner = new Texture[4];
+
+        if (environment == forest) {
+            envTreeTransparent = new Texture(envTree);
+            envTreeTransparent.texture = ImageLoader.lowerTransparency(envTreeTransparent.texture);
+        } else {
+            envTreeTransparent = null;
+        }
 
         for (int i = 1; i <= 4; i++) {
             envWaterCorner[i - 1] = MakeTexture.make(ImageLoader.removeCorner(envWater.texture, i), waterTileSize);
