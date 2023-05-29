@@ -5,6 +5,10 @@ import game.graphics.ImageLoader;
 
 import java.awt.image.BufferedImage;
 
+/*
+    Clasa Animation conține metodele make pentru crearea unei animații
+ */
+
 public class Animation extends Texture {
     private final BufferedImage[] animation;
     private final int length;
@@ -48,6 +52,10 @@ public class Animation extends Texture {
         timer = 0;
         curentTexture = 0;
     }
+
+    /*
+        metodă folosită pentru afișarea animației
+     */
 
     public BufferedImage getTexture() {
         if (FPS != 0) {

@@ -5,6 +5,12 @@ import game.component.position.Position;
 import game.component.texture.MakeTexture;
 import game.graphics.assets.UIAssets;
 
+/*
+    Clasă pentru implementarea obiectelor care pot fi colectate de către jucător.
+    Tipul obiectelor este generate aleatoriu la încărcarea nivelului.
+    Conținutul unor obiecte este generat la aleatoriu la colectarea acestora.
+ */
+
 public class Collectable extends TextureComponent {
 
     public static final int medKit = 1;
@@ -45,6 +51,10 @@ public class Collectable extends TextureComponent {
             default -> throw new IllegalStateException("Unexpected value: " + type);
         };
     }
+
+    /*
+        la colectarea unui obiect se returnează un Pair cu tipul obiectului și valoarea obiectului
+     */
 
     public Pair<Integer, Integer> collect() {
         collected = true;

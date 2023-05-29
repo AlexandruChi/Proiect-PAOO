@@ -7,9 +7,18 @@ import game.character.Player;
 import game.component.position.RelativeCoordinates;
 import game.graphics.assets.CharacterAssets;
 
+/*
+    Clasa pentru ajustarea poziției camerei;
+ */
+
 public class Camera extends Component {
     private static Camera camera;
     private static final int cameraDistance = 100;
+
+    /*
+        constante pentru definirea poziției camerei pe ecran;
+     */
+
     public static final int screenX = 367;
     public static final int screenY = 270 + CharacterAssets.characterTextureSize / 2;
     private final Player player;
@@ -36,8 +45,6 @@ public class Camera extends Component {
             difY = 0;
         }
 
-        // TODO center camera when changing character
-
         if (Math.abs(difX) > cameraDistance || Math.abs(difY) > cameraDistance) {
             followPlayer();
         } else {
@@ -45,6 +52,11 @@ public class Camera extends Component {
             position.tmpX = position.xPX;
         }
     }
+
+    /*
+        Dacă distanța dintre cameră și jucător pe ecran este mai mare decât cameraDistance, camera se mișcă în direcția
+        jucătorului cu viteza acestuia.
+     */
 
     private void followPlayer() {
         double speedX = player.getEntity().getSpeed();

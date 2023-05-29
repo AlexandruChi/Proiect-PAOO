@@ -1,7 +1,5 @@
 package game.level;
 
-import game.Window;
-import game.character.Character;
 import game.character.CharacterManager;
 import game.character.NormalEnemy;
 import game.character.UndeadEnemy;
@@ -11,13 +9,16 @@ import game.graphics.assets.MapAssets;
 
 import java.io.BufferedReader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Vector;
 
 import java.sql.*;
+
+/*
+    Clasa LevelManager citește din fișierul în care sunt stocate datele despre nivele.
+ */
 
 public class LevelManager {
     private static FileReader fileReader;
@@ -193,7 +194,7 @@ public class LevelManager {
                                         line = bufferedReader.readLine();
                                     } while (line.equals(""));
                                     String[] numbers = TextParser.parse(line);
-                                    playerPosition = new Position(Integer.parseInt(numbers[0]) * Window.objectSize, Integer.parseInt(numbers[1]) * Window.objectSize);
+                                    playerPosition = new Position(Integer.parseInt(numbers[0]), Integer.parseInt(numbers[1]));
                                 } catch (NumberFormatException e) {
                                     readPlayer = false;
                                 }
@@ -497,6 +498,12 @@ public class LevelManager {
     }
 }
 
+/*
+    Clasa TextParser este folosită pentru a transforma datele citite din fișier în String-uri care pot fi procesate de
+    către LevelManager. Fiecare linie din fișierul text este împărțită în cuvinte, pentru fi transformate mai ușor în
+    valori int sau double de către LevelManager
+ */
+
 class TextParser {
     private static final String delimiters = " <>\t";
 
@@ -521,6 +528,15 @@ class TextParser {
         return words.toArray(result);
     }
 }
+
+/*
+    Clasa SaveManager este folosită de către LeveManager pentru a crea baza de date pentru salvarea stării jocului.
+    Baza de date conține un table cu un număr variat de linii. Fiecare linie reprezintă o salvare a jocului și este
+    identificată prin parametrul id. Salvare cu id 0 este folosită pentru a salva începutul unui nivel. Salvarea cu id 1
+    este folosită pentru a stoca salvarea de pe parcursul jocului și este ștearsă când se încarcă în baza de date o
+    salvare cu id 0. Fiecărei salvări îi corespund și 4 tabele pentru a stoca obiectivele, obiectele de pe hartă,
+    caracterele și inamicii
+ */
 
 class SaveManager {
 

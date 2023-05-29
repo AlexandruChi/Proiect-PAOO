@@ -3,8 +3,16 @@ package game.component;
 import game.component.texture.Texture;
 import game.graphics.assets.MapAssets;
 
+/*
+    Tile conține tile-urile care pot fi afișate.
+ */
+
 public enum Tile {
     water, envWater, ground, envGround, path, envPath, road, envRoad;
+
+    /*
+        returnează mărimea unui tile sau a unui layer
+     */
 
     public static int getTileScale(Tile tile) {
         if (tile == null) {
@@ -28,6 +36,10 @@ public enum Tile {
         };
     }
 
+    /*
+        returnează tipul de tile de pe un layer
+     */
+
     public static Tile getLayerTile(int layer) {
         return switch (layer) {
             case 1 -> water;
@@ -37,6 +49,10 @@ public enum Tile {
             default -> null;
         };
     }
+
+    /*
+        returnează texturile tile-urilor în funcție de nivel și proprietățile acestora
+     */
 
     public static Texture getTileTexture(Tile tile) {
         if (tile == null) {
@@ -81,26 +97,22 @@ public enum Tile {
     }
 
     public static Tile getEnv(Tile tile) {
-        if (tile == null) {
-            return null;
-        }
-        return switch (tile) {
-            case water, envWater -> envWater;
-            case ground, envGround -> envGround;
-            case path, envPath -> envPath;
-            case road, envRoad -> envRoad;
-        };
+        return getTile(tile, envWater, envGround, envPath, envRoad);
     }
 
     public static Tile getNormal(Tile tile) {
+        return getTile(tile, water, ground, path, road);
+    }
+
+    private static Tile getTile(Tile tile, Tile tile2, Tile tile3, Tile tile4, Tile tile5) {
         if (tile == null) {
             return null;
         }
         return switch (tile) {
-            case water, envWater -> water;
-            case ground, envGround -> ground;
-            case path, envPath -> path;
-            case road, envRoad -> road;
+            case water, envWater -> tile2;
+            case ground, envGround -> tile3;
+            case path, envPath -> tile4;
+            case road, envRoad -> tile5;
         };
     }
 

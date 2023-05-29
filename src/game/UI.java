@@ -10,6 +10,10 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
+/*
+    Clasa pentru afișarea UI
+ */
+
 public class UI {
 
     public static final int iconSize = 64;
@@ -18,6 +22,11 @@ public class UI {
     private static int framesToPrint = 60;
 
     private static long time = System.currentTimeMillis();
+
+    /*
+        metoda draw parcurge obiectele ale căror proprietăți trebuie afișate pe ecran și calculează zona în care trebuie
+        afișate
+     */
 
     public static void draw(Graphics graphics) {
 

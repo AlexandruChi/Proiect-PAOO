@@ -9,6 +9,10 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+    Clasă pentru încărcarea asset-urilor și crearea animaților caracterelor
+ */
+
 public class GermanCharacterAssets {
     public static final String spriteSheet = "res/textures/character/german/germanSpriteSheet.png";
     public static final int textureSize = 250;
@@ -31,7 +35,7 @@ public class GermanCharacterAssets {
             tmp[1] = spriteSheet.crop(i, 1, textureSize);
             tmp[2] = spriteSheet.crop(i, 2, textureSize);
 
-            characterWalk[0][i] = Animation.make(tmp, 3, 5, CharacterAssets.characterTextureSize);
+            characterWalk[0][i] = Animation.make(tmp, 3, 10, CharacterAssets.characterTextureSize);
             characterWalk[1][i] = Animation.make(characterWalk[0][i]);
             characterWalk[1][i].flip();
         }

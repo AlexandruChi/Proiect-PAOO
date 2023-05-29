@@ -14,6 +14,10 @@ import java.util.List;
 
 import static game.character.Ranks.Oberleutnant;
 
+/*
+    Clasa player conține toate funcțiile din clasa pentru caractere și funcțiile necesare pentru menținerea scorului
+ */
+
 public class Player implements Character {
     protected Entity entity;
     private int score;

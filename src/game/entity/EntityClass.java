@@ -10,7 +10,13 @@ import game.component.weapon.Weapon;
 import game.level.Map;
 
 import javax.print.attribute.standard.PrinterMoreInfoManufacturer;
+import java.util.ArrayList;
 import java.util.List;
+
+/*
+    Clasa EntityClass reprezintă obiectele care sunt afișate pe ecran a caracterelor
+    Conține funcții pentru a primi comenzi de la caractere sau jucător
+ */
 
 public class EntityClass extends TextureComponent implements Entity {
 
@@ -48,6 +54,7 @@ public class EntityClass extends TextureComponent implements Entity {
 
     EntityClass(Position position, List<Animation[][]> animation, HitBox hitbox, PrintBox printBox, double normalSpeed, double sprintSpeed, int health, int damage, int range, int delay, int weaponSlots) {
         super(position, MakeTexture.make(animation.get(0)[0][0].texture, animation.get(0)[0][0].width), printBox);
+
         this.animation = animation.get(0)[0][0];
         altAnimation = animation.get(0);
         animationList = animation;
@@ -160,6 +167,10 @@ public class EntityClass extends TextureComponent implements Entity {
         this.orientation = orientation;
     }
 
+    /*
+        funcție pentru actualizarea texturii în funcție de animație
+     */
+
     private void refreshTexture() {
         if (aim) {
             altAnimation = animationList.get(2);
@@ -180,6 +191,13 @@ public class EntityClass extends TextureComponent implements Entity {
         animation = altAnimation[orientation][curentAnimation];
         texture.texture = animation.getTexture();
     }
+
+    /*
+        Funcție pentru deplasarea pe hartă
+
+        Folosește funcțiile din clasele Map și CharacterManager pentru a determina dacă se poste mișca pe o anumită
+        poziție. În caz contrar selectează o altă poziție din cele valide pentru a se deplasa.
+     */
 
     public void move() {
 
@@ -264,6 +282,11 @@ public class EntityClass extends TextureComponent implements Entity {
         }
         return false;
     }
+
+    /*
+        Funcțiile attack folosesc funcții din CharacterManager pentru a identifica un caracter care poate fi atacat.
+        Caracteru salvează ultimul caracter care l-a atacat pentru a putea calcula scorul.
+     */
 
     public void attack(Position position) {
         try {

@@ -9,13 +9,25 @@ import game.states.State;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 
+/*
+    Clasa principală a jocului.
+ */
+
 public class Game implements Runnable {
     private static Game game = null;
     private boolean isRunning;
     private Thread thread;
     private final Window window;
-
     private final Input input;
+
+
+    /*
+        Constante pentru mărimea ferestrei jocului.
+        Dimensiunea texturilor și poziția pe hartă a obiectelor este calculată în funcție de înălțimea ferestre.
+     */
+
+    public static final int height = 700;   // default height 540
+    public static final int width = (int) (height * (16.0/9));
 
     public Input getInput() {
         return input;
@@ -23,7 +35,7 @@ public class Game implements Runnable {
 
     public static Game getGame() {
         if (game == null) {
-            game = new Game("Beim letzten Weltkrieg", 960, 540);
+            game = new Game("Beim letzten Weltkrieg", width, height);
         }
         return game;
     }
@@ -37,8 +49,6 @@ public class Game implements Runnable {
         AssetManager.load();
 
         State.setState(new StartState());
-
-        //TODO states
     }
 
     @Override
@@ -112,12 +122,15 @@ public class Game implements Runnable {
         return getWindow().getHeight();
     }
 
-    public void loadMainMenu() {
-        //TODO add main menu
-        loadGame();
-    }
-
     public void loadGame() {
         State.setState(new GameState());
+    }
+
+    public void startScreen() {
+        State.setState(new StartState());
+    }
+
+    public boolean isRunning() {
+        return isRunning;
     }
 }

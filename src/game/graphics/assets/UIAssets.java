@@ -8,6 +8,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+/*
+    Clasă pentru încărcarea asset-urilor pentru UI
+ */
+
 public class UIAssets {
 
     public static final String UIPath = "res/textures/UI/ui.png";

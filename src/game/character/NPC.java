@@ -12,6 +12,10 @@ import java.awt.*;
 
 import static game.component.Direction.*;
 
+/*
+    Clasă de bază pentru implementarea caracterelor și a AI acestora
+ */
+
 public abstract class NPC implements Character {
     private Entity entity;
 

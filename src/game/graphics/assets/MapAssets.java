@@ -9,6 +9,11 @@ import game.graphics.ImageLoader;
 import game.graphics.SpriteSheet;
 import game.level.Map;
 
+/*
+    Clasă pentru încărcarea asset-urilor pentru hartă și crearea texturilor pentru obiectele cu transparență redusă sau
+    tile-urilor de pe colțuri
+ */
+
 public class MapAssets {
     public static final int waterTileSize = Window.objectSize * Map.mapScale * Tile.getTileScale(Tile.water);
     public static final int groundTileSize = Window.objectSize * Map.mapScale * Tile.getTileScale(Tile.ground);
@@ -73,6 +78,10 @@ public class MapAssets {
             roadCorner[i - 1] = MakeTexture.make(ImageLoader.removeCorner(road.texture, i), roadTileSize);
         }
     }
+
+    /*
+        Încarcă un sprite Sheet diferit în funcție de parametrii nivelului
+     */
 
     public static void loadEnvironment(int environment) {
         String path = switch (environment) {

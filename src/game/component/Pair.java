@@ -1,5 +1,9 @@
 package game.component;
 
+/*
+    Implementează o structură de date de tip Pair care poate avea valori cu tipuri de date diferite
+ */
+
 public class Pair<T, T1> {
     private T left;
     private T1 right;
