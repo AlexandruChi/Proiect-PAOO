@@ -219,7 +219,13 @@ public class CharacterManager {
     private void refreshAlliedPosition() {
         Position position;
 
-        player.setPosition(LevelManager.getPlayerPosition());
+        Position playerPosition = LevelManager.getPlayerPosition();
+        playerPosition.xPX *= Window.objectSize;
+        playerPosition.tmpX = playerPosition.xPX;
+        playerPosition.yPX *= Window.objectSize;
+        playerPosition.tmpY = playerPosition.yPX;
+
+        player.setPosition(playerPosition);
         Camera.getCamera().setPosition(player.getPosition());
 
         for (Character character : alliedCharacters) {
