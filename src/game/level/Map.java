@@ -504,8 +504,8 @@ public class Map {
     }
 
     /*
-        Calculează dacă un tile este pe marginea zonei în care trebuie afișat și încarcă textura potrivită conțului sau
-        marginii respective
+        Calculează dacă un tile este pe marginea zonei în care trebuie afișat sau două tile-uri sunt una deasupra
+        celeilalte pentru a încarcă textura potrivită conțului sau marginii respective
      */
 
     private int getCorner(int layer, int y, int x) {
