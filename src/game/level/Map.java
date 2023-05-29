@@ -2,6 +2,7 @@ package game.level;
 
 import game.Camera;
 import game.Draw;
+import game.Game;
 import game.Window;
 import game.character.CharacterManager;
 import game.component.*;
@@ -9,19 +10,23 @@ import game.component.position.Corner;
 import game.component.position.Position;
 import game.component.position.RelativeCoordinates;
 import game.component.texture.Texture;
-import game.graphics.assets.MapAssets;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
-import java.util.logging.Level;
 
 import static game.component.ObjectTile.tmp;
 import static game.component.ObjectTile.tree;
 
 // TODO better coordinates system
+
+/*
+    Clasa petru harta jocului.
+    Harta este împărțită în 4 layer-e, fiecare cu un tip diferit de tile, un layer cu obiectele generate pe tile-uri care
+    este folosit pentru coliziuni și o listă cu obiecte cu care playerul poate interacționa;
+    Dacă nu mai există hărți de încărcat, la final se reîncarcă starea de start a jocului
+ */
 
 public class Map {
     private static Map __map;
@@ -44,10 +49,22 @@ public class Map {
     private int nrObjectives;
     private int nrFinishedObjectives;
 
+    /*
+        locația de la care se trece la nivelul următor
+     */
+
     private boolean exit;
     private Position exitPosition;
 
+    /*
+        constanta mapScale stochează dimensiunea unui tile pe matricea jocului
+     */
+
     public static final int mapScale = 2;
+
+    /*
+        mărimea matricei jocului și mărimea hărții în pixeli (folosită pentru afișare și calcularea distanțelor)
+     */
 
     public static final int width = 500;
     public static final int height = 500;
@@ -65,13 +82,14 @@ public class Map {
         __map = this;
         exit = false;
         curentMap = 0;
-        loadNextMap();
-        loadNextMap();
         if (!loadNextMap()) {
-            // TODO add error
-            System.exit(1);
+            Game.getGame().startScreen();
         }
     }
+
+    /*
+        metoda loadNextMap citește datele despre următorul nivel și dacă există încarcă datele și texturile necesare
+     */
 
     public boolean loadNextMap() {
         curentMap++;
@@ -93,8 +111,10 @@ public class Map {
         exit = false;
         exitPosition = LevelManager.getExitPosition();
         exitPosition.xPX *= Window.objectSize;
+        //exitPosition.xPX *= (int)((double)Game.getGame().getHeight() / 540);
         exitPosition.tmpX = exitPosition.xPX;
         exitPosition.yPX *= Window.objectSize;
+        //exitPosition.yPX *= (int)((double)Game.getGame().getHeight() / 540);
         exitPosition.tmpY = exitPosition.yPX;
 
         generateObjects(objectMap);
@@ -111,6 +131,10 @@ public class Map {
 
         return true;
     }
+
+    /*
+        generarea aleatorie obiectelor cu care jucătorul poate interacționa
+     */
 
     private void addObjectives() {
         int objectivesToGenerate = nrObjectives;
@@ -135,6 +159,10 @@ public class Map {
             }
         }
     }
+
+    /*
+        calculează dacă nu există obstacole între două puncte
+     */
 
     public boolean lineOfSight(Position p1, Position p2) {
         int signX = p2.xPX / Window.objectSize - p1.xPX / Window.objectSize;
@@ -184,6 +212,10 @@ public class Map {
         }
         return true;
     }
+
+    /*
+        generează obiectele de decor a hărții și harta cu coliziuni pentru acestea
+     */
 
     private void generateObjects(ObjectTile[][] objectMap) {
 
@@ -361,6 +393,10 @@ public class Map {
         }
     }
 
+    /*
+        metoda draw calculează pozițiile și distanțele dintre obiecte pentru a le afișa în ordinea corectă
+     */
+
     public void draw(Graphics graphics, Camera camera, CharacterManager characterManager) {
         Tile tile;
         for (int l = 0; l < nrLayers; l++) {
@@ -430,6 +466,10 @@ public class Map {
         return  objectMap;
     }
 
+    /*
+        verifică dacă un personaj poate exista la o anumită coordonată
+     */
+
     public boolean canWalkOn(int x, int y) {
 
         // Tile -> layer indexat de la 1
@@ -462,6 +502,11 @@ public class Map {
 
         return ok;
     }
+
+    /*
+        Calculează dacă un tile este pe marginea zonei în care trebuie afișat și încarcă textura potrivită conțului sau
+        marginii respective
+     */
 
     private int getCorner(int layer, int y, int x) {
         if (y <= 0 || y >= (height / mapScale / Tile.getLayerScale(layer + 1)) - 1 || x <= 0 || x >= (width / mapScale / Tile.getLayerScale(layer + 1)) - 1) {

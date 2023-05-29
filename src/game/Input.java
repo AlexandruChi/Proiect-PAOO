@@ -9,6 +9,10 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Set;
 
+/*
+    Clasa pentru citirea comenzilor de la tastatură și maus
+ */
+
 public class Input implements KeyListener, MouseListener {
     private final Set<Direction> validDirections;
     boolean input;
@@ -20,6 +24,8 @@ public class Input implements KeyListener, MouseListener {
     int change;
     boolean medKit;
     boolean reload;
+
+    boolean escape;
 
     Direction direction;
 
@@ -84,6 +90,14 @@ public class Input implements KeyListener, MouseListener {
         return false;
     }
 
+    public boolean getEscape() {
+        if (escape) {
+            reload = false;
+            return true;
+        }
+        return false;
+    }
+
     public int getCurentWeapon() {
         if (curentWeapon != -1) {
             int returnCurentWeapon = curentWeapon;
@@ -122,11 +136,13 @@ public class Input implements KeyListener, MouseListener {
 
             case KeyEvent.VK_SHIFT -> sprint = true;
             case KeyEvent.VK_SPACE -> aim = true;
+            case KeyEvent.VK_ESCAPE -> escape = true;
         }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
+        input = false;
         switch (e.getKeyCode()) {
             case KeyEvent.VK_W -> subMovement(Direction.up);
             case KeyEvent.VK_S -> subMovement(Direction.down);
@@ -144,6 +160,7 @@ public class Input implements KeyListener, MouseListener {
 
             case KeyEvent.VK_SHIFT -> sprint = false;
             case KeyEvent.VK_SPACE -> aim = false;
+            case KeyEvent.VK_ESCAPE -> escape = false;
         }
     }
 
@@ -215,6 +232,11 @@ public class Input implements KeyListener, MouseListener {
             }
         }
     }
+
+    /*
+        metodele subMovement și addMovement calculează direcția în care trebuie să se deplaseze jucătorul în funcție de
+        tastele care sunt apăsate și stochează rezultatul într-un obiect de tip Direction
+     */
 
     private void subMovement(Direction direction) {
         if (!validDirections.contains(direction)) {

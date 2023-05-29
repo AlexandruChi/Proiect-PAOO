@@ -1,5 +1,6 @@
 package game.graphics.assets;
 
+import game.Game;
 import game.Window;
 import game.component.HitBox;
 import game.component.PrintBox;

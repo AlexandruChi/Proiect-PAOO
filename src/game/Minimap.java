@@ -8,13 +8,21 @@ import game.level.Map;
 
 import java.awt.*;
 
+/*
+    Clasa pentru afișarea poziției obiectelor pe minimap;
+ */
+
 public class Minimap {
 
-    private static int iconSize = 10;
+    /*
+        metoda draw parcurge toate obiectele care pot fi afișate pe minimap și calculează poziția pe ecran în funcție de
+        poziția pe hartă
+     */
 
     public static void draw(Graphics graphics, int x, int y, int size) {
         graphics.drawImage(UIAssets.minimap[Map.getMap().curentLevel() - 1], x, y, size, size, null);
 
+        int iconSize = 10;
         for (Character character : CharacterManager.getCharacterManager().getCharacters()) {
             if (character != null && !character.isDead()) {
                 double cX = character.getPosition().tmpX / (double) Map.widthPX;

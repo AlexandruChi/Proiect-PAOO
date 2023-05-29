@@ -6,8 +6,19 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+/*
+    Clasa pentru fereastra principală.
+    Conține un obiect de tim JFrame pentru fereastră și un obiect Canvas pentru desenare;
+ */
+
 public class Window {
-    public static final int objectSize = 23; // 32
+
+    /*
+        constanta objectScale poste fi modificată pentru a mări sau micșora distanța dintre cameră și jucător
+     */
+
+    private static final int objectScale = 23;
+    public static final int objectSize = (int) (objectScale * ((double)Game.height / 540));
     private final JFrame jFrame;
     private final Canvas canvas;
 

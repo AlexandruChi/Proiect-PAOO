@@ -1,6 +1,7 @@
 package game.character;
 
 import game.Camera;
+import game.Game;
 import game.Window;
 import game.component.Collectable;
 import game.component.Pair;
@@ -44,7 +45,17 @@ public class CharacterManager {
     }
 
     private void loadAlliedCharacters() {
-        player = new Player(LevelManager.getPlayerPosition());
+        Position playerPosition;
+
+        playerPosition = LevelManager.getPlayerPosition();
+        playerPosition.xPX *= Window.objectSize;
+        //playerPosition.xPX *= (int)((double)Game.getGame().getHeight() / 540);
+        playerPosition.tmpX = playerPosition.xPX;
+        playerPosition.yPX *= Window.objectSize;
+        //playerPosition.yPX *= (int)((double)Game.getGame().getHeight() / 540);
+        playerPosition.tmpY = playerPosition.yPX;
+
+        player = new Player(playerPosition);
         hasPlayer = true;
 
         Position position;
@@ -178,14 +189,13 @@ public class CharacterManager {
                         refreshAlliedPosition();
                         loadCharacters();
                     } else {
-                        // TODO add end screen
-                        System.exit(0);
+                        Game.getGame().startScreen();
                     }
                 }
             }
 
         } else {
-            System.out.println("DEAD");
+            Game.getGame().startScreen();
         }
     }
 
@@ -293,7 +303,6 @@ public class CharacterManager {
 
             Camera.getCamera().setPosition(player.getPosition());
 
-            //LevelManager.saveGame();
             return true;
         }
 
@@ -353,6 +362,8 @@ public class CharacterManager {
                     }
                 }
                 character.setLeader(oldCharacter.getLeader());
+                character.getCommanding().removeAll(Collections.singleton(null));
+                character.getCommanding().sort(Comparator.comparingInt(o -> o.getRank().ordinal()));
                 for (int i = 0; character.getLeader() != null && character.getLeader().getCommanding() != null && i < character.getLeader().getCommanding().size(); i++) {
                     if (character.getLeader().getCommanding().get(i) == oldCharacter) {
                         character.getLeader().getCommanding().set(i, character);
@@ -366,6 +377,7 @@ public class CharacterManager {
 
     private Character getRemoveCommandNodeCommandingLeft(Character character) {
         if (character != null && character.getCommanding() != null) {
+            character.getCommanding().removeAll(Collections.singleton(null));
             if (character.getCommanding().size() > 0) {
                 return character.getCommanding().get(0);
             }
@@ -375,14 +387,33 @@ public class CharacterManager {
 
     private List<Character> getRemoveCommandNodeCommandingRight(Character character) {
         List<Character> commandingRight = new ArrayList<>();
-        if (character != null && character.getCommanding() != null) {
+        if (character != null && character.getCommanding() != null && character.getCommanding().size() > 0) {
+            character.getCommanding().removeAll(Collections.singleton(null));
             commandingRight.addAll(character.getCommanding());
-            if (character.getCommanding().size() > 0) {
-                commandingRight.set(0, null);
-                commandingRight.removeAll(Collections.singleton(null));
-            }
+            commandingRight.set(0, null);
+            commandingRight.removeAll(Collections.singleton(null));
         }
         return commandingRight;
+    }
+
+    public void sortCommanding() {
+        Character character = player;
+        while (character.getLeader() != null) {
+            character = character.getLeader();
+        }
+        sortCommandGraph(character);
+    }
+
+    private void sortCommandGraph(Character character) {
+        if (character.getCommanding() != null) {
+            character.getCommanding().removeAll(Collections.singleton(null));
+            character.getCommanding().sort(Comparator.comparingInt(o -> o.getRank().ordinal()));
+        }
+        for (Character commandedCharacter : character.getCommanding()) {
+            if (commandedCharacter != null) {
+                sortCommandGraph(commandedCharacter);
+            }
+        }
     }
 
     public void loadCharacters() {

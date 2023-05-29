@@ -193,7 +193,7 @@ public class LevelManager {
                                         line = bufferedReader.readLine();
                                     } while (line.equals(""));
                                     String[] numbers = TextParser.parse(line);
-                                    playerPosition = new Position(Integer.parseInt(numbers[0]) * Window.objectSize, Integer.parseInt(numbers[1]) * Window.objectSize);
+                                    playerPosition = new Position(Integer.parseInt(numbers[0]), Integer.parseInt(numbers[1]));
                                 } catch (NumberFormatException e) {
                                     readPlayer = false;
                                 }

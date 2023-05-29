@@ -1,5 +1,6 @@
 package game.entity;
 
+import game.Game;
 import game.Window;
 import game.component.position.Position;
 import game.graphics.assets.CharacterAssets;
