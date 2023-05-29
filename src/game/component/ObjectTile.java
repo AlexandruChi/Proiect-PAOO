@@ -3,6 +3,11 @@ package game.component;
 import game.component.texture.Texture;
 import game.graphics.assets.MapAssets;
 
+/*
+    Conține tile-uri pentru obiectele generate. Modul de funcționare este identic cu cel al tile-urilor obișnuite cu
+    excepția mărimii acestora care depinde de nivel
+ */
+
 public enum ObjectTile {
     tmp, tree, envTree, rock, envRock;
 

@@ -1,5 +1,10 @@
 package game.component.position;
 
+/*
+    Clasa Position reprezintă sistemul de bază de coordonate a jocului.
+    Conține poziția în pixei și o valoare double pentru a permite mutarea unui obiect cu valori double
+ */
+
 public class Position {
     public int xPX, yPX;
     public double tmpX, tmpY;

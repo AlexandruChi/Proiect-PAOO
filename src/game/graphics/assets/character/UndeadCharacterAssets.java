@@ -9,6 +9,10 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+    Clasă pentru încărcarea asset-urilor și crearea animaților caracterelor
+ */
+
 public class UndeadCharacterAssets {
     public static final String spriteSheet = "res/textures/character/undead/undeadSpriteSheet.png";
     public static final int textureSize = 250;

@@ -8,7 +8,16 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
+/*
+    Clasă care conține funcțiile necesare prelucrării imaginilor
+ */
+
 public class ImageLoader {
+
+    /*
+        încărcarea unei imagini
+     */
+
     public static BufferedImage loadImage(String path) {
         try {
             return ImageIO.read(new File(path));
@@ -18,12 +27,20 @@ public class ImageLoader {
         return null;
     }
 
+    /*
+        schimbarea direcției de orientare a unei imagini
+     */
+
     public static BufferedImage flipImage(BufferedImage originalImage) {
         AffineTransform affineTransform = AffineTransform.getScaleInstance(-1, 1);
         affineTransform.translate(-originalImage.getWidth(null), 0);
         AffineTransformOp flipOperation = new AffineTransformOp(affineTransform, AffineTransformOp.TYPE_BICUBIC);
         return flipOperation.filter(originalImage, null);
     }
+
+    /*
+        scăderea transparenței unei imagini cu 50%
+     */
 
     public static BufferedImage lowerTransparency(BufferedImage originalImage) {
         int width = originalImage.getWidth();
@@ -35,9 +52,7 @@ public class ImageLoader {
             for (int x = 0; x < width; x++) {
                 int pixel = originalImage.getRGB(x, y);
                 int alpha = (pixel >> 24) & 0xFF;
-                int newAlpha = (int) (alpha * 0.5); // Lowering transparency to 50%
-
-                // Create the new pixel with the lowered transparency
+                int newAlpha = (int) (alpha * 0.5); // 50% transparency
                 int newPixel = (newAlpha << 24) | (pixel & 0x00FFFFFF);
                 newImage.setRGB(x, y, newPixel);
             }
@@ -45,6 +60,10 @@ public class ImageLoader {
 
         return newImage;
     }
+
+    /*
+        ștergerea colțului dintr-un cadran (dat de parametrul corner) a unei imagini
+     */
 
     public static BufferedImage removeCorner(BufferedImage image, int corner) {
         int width = image.getWidth();

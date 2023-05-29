@@ -1,5 +1,9 @@
 package game.component.weapon;
 
+/*
+    Clasa de bază pentru obiectele de tip Weapon
+ */
+
 public abstract class WeaponBase implements Weapon {
     protected int damage;
     protected int range;

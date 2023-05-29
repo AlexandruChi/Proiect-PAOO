@@ -4,6 +4,10 @@ import game.graphics.ImageLoader;
 
 import java.awt.image.BufferedImage;
 
+/*
+    Clasă pentru implementarea unei texturi
+ */
+
 public class Texture {
     public BufferedImage texture;
     public int width;

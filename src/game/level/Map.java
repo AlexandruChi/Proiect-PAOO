@@ -504,8 +504,9 @@ public class Map {
     }
 
     /*
-        Calculează dacă un tile este pe marginea zonei în care trebuie afișat sau două tile-uri sunt una deasupra
-        celeilalte pentru a încarcă textura potrivită conțului sau marginii respective
+        Calculează dacă un tile este pe unul dintre conțurile zonei în care trebuie afișat pentru a încarcă textura
+        potrivită conțului sau marginii respective și a genera obiecte doar în zona în care tile-ul este desenat pe
+        hartă
      */
 
     private int getCorner(int layer, int y, int x) {
@@ -538,6 +539,12 @@ public class Map {
         }
         return 0;
     }
+
+    /*
+        Calculează dacă la poziția x, y există un tile la care este afișat doar unul dintre colțuri deasupra unui tile
+        complet pentru a le putea afișa în ordinea corectă și a putea genera obiectele de pe hartă doar pe jumătatea de
+        tile corectă
+     */
 
     private boolean hasOverlap(int layer, int y, int x) {
         if (y <= 0 || y >= (height / mapScale / Tile.getLayerScale(layer + 1)) - 1 || x <= 0 || x >= (width / mapScale / Tile.getLayerScale(layer + 1)) - 1) {

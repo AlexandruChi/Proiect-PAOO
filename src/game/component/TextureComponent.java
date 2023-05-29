@@ -8,6 +8,11 @@ import game.component.texture.Texture;
 import java.awt.*;
 import java.util.Objects;
 
+/*
+    Componenta de bază a obiectelor afișabile.
+    Conține textura și modul în care trebuie afișat pe ecran
+ */
+
 public abstract class TextureComponent extends Component {
     protected Texture texture;
     protected PrintBox printBox;

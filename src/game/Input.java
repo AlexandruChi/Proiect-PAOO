@@ -11,6 +11,23 @@ import java.util.Set;
 
 /*
     Clasa pentru citirea comenzilor de la tastatură și maus
+
+    W A S D -> mișcarea caracterului
+
+    SHIFT -> sprint
+    SPACE -> aim
+
+    V -> schimbarea modului armei
+    R -> reîncărcare armă
+    M -> utilizare MedKit
+
+    ESC -> save game
+
+    ARROW_UP -> schimbare caracter următor
+    ARROW_DOWN -> schimbare caracter anterior
+
+    MOUSE_CLICK -> atacare poziție maus
+
  */
 
 public class Input implements KeyListener, MouseListener {

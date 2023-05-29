@@ -19,6 +19,19 @@ import java.util.List;
 
 import static game.character.Ranks.*;
 
+/*
+    Clasa CharacterManager este folosită pentru a crea și utiliza caracterele aliate, caracterul jucătorului și inamicii
+    din joc. Toate caracterele sunt utilizate folosind interfața Character, fiind stocate într-o listă de caractere când
+    sunt folosite de funcțiile de update sau de trimise la funcția de draw din clasa Map.
+
+    Caracterele sunt organizate în arbori care determină caracterul pe care îl urmăresc.
+    Lista de caractere commanding returnată de metoda getCommanding reprezintă nodurile fiu.
+    Caracterul leader  returnat de metoda getLeader reprezintă nodul părinte și caracterul pe care îl urmărește pe hartă
+
+    Elementele din listele de caractere și lista de obiective sunt ordonate în funcție de poziția de pe hartă pentru a
+    fi afișate.
+ */
+
 public class CharacterManager {
     private static CharacterManager characterManager = null;
     private List<Character> characters;
@@ -49,10 +62,8 @@ public class CharacterManager {
 
         playerPosition = LevelManager.getPlayerPosition();
         playerPosition.xPX *= Window.objectSize;
-        //playerPosition.xPX *= (int)((double)Game.getGame().getHeight() / 540);
         playerPosition.tmpX = playerPosition.xPX;
         playerPosition.yPX *= Window.objectSize;
-        //playerPosition.yPX *= (int)((double)Game.getGame().getHeight() / 540);
         playerPosition.tmpY = playerPosition.yPX;
 
         player = new Player(playerPosition);
@@ -199,6 +210,10 @@ public class CharacterManager {
         }
     }
 
+    /*
+        metoda refreshAlliedPosition recentrează caracterele aliate în jurul jucătorului la schimbarea nivelului
+     */
+
     private void refreshAlliedPosition() {
         Position position;
 
@@ -215,7 +230,9 @@ public class CharacterManager {
 
     private void removeCharacter(Character characterInstance) {
 
+        sortCommanding();
         removeCommandNode(characterInstance);
+        sortCommanding();
 
         if (characters != null) {
             for (Character character : characters) {
@@ -268,6 +285,11 @@ public class CharacterManager {
         return true;
     }
 
+    /*
+        metoda changeCharacter modifică referințele la obiectul Entity și Rank dintre două caracter aflate în lista de
+        caractere jucabile și actualizează arborele în care se află caracterul jucătorului
+     */
+
     public boolean changeCharacter(int character) {
         Character newPlayer = null;
 
@@ -308,6 +330,10 @@ public class CharacterManager {
 
         return false;
     }
+
+    /*
+        metode pentru schimbarea a 2 noduri, ștergerea unui nod și sortarea nodurilor dintr-un arbore de caracter
+     */
 
     private void swapCommandNode(Character character1, Character character2) {
         List<Character> commandingCharacter1 = character1.getCommanding();
@@ -408,10 +434,10 @@ public class CharacterManager {
         if (character.getCommanding() != null) {
             character.getCommanding().removeAll(Collections.singleton(null));
             character.getCommanding().sort(Comparator.comparingInt(o -> o.getRank().ordinal()));
-        }
-        for (Character commandedCharacter : character.getCommanding()) {
-            if (commandedCharacter != null) {
-                sortCommandGraph(commandedCharacter);
+            for (Character commandedCharacter : character.getCommanding()) {
+                if (commandedCharacter != null) {
+                    sortCommandGraph(commandedCharacter);
+                }
             }
         }
     }
